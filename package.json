@@ -7,9 +7,7 @@
     "engines": {
         "vscode": "^1.22.0"
     },
-    "author": {
-        "name": "Aaron (Yiming) Zhang"
-    },
+    "author": "ask-dev-exp-tools team",
     "homepage": "https://github.com/alexa-labs/ask-toolkit-for-vscode",
     "categories": [
         "Other",
