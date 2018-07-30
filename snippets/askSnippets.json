@@ -1,0 +1,443 @@
+{
+  "Built-in Intent: ActivateAction": {
+    "prefix": "askModelActivateAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ActivateAction<object@${1|PlaybackMode|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: AddAction": {
+    "prefix": "askModelAddAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.AddAction<object@${1|BookSeries\\,targetCollection@ReadingList,Book\\,targetCollection@ReadingList,Event,MusicCreativeWork\\,targetCollection@MusicPlaylist|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: CancelIntent": {
+    "prefix": "askModelCancelIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.CancelIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ChooseAction": {
+    "prefix": "askModelChooseAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ChooseAction<object@${1|Book,Book\\,sourceCollection@ReadingList,CreativeWork,Event,MusicCreativeWork,MusicCreativeWork\\,sourceCollection@MusicPlaylist,MusicPlaylist,ScreeningEvent[location],ScreeningEvent[workPresented],VideoCreativeWork,VideoCreativeWork\\,sourceCollection@VideoPlaylist|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: CloseAction": {
+    "prefix": "askModelCloseAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.CloseAction<object@${1|CreativeWorkSection,Thing,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: CreateAction": {
+    "prefix": "askModelCreateAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.CreateAction<object@${1|MusicPlaylist,MusicPlaylist\\,content@MusicCreativeWork,ReadingList|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: DeactivateAction": {
+    "prefix": "askModelDeactivateAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.DeactivateAction<object@${1|PlaybackMode,Thing|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: DeleteAction": {
+    "prefix": "askModelDeleteAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.DeleteAction<object@${1|BookSeries\\,sourceCollection@ReadingList,Book\\,sourceCollection@ReadingList,Event,MusicCreativeWork,MusicCreativeWork\\,sourceCollection@MusicPlaylist,MusicPlaylist,MusicPlaylist\\,sourceCollection@Catalog,ReadingList,Thing|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: DislikeAction": {
+    "prefix": "askModelDislikeAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.DislikeAction<object@${1|VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ExitAction": {
+    "prefix": "askModelExitAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ExitAction<object@${1|Episode,VideoPlaylist|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: FallbackIntent": {
+    "prefix": "askModelFallbackIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.FallbackIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: HelpIntent": {
+    "prefix": "askModelHelpIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.HelpIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: IgnoreAction": {
+    "prefix": "askModelIgnoreAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.IgnoreAction<object@${1|Thing|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: LikeAction": {
+    "prefix": "askModelLikeAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.LikeAction<object@${1|Musician,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: LoopOffIntent": {
+    "prefix": "askModelLoopOffIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.LoopOffIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: LoopOnIntent": {
+    "prefix": "askModelLoopOnIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.LoopOnIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: MoreIntent": {
+    "prefix": "askModelMoreIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.MoreIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: MuteAction": {
+    "prefix": "askModelMuteAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.MuteAction<object@${1|Thing|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: NavigateHomeIntent": {
+    "prefix": "askModelNavigateHomeIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.NavigateHomeIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: NavigateSettingsIntent": {
+    "prefix": "askModelNavigateSettingsIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.NavigateSettingsIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: NextIntent": {
+    "prefix": "askModelNextIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.NextIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: NoIntent": {
+    "prefix": "askModelNoIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.NoIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: PageDownIntent": {
+    "prefix": "askModelPageDownIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.PageDownIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: PageUpIntent": {
+    "prefix": "askModelPageUpIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.PageUpIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: PauseIntent": {
+    "prefix": "askModelPauseIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.PauseIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: PlaybackAction": {
+    "prefix": "askModelPlaybackAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.PlaybackAction<object@${1|Book,CreativeWorkSection,Episode,MusicCreativeWork,MusicPlaylist,TVSeason,TVSeries,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: PreviousIntent": {
+    "prefix": "askModelPreviousIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.PreviousIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: RateAction": {
+    "prefix": "askModelRateAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.RateAction<object@${1|Book,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ReadAction": {
+    "prefix": "askModelReadAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ReadAction<object@${1|Calendar|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: RepeatAction": {
+    "prefix": "askModelRepeatAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.RepeatAction<object@${1|MusicCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: RepeatIntent": {
+    "prefix": "askModelRepeatIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.RepeatIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ReplaceAction": {
+    "prefix": "askModelReplaceAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ReplaceAction<object@${1|Event|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: RestartAction": {
+    "prefix": "askModelRestartAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.RestartAction<object@${1|Book,CreativeWorkSection,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ResumeAction": {
+    "prefix": "askModelResumeAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ResumeAction<object@${1|Book,CreativeWorkSection,MusicCreativeWork,TVSeries,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ResumeIntent": {
+    "prefix": "askModelResumeIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ResumeIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ScrollDownIntent": {
+    "prefix": "askModelScrollDownIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ScrollDownIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ScrollLeftIntent": {
+    "prefix": "askModelScrollLeftIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ScrollLeftIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ScrollRightIntent": {
+    "prefix": "askModelScrollRightIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ScrollRightIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ScrollUpIntent": {
+    "prefix": "askModelScrollUpIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ScrollUpIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: SearchAction": {
+    "prefix": "askModelSearchAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.SearchAction<object@${1|Actor,Book,Book[datePublished],Book[numberOfSections],Book[position],Calendar,CreativeWork,CreativeWorkSection,CreativeWorkSection[name],CreativeWork[name],Episode,Episode[description],Event,Event[eventStatus],Event[location],Event[startDate],LocalBusiness,LocalBusiness[openHours.closes],LocalBusiness[openHours],LocalBusiness[telephone],MusicCreativeWork,MusicCreativeWork[byArtist],MusicGroup,MusicGroup[musicGroupMember],MusicPlaylist[tracks],MusicRecording[byArtist.musicGroupMember],MusicRecording[byArtist],MusicRecording[duration],MusicRecording[inAlbum],MusicRecording[producer],ScreeningEvent,ScreeningEvent[location],Singer,VideoCreativeWork,VideoCreativeWork[actor],VideoCreativeWork[audience],VideoCreativeWork[contentRating],VideoCreativeWork[dateReleased],VideoCreativeWork[description],VideoCreativeWork[director],VideoCreativeWork[genre],VideoCreativeWork[musicBy],VideoCreativeWork[name],VideoCreativeWork\\,sourceCollection@VideoPlaylist,WeatherForecast,WeatherForecast[temperature],WeatherForecast[weatherCondition]|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ShuffleOffIntent": {
+    "prefix": "askModelShuffleOffIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ShuffleOffIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: ShuffleOnIntent": {
+    "prefix": "askModelShuffleOnIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.ShuffleOnIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: StartAction": {
+    "prefix": "askModelStartAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.StartAction<object@${1|CreativeWorkSection,MusicCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: StartOverIntent": {
+    "prefix": "askModelStartOverIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.StartOverIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: StopAction": {
+    "prefix": "askModelStopAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.StopAction<object@${1|Book,MusicCreativeWork,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: StopIntent": {
+    "prefix": "askModelStopIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.StopIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: SuspendAction": {
+    "prefix": "askModelSuspendAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.SuspendAction<object@${1|Book,CreativeWorkSection,Episode,MusicCreativeWork,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: WatchAction": {
+    "prefix": "askModelWatchAction",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.WatchAction<object@${1|Episode,VideoCreativeWork|}>\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  },
+  "Built-in Intent: YesIntent": {
+    "prefix": "askModelYesIntent",
+    "body": [
+      "{",
+      "    \"name\": \"AMAZON.YesIntent\",",
+      "    \"samples\": []",
+      "}"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+	"intent_handler": {
+		"prefix": "askSDKIntentHandler",
+		"body": [
+			"const ${1:Intent}Handler = {",
+				"\tcanHandle(handlerInput) {",
+					"\t\treturn handlerInput.requestEnvelope.request.type === \"IntentRequest\"",
+					"\t\t\t&& handlerInput.requestEnvelope.request.intent.name === \"${1}Intent\";",
+				"\t},",
+				"\thandle(handlerInput) {",
+					"\t\treturn handlerInput.responseBuilder",
+					"\t\t\t.speak(\"${0:Replace this text}\")",
+					"\t\t\t.getResponse();",
+				"\t}",
+			"}"
+		],
+		"description": "Alexa SDK - Standard Intent Handler"
+	},
+	"response_builder": {
+		"prefix": "askSDKSpeak",
+		"body": [
+			"handlerInput.responseBuilder",
+			"\t.speak(\"${1}\")",
+			"\t.getResponse();"
+		],
+		"description": "Alexa SDK - Speak Directive"
+	}, 
+	"dm_delegate": {
+		"prefix": "askSDKDialogDelegate",
+		"body": [
+			"handlerInput.responseBuilder",
+			"\t.addDelegateDirective()",
+			"\t.getResponse();"
+		],
+		"description": "Alexa SDK dialog.delegate"
+	}
+}
