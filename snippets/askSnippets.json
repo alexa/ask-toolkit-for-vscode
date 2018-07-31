@@ -439,5 +439,11 @@
       "    \"samples\": []",
       "}"
     ]
+  },
+  "Custom Intent": {
+    "prefix": "askModelCustomIntent",
+    "body": [
+      "{\r\n  \"name\": \"${1}\",\r\n  \"slots\": [\r\n    {\r\n      \"name\": \"${2}\",\r\n      \"type\": \"${3}\",\r\n      \"samples\": [\r\n        \"${4}\"\r\n      ]\r\n    }\r\n  ],\r\n  \"samples\": [\r\n    \"${5}\"\r\n  ]\r\n}"
+    ]
   }
 }
