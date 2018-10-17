@@ -33,5 +33,34 @@
 			"\t.getResponse();"
 		],
 		"description": "Alexa SDK dialog.delegate"
+	},
+	"body_template": {
+		"prefix": "askSDKBodyTemplate",
+		"body": [
+			".addRenderTemplateDirective({",
+			"\ttype: 'BodyTemplate$1',",
+			"\tbackButton: $2,",
+			"\tbackgroundImage: $3,",
+			"\timage: $4,",
+			"\ttitle: $5,",
+			"\ttextContent: $6,",
+			"\ttoken: '$7'",
+			"})"
+		],
+		"description": "Alexa SDK - BodyTemplate directive"
+	},
+	"list_template": {
+		"prefix": "askSDKListTemplate",
+		"body": [
+			".addRenderTemplateDirective({",
+			"\ttype: 'ListTemplate$1',",
+			"\tbackButton: $2,",
+			"\tbackgroundImage: $3,",
+			"\ttitle: $5,",
+			"\tlistItems: $6,",
+			"\ttoken: '$7'",
+			"})"
+		],
+		"description": "Alexa SDK - ListTemplate directive"
 	}
 }
