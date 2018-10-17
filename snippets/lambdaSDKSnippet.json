@@ -33,5 +33,35 @@
 			"\t.getResponse();"
 		],
 		"description": "Alexa SDK dialog.delegate"
+	},
+	"image_helper": {
+		"prefix": "askSDKImageHelper",
+		"body": [
+			"new Alexa.ImageHelper()",
+			"\t.addImageInstance($1)",
+			"\t.getImage()"
+		],
+		"description": "Alexa SDK Alexa.ImageHelper"
+	},
+	"plain_text_helper": {
+		"prefix": "askSDKPlainTextHelper",
+		"body": [
+			"new Alexa.PlainTextContentHelper()",
+			"\t.withPrimaryText($1)",
+			"\t.withSecondaryText($2)",
+			"\t.getTextContent()"
+		],
+		"description": "Alexa SDK Alexa.PlainTextHelper"
+	},
+	"rich_text_content_helper": {
+		"prefix": "askSDKRichTextContentHelper",
+		"body": [
+			"new Alexa.RichTextContentHelper()",
+			"\t.withPrimaryText($1)",
+			"\t.withSecondaryText($2)",
+			"\t.withTertiaryText($3)",
+			"\t.getTextContent()"
+		],
+		"description": "Alexa SDK Alexa.RichTextContentHelper"
 	}
 }
