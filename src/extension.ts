@@ -9,8 +9,7 @@ import { deployModelsOnly } from './commands/highLevelCommands/deployModelsOnly'
 import { deploySkillManifestOnly } from './commands/highLevelCommands/deploySkillManifestOnly';
 import { simulate } from './commands/highLevelCommands/simulate';
 import { clone } from './commands/highLevelCommands/clone';
-import { newWithTemplate } from './commands/highLevelCommands/newWithTemplate';
-import { newBasicSkill } from './commands/highLevelCommands/new';
+import { newWithTemplate } from './commands/highLevelCommands/new';
 import { init } from './commands/highLevelCommands/init';
 import { openDevPortal } from './commands/external/openDeveloperPortal';
 import { openHelpDoc } from './commands/external/openHelpDoc';
@@ -59,7 +58,6 @@ function registerCommands(context: vscode.ExtensionContext) {
         clone,
         simulate,
         newWithTemplate,
-        newBasicSkill,
         init,
         diff
     );

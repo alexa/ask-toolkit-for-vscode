@@ -1,38 +1,37 @@
 {
     "name": "alexa-skills-kit-toolkit",
-    "displayName": "Alexa Skills Kit (ASK) Toolkit (Beta)",
+    "displayName": "Alexa Skills Kit (ASK) Toolkit",
     "description": "Build and manage Alexa skills using Visual Studio Code",
-    "version": "0.2.1",
+    "version": "1.0.0",
     "publisher": "ask-toolkit",
     "engines": {
         "vscode": "^1.22.0"
     },
     "author": "ask-dev-exp-tools team",
+
     "homepage": "https://github.com/alexa-labs/ask-toolkit-for-vscode",
     "categories": [
         "Other",
         "Snippets"
     ],
-    "preview": true,
     "license": "SEE LICENSE IN LICENSE",
     "bugs": {
         "url": "https://github.com/alexa-labs/ask-toolkit-for-vscode/issues"
     },
     "repository": {
-        "type": "git",
-        "url": "https://github.com/alexa-labs/ask-toolkit-for-vscode.git"
+		"type": "git",
+		"url": "https://github.com/alexa-labs/ask-toolkit-for-vscode.git"
     },
     "icon": "images/ask_icon.png",
     "galleryBanner": {
         "color": "#232F3E",
         "theme": "dark"
     },
-    "qna": "https://forums.developer.amazon.com/spaces/165/index.html",
+    "qna":"https://forums.developer.amazon.com/spaces/165/index.html",
     "activationEvents": [
-        "onCommand:ask.newWithTemplate",
+        "onCommand:ask.new",
         "workspaceContains:.ask/config",
         "onCommand:ask.clone",
-        "onCommand:ask.new",
         "onCommand:ask.init",
         "onCommand:ask.openHelpDoc",
         "onCommand:ask.openDeveloperPortal",
@@ -75,7 +74,11 @@
             },
             {
                 "language": "javascript",
-                "path": "./snippets/lambdaSDKSnippet.json"
+                "path": "./snippets/lambdaSDKNodeSnippet.json"
+            },
+            {
+                "language": "python",
+                "path": "./snippets/lambdaSDKPythonSnippet.json"
             }
         ],
         "commands": [
@@ -130,13 +133,8 @@
                 "category": "ASK"
             },
             {
-                "command": "ask.newWithTemplate",
-                "title": "Create a skill from a template",
-                "category": "ASK"
-            },
-            {
                 "command": "ask.new",
-                "title": "Create a basic skill package",
+                "title": "Create a skill from a template",
                 "category": "ASK"
             },
             {

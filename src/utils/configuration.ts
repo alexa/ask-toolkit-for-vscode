@@ -5,7 +5,9 @@ export const EXTERNAL_LINKS = {
     ASK_CLI_INSTALL_DOC: 'https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html',
     CONTACT_US: 'https://developer.amazon.com/support/contact-us?subjectCategory=ALEXA',
     DEVELOPER_FORUMS: 'https://forums.developer.amazon.com/spaces/165/index.html',
-    FEATURE_REQUEST: 'https://alexa.uservoice.com/'
+    FEATURE_REQUEST: 'https://alexa.uservoice.com/',
+    REPORT_ISSUE : 'https://github.com/alexa-labs/ask-toolkit-for-vscode/issues',
+    INIT_COMMAND_DOC : 'https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#init-command'
 };
 
 export const EXTENSION_CONFIG = {
@@ -48,13 +50,9 @@ export const OPERATION = {
             COMMAND: 'init',
             EXTENSION_REGISTERED_NAME: 'init'
         },
-        NEW: {
-            COMMAND: 'new',
-            EXTENSION_REGISTERED_NAME: 'new'
-        },
         NEW_TEMPLATE: {
             COMMAND: 'new',
-            EXTENSION_REGISTERED_NAME: 'newWithTemplate'
+            EXTENSION_REGISTERED_NAME: 'new'
         },
         INITIALIZATION: {
             COMMAND: 'init',
@@ -290,5 +288,9 @@ export const ERROR_AND_WARNING = {
         CREATE_CLONE_ERROR_MESSAGE:'No workspace detected.\nOpen a workspace folder in which you want to create or clone your skill project and then run the command again.',
         DEPLOY_AND_RELATED_ERROR_MESSAGE: 'This command requires a valid skill workspace.\nOpen the workspace folder in which you have your skill project and then run the command again.',
         BUTTON_MESSAGE:'Open Folder'
+    },
+    CHECK_AWS_PROFILE_EXISTS : {
+        MISSING_AWS_PROFILE : 'AWS credentials (for lambda function deployment) are not configured in any profiles yet',
+        BUTTON_MESSAGE: 'Open documentation'
     }
-};
+};  
