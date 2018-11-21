@@ -33,7 +33,7 @@
     "exception_handler":{
         "prefix" : "askSDKPythonExceptionHandler",
         "body": [
-            "class AllExceptionHandler(AbstractRequestHandler):",
+            "class AllExceptionHandler(AbstractExceptionHandler):",
                 "\tdef can_handle(self, handler_input, exception):",
                 "\t\t# type: (HandlerInput) -> bool",
                 "\t\treturn True",
