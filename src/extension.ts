@@ -23,6 +23,7 @@ import { wasAskCliInstalled } from './utils/askCliHelper';
 import { diff } from './commands/highLevelCommands/diff';
 import { contactAlexaTeam } from './commands/external/contactAlexaTeam';
 import { doesWorkSpaceExist, askUserToPickAWorkspace } from './utils/highLevelCommandHelper';
+import { dialog } from './commands/highLevelCommands/dialog';
 
 export async function activate(context: vscode.ExtensionContext) {
     if (!await wasAskCliInstalled()) {
@@ -59,7 +60,8 @@ function registerCommands(context: vscode.ExtensionContext) {
         simulate,
         newWithTemplate,
         init,
-        diff
+        diff,
+        dialog
     );
     context.subscriptions.push(
         openDevPortal,
