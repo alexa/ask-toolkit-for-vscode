@@ -2,13 +2,12 @@
     "name": "alexa-skills-kit-toolkit",
     "displayName": "Alexa Skills Kit (ASK) Toolkit",
     "description": "Build and manage Alexa skills using Visual Studio Code",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "publisher": "ask-toolkit",
     "engines": {
         "vscode": "^1.22.0"
     },
     "author": "ask-dev-exp-tools team",
-
     "homepage": "https://github.com/alexa-labs/ask-toolkit-for-vscode",
     "categories": [
         "Other",
@@ -19,15 +18,15 @@
         "url": "https://github.com/alexa-labs/ask-toolkit-for-vscode/issues"
     },
     "repository": {
-		"type": "git",
-		"url": "https://github.com/alexa-labs/ask-toolkit-for-vscode.git"
+        "type": "git",
+        "url": "https://github.com/alexa-labs/ask-toolkit-for-vscode.git"
     },
     "icon": "images/ask_icon.png",
     "galleryBanner": {
         "color": "#232F3E",
         "theme": "dark"
     },
-    "qna":"https://forums.developer.amazon.com/spaces/165/index.html",
+    "qna": "https://forums.developer.amazon.com/spaces/165/index.html",
     "activationEvents": [
         "onCommand:ask.new",
         "workspaceContains:.ask/config",
@@ -45,7 +44,8 @@
         "onCommand:ask.deployModelsOnly",
         "onCommand:ask.deployIspOnly",
         "onCommand:ask.simulate",
-        "onCommand:ask.diff"
+        "onCommand:ask.diff",
+        "onCommand:ask.dialog"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -161,6 +161,11 @@
                 "command": "ask.contactAlexaTeam",
                 "title": "Contact Alexa Team for any extension questions",
                 "category": "ASK"
+            },
+            {
+                "command": "ask.dialog",
+                "title": "(Beta)simulate your skill via interactive dialog with Alexa",
+                "category": "ASK"
             }
         ],
         "configuration": {
@@ -231,35 +236,35 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "@types/execa": "0.9.0",
-        "@types/jsonfile": "4.0.1",
-        "@types/mocha": "2.2.42",
-        "@types/node": "10.5.2",
-        "@types/opn": "5.1.0",
-        "@types/ramda": "0.25.28",
-        "@types/request": "2.47.0",
-        "@types/request-promise": "4.1.41",
+        "@types/execa": "^0.9.0",
+        "@types/jsonfile": "^4.0.1",
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^10.5.2",
+        "@types/opn": "^5.1.0",
+        "@types/ramda": "^0.25.28",
+        "@types/request": "^2.47.0",
+        "@types/request-promise": "^4.1.41",
         "@types/shelljs": "^0.8.0",
-        "chai": "4.1.2",
-        "eslint": "4.19.1",
-        "jshint": "2.9.5",
-        "lodash": "4.17.10",
-        "mocha": "4.0.1",
-        "nyc": "11.8.0",
-        "omit-deep-lodash": "1.0.0",
+        "chai": "^4.1.2",
+        "eslint": "^4.19.1",
+        "jshint": "^2.9.5",
+        "lodash": "^4.17.10",
+        "mocha": "^4.0.1",
+        "nyc": "^11.8.0",
+        "omit-deep-lodash": "^1.0.0",
         "shx": "^0.3.2",
-        "sinon": "4.5.0",
-        "tslint": "5.10.0",
-        "typescript": "2.8.3",
+        "sinon": "^4.5.0",
+        "tslint": "^5.10.0",
+        "typescript": "^2.8.3",
         "vscode": "^1.1.6"
     },
     "dependencies": {
-        "execa": "0.9.0",
-        "jsonfile": "4.0.0",
-        "opn": "5.1.0",
-        "ramda": "0.25.0",
-        "request": "2.85.0",
-        "request-promise": "4.2.2",
+        "execa": "^0.9.0",
+        "jsonfile": "^4.0.0",
+        "opn": "^5.1.0",
+        "ramda": "^0.25.0",
+        "request": "^2.85.0",
+        "request-promise": "^4.2.2",
         "shelljs": "^0.8.2"
     }
 }
