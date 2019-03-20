@@ -1,9 +1,8 @@
 'use strict';
 import * as vscode from 'vscode';
 import { CommandRunner, ICommand } from './commandRunner';
-import { ERROR_AND_WARNING } from './configuration';
+import { ERROR_AND_WARNING, EXTERNAL_LINKS } from './configuration';
 import opn = require('opn');
-const INIT_COMMAND_DOC = 'https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#init-command';
 const execa = require('execa');
 
 const NULL_AWS_PROFILE = '** NULL **';
@@ -28,6 +27,9 @@ export class ProfileManager {
                 return;
             } else {
                 this.cachedProfileList = profileTree;
+            }
+            if (!this.isAnyAwsConfiguredInProfiles()) {
+                this.showAwsCredentialsMissingNotice();
             }
         } catch (error) {
             throw new Error('ASK CLI is not functional. ' + error.message);
@@ -77,9 +79,32 @@ export class ProfileManager {
             CommandRunner.runCommand( <ICommand>{
                 command: 'init'
             });
-            opn(INIT_COMMAND_DOC);
+            opn(EXTERNAL_LINKS.INIT_COMMAND_DOC);
         }
     }
+
+    /**
+     * check whether aws is configured in atleast one of the cached profiles
+     */
+    public static isAnyAwsConfiguredInProfiles() {
+        for (let entry of this.cachedProfileList) {
+            if (entry.awsProfile !== null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * show no aws credentials set up in any profiles message and a button to open documentation
+     */
+    public static async showAwsCredentialsMissingNotice() {
+        const action = await vscode.window.showWarningMessage(ERROR_AND_WARNING.CHECK_AWS_PROFILE_EXISTS.MISSING_AWS_PROFILE, ERROR_AND_WARNING.CHECK_AWS_PROFILE_EXISTS.BUTTON_MESSAGE);
+        if (action === ERROR_AND_WARNING.CHECK_AWS_PROFILE_EXISTS.BUTTON_MESSAGE) {
+            opn(EXTERNAL_LINKS.INIT_COMMAND_DOC);
+        }
+    }
+
 
     public static async getProfileList() {
         if (this.cachedProfileList.length === 0) {
