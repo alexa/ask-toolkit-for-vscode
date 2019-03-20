@@ -5,7 +5,9 @@ export const EXTERNAL_LINKS = {
     ASK_CLI_INSTALL_DOC: 'https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html',
     CONTACT_US: 'https://developer.amazon.com/support/contact-us?subjectCategory=ALEXA',
     DEVELOPER_FORUMS: 'https://forums.developer.amazon.com/spaces/165/index.html',
-    FEATURE_REQUEST: 'https://alexa.uservoice.com/'
+    FEATURE_REQUEST: 'https://alexa.uservoice.com/',
+    REPORT_ISSUE : 'https://github.com/alexa-labs/ask-toolkit-for-vscode/issues',
+    INIT_COMMAND_DOC : 'https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#init-command'
 };
 
 export const EXTENSION_CONFIG = {
@@ -48,17 +50,17 @@ export const OPERATION = {
             COMMAND: 'init',
             EXTENSION_REGISTERED_NAME: 'init'
         },
-        NEW: {
-            COMMAND: 'new',
-            EXTENSION_REGISTERED_NAME: 'new'
-        },
         NEW_TEMPLATE: {
             COMMAND: 'new',
-            EXTENSION_REGISTERED_NAME: 'newWithTemplate'
+            EXTENSION_REGISTERED_NAME: 'new'
         },
         INITIALIZATION: {
             COMMAND: 'init',
             EXTENSION_REGISTERED_NAME: 'init'
+        },
+        DIALOG: {
+            COMMAND: 'dialog',
+            EXTENSION_REGISTERED_NAME: 'dialog'
         }
     },
     LOW_LEVEL: {
@@ -251,7 +253,93 @@ export const OPERATION = {
             COMMAND: 'api',
             SUB_COMMAND: 'create-account-linking',
             TITLE: 'Skill - Create/update account linking configuration for a skill'
-        }
+        },
+        LIST_CATALOGS: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'list-catalogs',
+            TITLE: 'Catalog - Get the list of catalogs by the profile vendor'
+        },
+        GET_CATALOG: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'get-catalog',
+            TITLE: 'Catalog - Get the catalog by catalog-id'
+        },
+        CREATE_CATALOG: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'create-catalog',
+            TITLE: 'Catalog - Create a catalog'
+        },
+        LIST_CATALOG_UPLOADS: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'list-catalog-uploads',
+            TITLE: 'Catalog - List all the uploads for a catalog by catalog-id'
+        },
+        GET_CATALOG_UPLOAD: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'get-catalog-upload',
+            TITLE: 'Catalog - Get the catalog upload by catalog-id and upload-id'
+        },
+        ASSOCIATE_CATALOG_WITH_SKILL: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'associate-catalog-with-skill',
+            TITLE: 'Catalog - Associate a catalog with a skill'
+        },
+        UPLOAD_CATALOG: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'upload-catalog',
+            TITLE: 'Catalog - Upload a file for the catalog'
+        },
+        GET_BETA_TEST: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'get-beta-test',
+            TITLE: 'Beta Test - Get the beta test'
+        },
+        CREATE_BETA_TEST: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'create-beta-test',
+            TITLE: 'Beta Test - Create a beta test'
+        },
+        UPDATE_BETA_TEST: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'update-beta-test',
+            TITLE: 'Beta Test - Update the beta test'
+        },
+        START_BETA_TEST: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'start-beta-test',
+            TITLE: 'Beta Test - Start a beta test'
+        },
+        END_BETA_TEST: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'end-beta-test',
+            TITLE: 'Beta Test - End a beta test'
+        },
+        LIST_BETA_TESTERS: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'list-beta-testers',
+            TITLE: 'Beta Test - List testers in a beta test'
+        },
+        ADD_BETA_TESTERS: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'add-beta-testers',
+            TITLE: 'Beta Test - Add testers to a beta test'
+        },
+        REMOVE_BETA_TESTERS: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'remove-beta-testers',
+            TITLE: 'Beta Test - Remove testers from a beta test'
+        },
+        SEND_REMINDER_TO_BETA_TESTERS: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'send-reminder-to-beta-testers',
+            TITLE: 'Beta Test - Send reminder to testers in a beta test'
+        },
+        REQUEST_FEEDBACK_FROM_BETA_TESTERS: {
+            COMMAND: 'api',
+            SUB_COMMAND: 'request-feedback-from-beta-testers',
+            TITLE: 'Beta Test - Request feedback from testers in a beta test'
+        },
+        
     },
     EXTERNAL: {
         DEV_PORTAL: {
@@ -290,5 +378,9 @@ export const ERROR_AND_WARNING = {
         CREATE_CLONE_ERROR_MESSAGE:'No workspace detected.\nOpen a workspace folder in which you want to create or clone your skill project and then run the command again.',
         DEPLOY_AND_RELATED_ERROR_MESSAGE: 'This command requires a valid skill workspace.\nOpen the workspace folder in which you have your skill project and then run the command again.',
         BUTTON_MESSAGE:'Open Folder'
+    },
+    CHECK_AWS_PROFILE_EXISTS : {
+        MISSING_AWS_PROFILE : 'AWS credentials (for lambda function deployment) are not configured in any profiles yet',
+        BUTTON_MESSAGE: 'Open documentation'
     }
-};
+};  

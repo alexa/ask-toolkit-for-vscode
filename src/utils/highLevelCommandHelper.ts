@@ -114,10 +114,8 @@ export async function openAsWorkspaceWhenDirectoryCreated(dirName?: string) {
 }
 
 export function formatSkillName(inputName: string) {
-    return inputName.trim().replace(/ /g, '-').toLowerCase();
+    return inputName.trim().replace(/[\W_]+/g, '-');
 }
-
-
 
 /**
  * ask the user to pick a profile from the cached profile list and return the profile name

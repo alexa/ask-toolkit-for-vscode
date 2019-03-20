@@ -158,7 +158,12 @@ const simulationId = <IRequiredInputParameter> {
     parameterName: 'simulation-id',
     queryInputMethod: 'showInputBox',
     options: <vscode.InputBoxOptions> {
-        prompt: 'Please input the simulation-id for the simulation.'
+        prompt: 'Please input the simulation-id for the simulation.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input simulation Id cannot be empty';
+            }
+        }
     }
 };
 
@@ -174,7 +179,12 @@ const validationId = <IRequiredInputParameter> {
     parameterName: 'validation-id',
     queryInputMethod: 'showInputBox',
     options: <vscode.InputBoxOptions> {
-        prompt: 'Please input the validation-id for the validation.'
+        prompt: 'Please input the validation-id for the validation.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input validation Id cannot be empty';
+            }
+        }
     }
 };
 
@@ -182,7 +192,12 @@ const accountId = <IRequiredInputParameter> {
     parameterName: 'account-id',
     queryInputMethod: 'showInputBox',
     options: <vscode.InputBoxOptions> {
-        prompt: 'Please input the Id for the account.'
+        prompt: 'Please input the Id for the account.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input account Id cannot be empty';
+            }
+        }
     }
 };
 
@@ -199,7 +214,12 @@ const vendorId = <IRequiredInputParameter> {
     parameterName: 'vendor-id',
     queryInputMethod: 'showInputBox',
     options: <vscode.InputBoxOptions> {
-        prompt: 'Please input the vendor id.'
+        prompt: 'Please input the vendor id.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input vendor Id cannot be empty';
+            }
+        }
     }
 };
 
@@ -307,7 +327,12 @@ const ispId = <IRequiredInputParameter> {
     parameterName: 'isp-id',
     queryInputMethod: 'showInputBox',
     options: <vscode.InputBoxOptions> {
-        prompt: 'Please input the product id for the in-skill product.'
+        prompt: 'Please input the product id for the in-skill product.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input isp Id cannot be empty';
+            }
+        }
     }
 };
 
@@ -476,6 +501,95 @@ const lambdaNumberOfLogs = <IRequiredInputParameter> {
     isRequired: false
 };
 
+const catalogID = <IRequiredInputParameter> {
+    parameterName: 'catalog-id',
+    queryInputMethod: 'showInputBox',
+    options: <vscode.InputBoxOptions> {
+        prompt: 'Please input the catalog-id.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input catalog Id cannot be empty';
+            }
+        }
+        
+    }
+};
+
+const catalogUploadID = <IRequiredInputParameter> {
+    parameterName: 'upload-id',
+    queryInputMethod: 'showInputBox',
+    options: <vscode.InputBoxOptions> {
+        prompt: 'Please input the upload-id to get the catalog upload.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input upload Id cannot be empty';
+            }
+        }
+    }
+};
+
+const maxResults = <IRequiredInputParameter> {
+    parameterName: 'max-results',
+    queryInputMethod: 'showInputBox',
+    options: <vscode.InputBoxOptions> {
+        prompt: 'Please input the the total number of results to return in the command\'s output. Input should be a positive number. [Hit "Enter" to continue and omit this parameter]'
+    },
+    isRequired: false
+};
+
+const catalogType = <IRequiredInputParameter> {
+    parameterName: 'catalog-type',
+    queryInputMethod: 'showInputBox',
+    options: <vscode.InputBoxOptions> {
+        prompt: 'Please input the catalog-type.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input catalog type cannot be empty';
+            }
+        }
+    }
+};
+
+const catalogTitle = <IRequiredInputParameter> {
+    parameterName: 'catalog-title',
+    queryInputMethod: 'showInputBox',
+    options: <vscode.InputBoxOptions> {
+        prompt: 'Please input the catalog-title.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input catalog title cannot be empty';
+            }
+        }
+    }
+};
+
+const catalogUsage = <IRequiredInputParameter> {
+    parameterName: 'catalog-usage',
+    queryInputMethod: 'showInputBox',
+    options: <vscode.InputBoxOptions> {
+        prompt: 'Please input the catalog-usage.',
+        validateInput: (input:string): string | void => {
+            if (input.trim().length === 0) {
+                return 'Input catalog usage cannot be empty';
+            }
+        }
+    }
+};
+
+const feedbackEmail = <IRequiredInputParameter> {
+    parameterName: 'feedback-email',
+    queryInputMethod: 'showInputBox',
+    options: <vscode.InputBoxOptions> {
+        prompt: 'Please input the email-address.',
+        validateInput: (input:string): string | void => {
+            var regex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            if (!regex.test(input)){
+                return 'Input email address is invalid';
+            }
+        }
+    }
+};
+
 export const commandInputParameters = {
     stage: stage,
     locale: locale,
@@ -494,7 +608,14 @@ export const commandInputParameters = {
     intentRequestsHistorySortField: intentRequestsHistorySortField,
     intentRequestsHistorySortDirection: intentRequestsHistorySortDirection,
     intentRequestsHistoryMaxResults: intentRequestsHistoryMaxResults,
-    privateDistributionAccountStage:privateDistributionAccountStage
+    privateDistributionAccountStage:privateDistributionAccountStage,
+    catalogID: catalogID,
+    catalogUploadID: catalogUploadID,
+    maxResults: maxResults,
+    catalogType: catalogType,
+    catalogTitle: catalogTitle,
+    catalogUsage: catalogUsage,
+    feedbackEmail: feedbackEmail
 };
 
 export const ispInputParameters = {

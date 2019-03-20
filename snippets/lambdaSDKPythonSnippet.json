@@ -1,0 +1,93 @@
+{
+    "request_handler" :{
+        "prefix" : "askSDKPythonRequestHandler",
+        "body": [
+            "class ${1:Request}Handler(AbstractRequestHandler):",
+                "\tdef can_handle(self, handler_input):",
+                "\t\t# type: (HandlerInput) -> bool",
+                "\t\treturn is_request_type(\"${1}\")(handler_input)",
+                "",
+                "\tdef handle(self, handler_input):",
+                "\t\t# type: (HandlerInput) -> Response",
+                "\t\tspeech_text = \"${0:Replace this text}\"",
+                "\t\thandler_input.response_builder.speak(speech_text)",
+                "\t\treturn handler_input.response_builder.response"
+        ],
+        "description": "Alexa SDK - Python Request Handler"
+    },
+    "intent_handler":{
+        "prefix" : "askSDKPythonIntentHandler",
+        "body": [
+            "class ${1:Intent}Handler(AbstractRequestHandler):",
+                "\tdef can_handle(self, handler_input):",
+                "\t\t# type: (HandlerInput) -> bool",
+                "\t\treturn is_intent_name(\"${1}\")(handler_input)",
+                "",
+                "\tdef handle(self, handler_input):",
+                "\t\t# type: (HandlerInput) -> Response",
+                "\t\thandler_input.response_builder.speak(\"${0:Replace this text}\")",
+                "\t\treturn handler_input.response_builder.response"
+        ],
+        "description": "Alexa SDK - Python Intent Handler"
+    },
+    "exception_handler":{
+        "prefix" : "askSDKPythonExceptionHandler",
+        "body": [
+            "class AllExceptionHandler(AbstractExceptionHandler):",
+                "\tdef can_handle(self, handler_input, exception):",
+                "\t\t# type: (HandlerInput) -> bool",
+                "\t\treturn True",
+                "",
+                "\tdef handle(self, handler_input, exception):",
+                "\t\t# type: (HandlerInput, Exception) -> Response",
+                "\t\t# Log the exception in CloudWatch Logs",
+                "\t\tprint(exception)",
+                "",
+                "\t\tspeech = \"${0:Replace this text}\"",
+                "\t\thandler_input.response_builder.speak(speech).ask(speech)",
+                "\t\treturn handler_input.response_builder.response"
+        ],
+        "description": "Alexa SDK - Python Exception Handler"
+    },
+    "request_handler_decorator":{
+        "prefix": "askSDKPythonRequestHandlerDecorator",
+        "body":[
+            "@sb.request_handler(can_handle_func=is_request_type(${1|\"Launch,\"SessionEnd|}Request\"))",
+            "def ${2|launch_request,session_end|}_request_handler(handler_input):",
+            "\t# type: (HandlerInput) -> Response",
+            "\tspeech_text = \"${0:Replace this text}\"",
+            "",
+            "\thandler_input.response_builder.speak(speech_text)",
+            "\treturn handler_input.response_builder.response"
+        ],
+        "description": "Alexa SDK - Python Request Handler Decorators"
+    },
+    "intent_handler_decorator":{
+        "prefix": "askSDKPythonIntentHandlerDecorator",
+        "body":[
+            "@sb.request_handler(can_handle_func=is_intent_name(${1|\"HelloWorld,\"AMAZON.Help,\"AMAZON.Cancel,\"AMAZON.Stop|}Intent\"))",
+            "def ${2|hello_world,help,cancel,stop|}_intent_handler(handler_input):",
+            "\t# type: (HandlerInput) -> Response",
+            "\tspeech_text = \"${0:Replace this text}\"",
+            "",
+            "\thandler_input.response_builder.speak(speech_text)",
+            "\treturn handler_input.response_builder.response"
+        ],
+        "description": "Alexa SDK - Python Intent Handler Decorators"
+    },
+    "exception_handler_decorator":{
+        "prefix":"askSDKPythonExceptionHandlerDecorator",
+        "body":[
+            "@sb.exception_handler(can_handle_func= lambda i, e: True)",
+            "def all_exception_handler(handler_input, exception):",
+            "\t# type: (HandlerInput, Exception) -> Response",
+            "\t# Log the exception in CloudWatch Logs",
+            "\tprint(exception)",
+            "",
+            "\tspeech_text = \"${0:Replace this text}\"",
+            "\thandler_input.response_builder.speak(speech_text).ask(speech_text)",
+            "\treturn handler_input.response_builder.response"
+        ],
+        "description":"Alexa SDK - Python Exception Handler Decorators"
+    }
+}

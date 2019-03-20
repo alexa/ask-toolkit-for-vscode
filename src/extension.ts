@@ -9,8 +9,7 @@ import { deployModelsOnly } from './commands/highLevelCommands/deployModelsOnly'
 import { deploySkillManifestOnly } from './commands/highLevelCommands/deploySkillManifestOnly';
 import { simulate } from './commands/highLevelCommands/simulate';
 import { clone } from './commands/highLevelCommands/clone';
-import { newWithTemplate } from './commands/highLevelCommands/newWithTemplate';
-import { newBasicSkill } from './commands/highLevelCommands/new';
+import { newWithTemplate } from './commands/highLevelCommands/new';
 import { init } from './commands/highLevelCommands/init';
 import { openDevPortal } from './commands/external/openDeveloperPortal';
 import { openHelpDoc } from './commands/external/openHelpDoc';
@@ -24,6 +23,7 @@ import { wasAskCliInstalled } from './utils/askCliHelper';
 import { diff } from './commands/highLevelCommands/diff';
 import { contactAlexaTeam } from './commands/external/contactAlexaTeam';
 import { doesWorkSpaceExist, askUserToPickAWorkspace } from './utils/highLevelCommandHelper';
+import { dialog } from './commands/highLevelCommands/dialog';
 
 export async function activate(context: vscode.ExtensionContext) {
     if (!await wasAskCliInstalled()) {
@@ -59,9 +59,9 @@ function registerCommands(context: vscode.ExtensionContext) {
         clone,
         simulate,
         newWithTemplate,
-        newBasicSkill,
         init,
-        diff
+        diff,
+        dialog
     );
     context.subscriptions.push(
         openDevPortal,
