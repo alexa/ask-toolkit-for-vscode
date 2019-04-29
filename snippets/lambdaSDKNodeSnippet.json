@@ -62,7 +62,7 @@
 			"})"
 		],
 		"description": "Alexa SDK - ListTemplate directive"
-  },
+        },
 	"image_helper": {
 		"prefix": "askSDKImageHelper",
 		"body": [
