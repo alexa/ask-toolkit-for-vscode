@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 import { CommandRunner, ICommand } from './commandRunner';
 import { ERROR_AND_WARNING, EXTERNAL_LINKS } from './configuration';
-import opn = require('opn');
+import open = require('open');
 const execa = require('execa');
 
 const NULL_AWS_PROFILE = '** NULL **';
@@ -12,8 +12,8 @@ export class ProfileManager {
     private static cachedProfileList: IProfile[] = [];
 
     /**
-     * initalized the profile manager. The profile manager will cache the profile list
-     * if they are existed, or show an error message with an option to initaizled the ASK CLI
+     * Initialize the profile manager. The profile manager will cache the profile list
+     * if they exist, or show an error message with an option to initialize the ASK CLI
      */
     public static init() {
         try {
@@ -79,12 +79,12 @@ export class ProfileManager {
             CommandRunner.runCommand( <ICommand>{
                 command: 'init'
             });
-            opn(EXTERNAL_LINKS.INIT_COMMAND_DOC);
+            open(EXTERNAL_LINKS.INIT_COMMAND_DOC);
         }
     }
 
     /**
-     * check whether aws is configured in atleast one of the cached profiles
+     * check whether aws is configured in at least one of the cached profiles
      */
     public static isAnyAwsConfiguredInProfiles() {
         for (let entry of this.cachedProfileList) {
@@ -101,7 +101,7 @@ export class ProfileManager {
     public static async showAwsCredentialsMissingNotice() {
         const action = await vscode.window.showWarningMessage(ERROR_AND_WARNING.CHECK_AWS_PROFILE_EXISTS.MISSING_AWS_PROFILE, ERROR_AND_WARNING.CHECK_AWS_PROFILE_EXISTS.BUTTON_MESSAGE);
         if (action === ERROR_AND_WARNING.CHECK_AWS_PROFILE_EXISTS.BUTTON_MESSAGE) {
-            opn(EXTERNAL_LINKS.INIT_COMMAND_DOC);
+            open(EXTERNAL_LINKS.INIT_COMMAND_DOC);
         }
     }
 

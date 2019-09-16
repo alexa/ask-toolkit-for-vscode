@@ -15,7 +15,7 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
 
 ASK toolkit requires you to install and initialize the ASK CLI.
 
-1. Download and configure ASK CLI (recommend version 1.5.0). For more information, watch the [video](https://alexa.design/ask-cli-overview) and see the [documentation for configuring your AWS credentials](https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html).
+1. Download and configure ASK CLI (recommend version 1.7.14). For more information, watch the [video](https://alexa.design/ask-cli-overview) and see the [documentation for configuring your AWS credentials](https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html).
 
 2. To use the Alexa templates, [download Git](https://git-scm.com/downloads) and install it.
 

@@ -34,7 +34,7 @@ export class LowLevelCommandBuilder {
                     break;
                     
                 default:
-                    throw new Error(`Invilad 'queryInputMethod' for parameter '${requiredParam.parameterName}'.`);
+                    throw new Error(`Invalid 'queryInputMethod' for parameter '${requiredParam.parameterName}'.`);
             }
 
 
@@ -57,7 +57,7 @@ export class LowLevelCommandBuilder {
                 // if the user didn't input anything, the builder will omit this parameter.
                     continue;
                 } 
-                const errorMessage = `Proccess aborted due to ${requiredParam.parameterName}, ${requiredParam.quickPick!.items.toString()} is omitted.`;
+                const errorMessage = `Process aborted due to ${requiredParam.parameterName}, ${requiredParam.quickPick!.items.toString()} is omitted.`;
                 throw new Error(errorMessage);
             }
         }
@@ -102,7 +102,7 @@ export class LowLevelCommandBuilder {
             return !!item;
         });
         const noPreDefinedParameters = removeUndefinedValueFromList(<IRequiredInputParameter[]>getConfigValueIfPossible(requiredParameters));
-        // tuple appoach.
+        // tuple approach.
         return [defaultConfigValueMap, noPreDefinedParameters];
     }
     
