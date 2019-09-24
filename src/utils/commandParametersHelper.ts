@@ -34,11 +34,11 @@ export function findSkillId(profile: string): string|undefined {
     } else {
         const config = jsonfile.readFileSync(configPath);
         const skillIdJsonPath = R.path(['deploy_settings', profile, 'skill_id']);
-        const skillId = skillIdJsonPath(config);
+        const skillId = skillIdJsonPath(config) as string;
         if (skillId) {
             return skillId.toString();
         } else {
-            return warnMessage('valid "skill ID" value in .ask/confg');
+            return warnMessage('valid "skill ID" value in .ask/config');
         }
     }
 }

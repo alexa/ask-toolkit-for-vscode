@@ -1,7 +1,7 @@
 'use strict';
 import * as vscode from 'vscode';
 import { EXTENSION_CONFIG, OPERATION, EXTERNAL_LINKS } from '../../utils/configuration';
-import opn = require('opn');
+import open = require('open');
 
 const optionUrlMap = new Map<string, string>();
 const CONTACT_ALEXA_DEVELOPER_SUPPORT = 'Contact Alexa Developer Support';
@@ -23,7 +23,7 @@ export const contactAlexaTeam = vscode.commands.registerCommand(`${EXTENSION_CON
             REPORT_ISSUE
         ]);
         if (pickedContactMethod) {
-            opn(<string>optionUrlMap.get(pickedContactMethod));
+            open(<string>optionUrlMap.get(pickedContactMethod));
         }
     }
 );

@@ -19,7 +19,7 @@ export class CommandRunner {
     /**
      * Run commands in the VS Code integrated terminal.
      * @param {ICommand} input
-     * @param {string} terminalName defaults to EXTENSION_CONFIG.IntegratedTermianlName
+     * @param {string} terminalName defaults to EXTENSION_CONFIG.IntegratedTerminalName
      */
     public static runCommand(input: ICommand, terminalName: string = EXTENSION_CONFIG.INTEGRATED_TERMINAL_NAME): void {
         if (!input.command) {

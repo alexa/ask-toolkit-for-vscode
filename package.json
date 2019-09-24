@@ -240,7 +240,6 @@
         "@types/jsonfile": "^4.0.1",
         "@types/mocha": "^2.2.42",
         "@types/node": "^10.5.2",
-        "@types/opn": "^5.1.0",
         "@types/ramda": "^0.25.28",
         "@types/request": "^2.47.0",
         "@types/request-promise": "^4.1.41",
@@ -255,13 +254,13 @@
         "shx": "^0.3.2",
         "sinon": "^4.5.0",
         "tslint": "^5.10.0",
-        "typescript": "^2.8.3",
+        "typescript": "^3.6.3",
         "vscode": "^1.1.6"
     },
     "dependencies": {
         "execa": "^0.9.0",
         "jsonfile": "^4.0.0",
-        "opn": "^5.1.0",
+        "open": "^6.4.0",
         "ramda": "^0.25.0",
         "request": "^2.85.0",
         "request-promise": "^4.2.2",
