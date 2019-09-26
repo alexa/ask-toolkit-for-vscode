@@ -56,7 +56,7 @@
             },
             {
                 "fileMatch": "*/skill.json",
-                "url": "https://s3.amazonaws.com/ask-json-schema/Manifest/manifest.json"
+                "url": "https://ask-json-schemas.s3-us-west-2.amazonaws.com/Manifest/skillManifestJsonSchema.json"
             },
             {
                 "fileMatch": "**/isps/entitlement/*.json",
