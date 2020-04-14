@@ -45,7 +45,8 @@
         "onCommand:ask.deployIspOnly",
         "onCommand:ask.simulate",
         "onCommand:ask.diff",
-        "onCommand:ask.dialog"
+        "onCommand:ask.dialog",
+        "onCommand:ask.configure"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -139,7 +140,7 @@
             },
             {
                 "command": "ask.init",
-                "title": "Initialize / Configure the ASK CLI v1",
+                "title": "Initialize a new or existing Alexa Skill project",
                 "category": "ASK"
             },
             {
@@ -165,6 +166,11 @@
             {
                 "command": "ask.dialog",
                 "title": "(Beta)simulate your skill via interactive dialog with Alexa",
+                "category": "ASK"
+            },
+            {
+                "command": "ask.configure",
+                "title": "Configure ASK (and AWS) profiles and credentials",
                 "category": "ASK"
             }
         ],

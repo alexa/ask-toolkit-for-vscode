@@ -17,7 +17,7 @@ export class ProfileManager {
      */
     public static init() {
         try {
-            const listProfileOutput = execa.shellSync('ask init -l');
+            const listProfileOutput = execa.shellSync('ask configure -l');
             if ((listProfileOutput.stderr && listProfileOutput.stderr.includes(ERROR_AND_WARNING.EMPTY_PROFILE_MESSAGE)) || listProfileOutput.stdout.trim().length === 0) {
                 return;
             }

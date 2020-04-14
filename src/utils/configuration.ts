@@ -61,6 +61,10 @@ export const OPERATION = {
         DIALOG: {
             COMMAND: 'dialog',
             EXTENSION_REGISTERED_NAME: 'dialog'
+        },
+        CONFIGURE: {
+            COMMAND: 'configure',
+            EXTENSION_REGISTERED_NAME: 'configure'
         }
     },
     LOW_LEVEL: {

@@ -7,6 +7,11 @@ import { ProfileManager } from "../../utils/profileManager";
 
 const COMMAND_NAME = EXTENSION_CONFIG.DEFAULT_PREFIX + '.' + OPERATION.HIGH_LEVEL.INITIALIZATION.EXTENSION_REGISTERED_NAME;
 
+/**
+ * Implements the `ask init` command.  Currently available options:
+ * 
+ * @see {@link https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-command-reference.html#init-command}
+ */
 export const init = vscode.commands.registerCommand(COMMAND_NAME, async () => {
     if (!await wasAskCliInstalled()) {
         return;
