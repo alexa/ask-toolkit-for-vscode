@@ -371,7 +371,7 @@ export const ERROR_AND_WARNING = {
     EMPTY_PROFILE_MESSAGE: 'ask-cli v1 has not set up any profiles yet',
     SUGGEST_INIT_CLI: 'ASK Command Line Interface (ASK CLI v1) is not initialized with your Amazon developer account credentials.',
     INIT_CLI_ACTION: 'Initialize the ASK CLI v1.',
-    MISSING_ASK_CLI: 'ASK Command Line Interface (ASK CLI v1) is not installed. The toolkit requires ASK CLI v1 version to execute the commands.\nPlease run npm install -g ask-cli@1 get to the latest CLI v1 version.',
+    MISSING_ASK_CLI: 'ASK Command Line Interface (ASK CLI v1) is not installed. The toolkit requires ASK CLI v1 version to execute the commands.\nPlease run \"npm install -g ask-cli@1\" get to the latest CLI v1 version.',
     SUGGEST_INSTALL_CLI: 'See the ASK CLI v1 installation guide.',
     QUICK_PICK_PLACE_HOLDER: 'Please choose a profile. (You can set up a default profile in user\'s setting with \'ask.profile\').',
     CHECK_WORKSPACE_EXISTS: {
