@@ -139,7 +139,7 @@
             },
             {
                 "command": "ask.init",
-                "title": "Initialize / Configure the ASK CLI",
+                "title": "Initialize / Configure the ASK CLI v1",
                 "category": "ASK"
             },
             {

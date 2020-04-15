@@ -2,15 +2,11 @@
 
 import * as vscode from 'vscode';
 import * as shell from 'shelljs';
-import { ERROR_AND_WARNING, EXTERNAL_LINKS } from './configuration';
-import open = require('open');
+import { ERROR_AND_WARNING } from './configuration';
 
 export async function wasAskCliInstalled() {
     if (!shell.which('ask')) {
-        const action = await vscode.window.showErrorMessage(ERROR_AND_WARNING.MISSING_ASK_CLI, ERROR_AND_WARNING.SUGGEST_INSTALL_CLI);
-        if (action === ERROR_AND_WARNING.SUGGEST_INSTALL_CLI) {
-            open(EXTERNAL_LINKS.ASK_CLI_INSTALL_DOC);
-        }
+        vscode.window.showErrorMessage(ERROR_AND_WARNING.MISSING_ASK_CLI);
         return false;
     }
     return true;

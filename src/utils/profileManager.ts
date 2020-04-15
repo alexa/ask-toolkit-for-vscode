@@ -13,7 +13,7 @@ export class ProfileManager {
 
     /**
      * Initialize the profile manager. The profile manager will cache the profile list
-     * if they exist, or show an error message with an option to initialize the ASK CLI
+     * if they exist, or show an error message with an option to initialize the ASK CLI v1
      */
     public static init() {
         try {
@@ -32,13 +32,13 @@ export class ProfileManager {
                 this.showAwsCredentialsMissingNotice();
             }
         } catch (error) {
-            throw new Error('ASK CLI is not functional. ' + error.message);
+            throw new Error('ASK CLI v1 is not functional. ' + error.message);
         }
     }
 
     /**
      * parse the profile from CLI to a list of profile object that can be stored.
-     * @param profileString the output string from ASK CLI. i.e., [askProfile]   "awsProfile".
+     * @param profileString the output string from ASK CLI v1. i.e., [askProfile]   "awsProfile".
      */
     private static extractProfilesFromCliOutput(profileString:string) {
         const profiles = profileString.split(/\]/);
@@ -60,8 +60,8 @@ export class ProfileManager {
     }
 
     /**
-     * Remove the first line (header) and last line (empty spaces) from the ASK CLI output list.
-     * @param input entire output from ASK CLI
+     * Remove the first line (header) and last line (empty spaces) from the ASK CLI v1 output list.
+     * @param input entire output from ASK CLI v1
      */
     private static takeOutHeaderAndEnding(input: string) {
         if (input.length === 0 || input.includes('Associated AWS Profile')) {
