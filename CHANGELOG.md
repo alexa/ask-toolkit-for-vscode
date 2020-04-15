@@ -14,3 +14,7 @@ v1.0.1
 v1.0.2
 - Deprecate opn module and change to open module.
 - Move the latest manifest json validation schema to new s3 bucket.
+
+## April 15, 2020
+v1.0.3
+- Updated Error message prompt and docs to mention explicit ASK CLI v1 version dependency.
