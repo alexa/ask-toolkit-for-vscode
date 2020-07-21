@@ -1,0 +1,5 @@
+Amazon, Alexa, and all related logos (the “Marks”) are trademarks of Amazon.com, or its affiliates.  
+Subject to your compliance with the terms of the Amazon Developer Services Agreement, 
+available at https://developer.amazon.com/support/legal/da, and the Trademark Guidelines, 
+available at https://developer.amazon.com/support/legal/tuabg#trademark, you may use the Marks solely 
+for the purpose expressly authorized in the Alexa Skills Toolkit for VS Code.

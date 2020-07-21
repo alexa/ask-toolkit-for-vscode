@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;"
+        />
+        <title>Profile Manager</title>
+        <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+        <script src="${javascript}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Profile manager</h1>
+        </div>
+
+        <div class="body">
+            <p>
+                The profile manager guides you through logging in with your Amazon Developer Account and granting permission for
+                the toolkit to access your Alexa Skills resources. The toolkit supports storing credentials under multiple profiles,
+                useful if you are working across multiple developer accounts. The currently in-use profile is displayed on the toolkit
+                status bar and can be changed at any time.
+                <br/><br/>
+                Once you select a new or existing profile, your web browser will be opened to a Login with Amazon prompt and
+                you will be guided through the process of signing in and granting permission to the toolkit.
+            </p>
+            <br/>
+            <div class="container">
+                <div class="flex-item">
+                    <h2>Create new profile</h2>
+                    <form id="createForm">
+                        <input type="text" id="newProfileName" name="newProfileName" placeholder="Enter profile name">
+                        <br/><br/>
+                        <input id="createButton" type="submit" value="Create">
+                    </form>
+                </div>
+                <div class="flex-item">
+                    <h2>Delete existing profile</h2>
+                    <form id="deleteForm">
+                        <select id="deleteProfiles" class="existing-profiles" disabled="true"></select>
+                        <br/><br/>
+                        <input id="submitDelete" class="caution submit-existing" type="submit" value="Delete" disabled="true">
+                        <br/><br/><br/><br/>
+                        <span id="deleteMessage" class="right"></span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

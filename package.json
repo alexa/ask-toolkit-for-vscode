@@ -2,268 +2,322 @@
     "name": "alexa-skills-kit-toolkit",
     "displayName": "Alexa Skills Kit (ASK) Toolkit",
     "description": "Build and manage Alexa skills using Visual Studio Code",
-    "version": "1.0.3",
+    "version": "2.0.0",
     "publisher": "ask-toolkit",
     "engines": {
-        "vscode": "^1.22.0"
+        "vscode": "^1.42.0"
     },
     "author": "ask-dev-exp-tools team",
-    "homepage": "https://github.com/alexa-labs/ask-toolkit-for-vscode",
+    "homepage": "https://github.com/alexa/ask-toolkit-for-vscode",
     "categories": [
-        "Other",
-        "Snippets"
+        "Debuggers",
+        "Snippets",
+        "Visualization",
+        "Other"
+    ],
+    "keywords": [
+        "Alexa", 
+        "Alexa-Hosted skills", 
+        "ASK Toolkit", 
+        "JSON", 
+        "Python", 
+        "APL", 
+        "Local Debug", 
+        "Alexa skills"
     ],
     "license": "SEE LICENSE IN LICENSE",
     "bugs": {
-        "url": "https://github.com/alexa-labs/ask-toolkit-for-vscode/issues"
+        "url": "https://github.com/alexa/ask-toolkit-for-vscode/issues"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/alexa-labs/ask-toolkit-for-vscode.git"
+        "url": "https://github.com/alexa/ask-toolkit-for-vscode.git"
     },
-    "icon": "images/ask_icon.png",
+    "icon": "media/images/ask_icon.png",
     "galleryBanner": {
         "color": "#232F3E",
         "theme": "dark"
     },
-    "qna": "https://forums.developer.amazon.com/spaces/165/index.html",
+    "qna": "https://github.com/alexa/ask-toolkit-for-vscode/issues",
     "activationEvents": [
-        "onCommand:ask.new",
-        "workspaceContains:.ask/config",
-        "onCommand:ask.clone",
-        "onCommand:ask.init",
-        "onCommand:ask.openHelpDoc",
-        "onCommand:ask.openDeveloperPortal",
-        "onCommand:ask.lowLevelCommands",
-        "onCommand:ask.contactAlexaTeam",
-        "onCommand:ask.deploy",
-        "onCommand:ask.deleteSkill",
-        "onCommand:ask.lambdaLog",
-        "onCommand:ask.deploySkillManifestOnly",
-        "onCommand:ask.deployLambdaOnly",
-        "onCommand:ask.deployModelsOnly",
-        "onCommand:ask.deployIspOnly",
-        "onCommand:ask.simulate",
-        "onCommand:ask.diff",
-        "onCommand:ask.dialog"
+        "onDebugResolve:skillDebugger_nodejs",
+        "onDebugResolve:skillDebugger_python",
+        "onDebugInitialConfigurations",
+        "onView:askContainer.skills-console",
+        "onView:askContainer.help-view",
+        "onWebviewPanel:welcomeScreen",
+        "workspaceContains:**/ask-resources.json",
+        "onUri"
     ],
-    "main": "./out/src/extension",
+    "main": "./dist/extension",
     "contributes": {
-        "jsonValidation": [
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "ask-toolkit",
+                    "title": "Alexa Skills Toolkit",
+                    "icon": "media/images/ask_icon.png"
+                }
+            ]
+        },
+        "views": {
+            "ask-toolkit": [
+                {
+                    "id": "askContainer.skill-actions",
+                    "name": "Skills",
+                    "when": "inSkillWorkspace"
+                },
+                {
+                    "id": "askContainer.skills-console",
+                    "name": "Skills Management"
+                },
+                {
+                    "id": "askContainer.help-view",
+                    "name": "Documentation"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "ask.init",
+                    "when": "view == askContainer.skills-console",
+                    "group": "1_modification"
+                },
+                {
+                    "command": "askContainer.skill-actions.refresh",
+                    "when": "view == askContainer.skill-actions",
+                    "group": "navigation"
+                }
+            ],
+            "editor/title": [
+                {
+                    "when": "resourceFilename == document.json",
+                    "command": "ask.apl.container.renderAplTemplate",
+                    "group": "navigation"
+                },
+                {
+                    "when": "resourceFilename == document.json",
+                    "command": "ask.apl.container.changeViewportProfile",
+                    "group": "1_diff"
+                }
+            ]
+        },
+        "commands": [
             {
-                "fileMatch": "**/models/*-*.json",
-                "url": "https://s3.amazonaws.com/ask-json-schema/Model/model.json"
+                "command": "ask.init",
+                "title": "Profile manager"
             },
             {
-                "fileMatch": "*/skill.json",
-                "url": "https://ask-json-schemas.s3-us-west-2.amazonaws.com/Manifest/skillManifestJsonSchema.json"
+                "command": "ask.aboutToolkit",
+                "title": "Alexa: About Alexa Skill Toolkit"
             },
             {
-                "fileMatch": "**/isps/entitlement/*.json",
-                "url": "https://s3.amazonaws.com/ask-json-schema/In-Skill-Product/entitlement.json"
+                "command": "ask.apl.container.renderAplTemplate",
+                "title": "Alexa: Render APL Document",
+                "icon": {
+                    "light": "third-party/resources/from-vscode-icons/light/open-preview.svg",
+                    "dark": "third-party/resources/from-vscode-icons/dark/open-preview.svg"
+                }
             },
             {
-                "fileMatch": "**/isps/subscription/*.json",
-                "url": "https://s3.amazonaws.com/ask-json-schema/In-Skill-Product/subscription.json"
+                "command": "ask.apl.container.changeViewportProfile",
+                "title": "Alexa: Change APL Viewport Profile"
+            },
+            {
+                "command": "askContainer.skill-actions.refresh",
+                "title": "Refresh skills",
+                "icon": {
+                    "light": "third-party/resources/from-vscode-icons/light/refresh.svg",
+                    "dark": "third-party/resources/from-vscode-icons/dark/refresh.svg"
+                }
             }
         ],
         "snippets": [
             {
                 "language": "json",
-                "path": "./snippets/askSnippets.json"
-            },
-            {
-                "language": "javascript",
-                "path": "./snippets/lambdaSDKNodeSnippet.json"
-            },
-            {
-                "language": "python",
-                "path": "./snippets/lambdaSDKPythonSnippet.json"
-            }
-        ],
-        "commands": [
-            {
-                "command": "ask.deploy",
-                "title": "Deploy the skill",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.lowLevelCommands",
-                "title": "More commands ( low-level commands )",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.deleteSkill",
-                "title": "Delete a skill",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.lambdaLog",
-                "title": "Get AWS Lambda logs from Amazon CloudWatch",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.deploySkillManifestOnly",
-                "title": "Deploy the skill manifest",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.deployLambdaOnly",
-                "title": "Deploy to AWS Lambda",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.deployModelsOnly",
-                "title": "Deploy the interaction model(s)",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.deployIspOnly",
-                "title": "Deploy the in-skill purchase (ISP)",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.clone",
-                "title": "Clone a skill",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.simulate",
-                "title": "Simulate the skill",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.new",
-                "title": "Create a skill from a template",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.init",
-                "title": "Initialize / Configure the ASK CLI v1",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.openDeveloperPortal",
-                "title": "Open the Alexa developer console in the browser",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.openHelpDoc",
-                "title": "Open the help documentation in the browser",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.diff",
-                "title": "List the differences between the local and remote version of skill resources",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.contactAlexaTeam",
-                "title": "Contact Alexa Team for any extension questions",
-                "category": "ASK"
-            },
-            {
-                "command": "ask.dialog",
-                "title": "(Beta)simulate your skill via interactive dialog with Alexa",
-                "category": "ASK"
+                "path": "./snippets/aplSnippets.json"
             }
         ],
         "configuration": {
             "type": "object",
-            "title": "\"Alexa Skill Kit\" extension configuration",
+            "title": "Alexa Skills Kit",
             "properties": {
-                "ask.profile": {
-                    "type": "string",
-                    "description": "runtime ask profile for the extension."
-                },
-                "ask.defaultDeployResource": {
-                    "type": "string",
-                    "enum": [
-                        "all",
-                        "skill",
-                        "model",
-                        "lambda",
-                        "isp"
-                    ],
-                    "description": "deploy all resources in the skill package without prompt window selection"
-                },
-                "ask.shouldUseSkillIdFoundInCurrentWorkspace": {
+                "askToolkit.showWelcomeScreen": {
                     "type": "boolean",
                     "default": true,
-                    "description": "read skill ID from .ask/config file if it presents for granular commands."
+                    "description": "Show the welcome screen whenever the extension is loaded."
                 },
-                "ask.granularCommandDefaultStage": {
+                "askToolkit.logLevel": {
                     "type": "string",
+                    "default": "info",
                     "enum": [
-                        "development",
-                        "live"
+                        "error",
+                        "info",
+                        "debug",
+                        "verbose",
+                        "off"
                     ],
-                    "description": "default stage for excuting granular command when its required"
+                    "enumDescriptions": [
+                        "Errors Only",
+                        "Errors, Warnings, and Info",
+                        "Errors, Warnings, Info, and Debug",
+                        "Verbose",
+                        "No logs"
+                    ],
+                    "markdownDescription": "Specifies log level for ASK extension output channel",
+                    "scope": "window"
                 },
-                "ask.doesUseCurrentActivewindowContent": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "use the current active window content as the reference for granular commands if the command requires file input"
+                "ask.telemetryEnabled": {
+                    "type": "string",
+                    "default": "Enabled",
+                    "enum": [
+                        "Enabled",
+                        "Disabled",
+                        "Use IDE settings"
+                    ],
+                    "markdownDescription": "Enable the Alexa Skills extension to send usage data to Amazon",
+                    "scope": "window"
                 }
             }
         },
-        "menus": {
-            "explorer/context": [
-                {
-                    "command": "ask.deploySkillManifestOnly",
-                    "when": "resourceFilename == skill.json"
-                },
-                {
-                    "command": "ask.deployLambdaOnly",
-                    "when": "resourceFilename == lambda"
-                },
-                {
-                    "command": "ask.deployModelsOnly",
-                    "when": "resourceFilename == models"
-                },
-                {
-                    "command": "ask.deployIspOnly",
-                    "when": "resourceFilename == isps"
-                }
-            ]
-        }
+        "debuggers": [
+            {
+                "type": "skillDebugger_nodejs",
+                "label": "ASK: Alexa Skills Debugger (Node.js)",
+                "program": "./dist/nodeDebug.js",
+                "runtime": "node",
+                "configurationSnippets": [
+                    {
+                        "label": "ASK: Alexa Skills Debugger (Node.js)",
+                        "description": "Debugger configuration for Alexa skills (Node.js)",
+                        "body": {
+                            "name": "Debug Alexa Skill (Node.js)",
+                            "type": "node",
+                            "request": "launch",
+                            "program": "^\"\\${command:ask.debugAdapterPath}\"",
+                            "args": [
+                                "--accessToken",
+                                "^\"\\${command:ask.accessToken}\"",
+                                "--skillId",
+                                "^\"\\${command:ask.skillIdFromWorkspace}\"",
+                                "--handlerName",
+                                "handler",
+                                "--skillEntryFile",
+                                "^\"\\${workspaceFolder}/lambda/index.js\""
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "skillDebugger_python",
+                "label": "ASK: Alexa Skills Debugger (Python)",
+                "program": "./out/client/debugger/debugAdapter/main.js",
+                "runtime": "node",
+                "configurationSnippets": [
+                    {
+                        "label": "ASK: Alexa Skills Debugger (Python)",
+                        "description": "Debugger for Alexa Skills (Python)",
+                        "body": {
+                            "name": "Debug Alexa Skill (Python)",
+                            "type": "python",
+                            "request": "launch",
+                            "program": "^\"\\${command:ask.debugAdapterPath}\"",
+                            "pythonPath": "^\"\\${command:python.interpreterPath}\"",
+                            "args": [
+                                "--accessToken",
+                                "^\"\\${command:ask.accessToken}\"",
+                                "--skillId",
+                                "^\"\\${command:ask.skillIdFromWorkspace}\"",
+                                "--skillHandler",
+                                "lambda_handler",
+                                "--skillFilePath",
+                                "^\"\\${workspaceFolder}/lambda/lambda_function.py\""
+                            ],
+                            "console": "internalConsole"
+                        }
+                    }
+                ]
+            }
+        ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "shx rm -rf .out/ && tsc -p ./",
+        "vscode:prepublish": "webpack --mode production",
+        "webpack": "webpack --mode development",
+        "webpack-dev": "webpack --mode development --watch",
+        "test-compile": "tsc -p ./",
+        "compile": "shx rm -rf ./out/ && shx rm -rf ./dist/ && tsc -p ./",
+        "lint": "eslint src --ext ts",
         "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+        "pretest": "npm run compile && npm run lint",
+        "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
-        "@types/execa": "^0.9.0",
-        "@types/jsonfile": "^4.0.1",
-        "@types/mocha": "^2.2.42",
-        "@types/node": "^10.5.2",
+        "@types/adm-zip": "^0.4.32",
+        "@types/async-retry": "^1.4.1",
+        "@types/fs-extra": "^8.1.0",
+        "@types/glob": "^7.1.1",
+        "@types/jsonfile": "^6.0.0",
+        "@types/mocha": "^7.0.1",
+        "@types/node": "^12.12.30",
+        "@types/portscanner": "^2.1.0",
         "@types/ramda": "^0.25.28",
-        "@types/request": "^2.47.0",
-        "@types/request-promise": "^4.1.41",
-        "@types/shelljs": "^0.8.0",
-        "chai": "^4.1.2",
-        "eslint": "^4.19.1",
-        "jshint": "^2.9.5",
-        "lodash": "^4.17.10",
-        "mocha": "^4.0.1",
-        "nyc": "^11.8.0",
-        "omit-deep-lodash": "^1.0.0",
+        "@types/simple-oauth2": "^2.5.2",
+        "@types/sinon": "^4.3.0",
+        "@types/vscode": "^1.42.0",
+        "@typescript-eslint/eslint-plugin": "^3.4.0",
+        "@typescript-eslint/parser": "^3.4.0",
+        "ask-smapi-model": "^1.9.3",
+        "chai": "^4.2.0",
+        "del": "^3.0.0",
+        "eslint": "^7.3.1",
+        "eslint-config-airbnb": "^18.2.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-import-resolver-typescript": "^2.0.0",
+        "eslint-plugin-eslint-comments": "^3.2.0",
+        "eslint-plugin-import": "^2.21.2",
+        "eslint-plugin-json": "^2.1.1",
+        "eslint-plugin-jsx-a11y": "^6.3.1",
+        "eslint-plugin-prettier": "^3.1.4",
+        "eslint-plugin-react": "^7.20.0",
+        "glob": "^7.1.6",
+        "gulp": "^4.0.0",
+        "mocha": "^7.0.1",
+        "nock": "^9.2.3",
+        "nyc": "^13.0.1",
+        "prettier": "^2.0.5",
         "shx": "^0.3.2",
         "sinon": "^4.5.0",
-        "tslint": "^5.10.0",
-        "typescript": "^3.6.3",
-        "vscode": "^1.1.6"
+        "ts-loader": "^7.0.5",
+        "ts-node": "^6.0.1",
+        "tslint": "^5.20.1",
+        "typescript": "^3.7.5",
+        "vscode-test": "^1.3.0",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11"
     },
     "dependencies": {
-        "execa": "^0.9.0",
+        "adm-zip": "0.4.14",
+        "apl-suggester": "1.1.0",
+        "apl-viewhost-web": "1.4.0",
+        "ask-smapi-sdk": "^1.2.2",
+        "async-retry": "^1.3.1",
+        "axios": "^0.19.2",
+        "fs-extra": "9.0.0",
+        "https-proxy-agent": "^2.2.2",
+        "immutable": ">4.0.0-rc",
+        "jsdom": "^16.3.0",
+        "json-source-map": "^0.4.0",
         "jsonfile": "^4.0.0",
-        "open": "^6.4.0",
+        "md5-file": "^5.0.0",
+        "open": "^7.0.4",
+        "original-fs": "^1.1.0",
+        "portscanner": "^2.2.0",
         "ramda": "^0.25.0",
-        "request": "^2.85.0",
-        "request-promise": "^4.2.2",
-        "shelljs": "^0.8.2"
+        "simple-oauth2": "1.0.3",
+        "typed-rest-client": "1.7.3",
+        "uuidv4": "^6.1.1",
+        "vscode-debugadapter": "^1.39.1"
     }
 }

@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;"
+        />
+        <title>Download interaction model</title>
+        <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+        <script src="${javascript}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Download latest interaction model</h1>
+        </div>
+
+        <div class="body">
+            <p>
+                This tool allows you to download your skill's latest interaction model from the Developer Console to your local workspace.
+                <br/><br/>
+                Only changes that have been built in the Console can be retrieved through this tool.
+            </p>
+            <br/>
+            <div class="container">
+                <div class="flex-item">
+                    <h2>Locale</h2>
+                    <form id="syncIm">
+                        <select id="locale">
+                            <option value='en-US'>English (US)</option>
+                            <option value='en-AU'>English (AU)</option>
+                            <option value='en-CA'>English (CA)</option>
+                            <option value='en-IN'>English (IN)</option>
+                            <option value='en-GB'>English (UK)</option>
+                            <option value='de-DE'>German (DE)</option>
+                            <option value='es-ES'>Spanish (ES)</option>
+                            <option value='es-MX'>Spanish (MX)</option>
+                            <option value='fr-FR'>French (FR)</option>
+                            <option value='it-IT'>Italian (IT)</option>
+                            <option value='ja-JP'>Japanese (JP)</option>
+                            <option value='fr-CA'>French (CA)</option>
+                            <option value='pt-BR'>Portugese (BR)</option>
+                            <option value='hi-IN'>Hindi (IN)</option>
+                            <option value='es-US'>Spanish (US)</option>
+                        </select>
+                        <input type="submit" value="Download">
+                    </form>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </body>
+</html>

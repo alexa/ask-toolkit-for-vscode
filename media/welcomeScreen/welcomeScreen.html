@@ -1,0 +1,131 @@
+<html>
+    <head>
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="default-src 'none'; img-src https:; script-src 'unsafe-inline'; style-src 'unsafe-inline';"
+        />
+        <title>Welcome</title>
+        <style>
+          body {
+            padding: 0px;
+          }
+          body.vscode-light div.header {
+              color: white;
+          }
+          div.header {
+              background: #162A38;
+              height:58px;
+              padding: 10px;
+          }
+          .body {
+              margin: 30px 0;
+              padding: 0 50px;
+          }
+          .header img {
+              float: left;
+              width: 55px;
+              height: 55px;
+          }
+          .header h1 {
+              position: relative;
+              bottom: 5px;
+              left: 5px;
+          }
+          .card {
+              transition: 0.15s;
+              width: 100%;
+              background-color: #252526;
+              padding: 15px;
+              margin-top: 15px;
+          }
+          body.vscode-light .card {
+              background-color: #F3F3F3;
+          }
+          .card:hover {
+              box-shadow: 0 0 0 0.2rem rgba(0,176,230,.25);
+              cursor: pointer;
+          }
+          .card .icon {
+              width: 100px;
+              float: left;
+          }
+          label {
+              font-family: "Amazon Ember Regular","Helvetica Neue",Arial,Helvetica,Roboto,sans-serif;
+              font-weight: 700;
+          }
+        </style>
+        <script>
+          const vscode = acquireVsCodeApi();
+
+          window.onload = function() {
+              document.getElementById("createCard").onclick = function createSkill() {
+                  vscode.postMessage({target: 'createSkill'});
+              };
+
+              document.getElementById("importCard").onclick = function importSkill() {
+                  vscode.postMessage({target: 'importSkill'});
+              };
+
+              document.getElementById("profileCard").onclick = function profileManager() {
+                  vscode.postMessage({target: 'profileManager'});
+              };
+
+              document.getElementById("showWelcome").onclick = function showWelcomeToggle() {
+                  const toggleValue = document.getElementById('showWelcome').checked;
+                  vscode.postMessage({showWelcome: toggleValue});
+              };
+          };
+
+          window.addEventListener("message", (event) => {
+              const message = event.data;
+              const enabled = message.enabled;
+              document.getElementById("showWelcome").checked = enabled;
+          });
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Alexa Skills Kit</h1>
+        </div>
+
+        <div class="body">
+            <p>
+                Welcome to the Alexa Skills Kit (ASK) Toolkit for Visual Studio Code.
+            </p>
+            <h2>Get started</h2>
+            <div class="card" id="createCard">
+                <div class="icon">
+                  <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/create.png"/>
+                </div>
+                <div class="content">
+                  <h4><b>Create new skill</b></h4> 
+                  <p>Quickly create a new Alexa-hosted skill from VS Code.</p>
+                </div>
+            </div>
+
+            <div class="card" id="importCard">
+                <div class="icon">
+                  <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/import.png"/>
+                </div>
+                <div class="content">
+                  <h4><b>Import existing skill</b></h4> 
+                  <p>Download an existing skill and edit it locally in VS Code.</p>
+                </div>
+            </div>
+
+            <div class="card" id="profileCard">
+                <div class="icon">
+                  <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/accountLink.png"/>
+                </div>
+                <div class="content">
+                  <h4><b>Manage account profiles</b></h4> 
+                  <p>Create and delete profiles to manage multiple accounts in the Alexa Developer Console.</p>
+                </div>
+            </div>
+            <br/><br/>
+            <input type="checkbox" id="showWelcome" name="showWelcome" ${enabled}>
+            <label for="showWelcome">Show welcome page on startup</label>
+        </div>
+    </body>
+</html>

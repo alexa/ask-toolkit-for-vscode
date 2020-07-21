@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https:; script-src vscode-resource:; style-src vscode-resource:;"
+        />
+        <title>Skill Information</title>
+        <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+        <script src="${javascript}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Skill Information</h1>
+        </div>
+
+        <div class="body">
+            <p>
+                The Skill Information page provides some basic information about your skill. You can check and confirm 
+                the skill metadata before going ahead with cloning the skill for local development.
+            </p>
+            <br/>
+            <div class="container">
+                <div class="flex-item">
+                    <h2>${skillName}</h2>
+                    <form id="cloneSkill">
+                            <label for="skillId">Skill ID : ${skillInfo.data.skillSummary.skillId}</label>  
+                            <input type="hidden" id="localeNameMap" value="${localesInfo}"/>
+                            </br></br>
+                            <label>Skill Names : </label></br></br>
+                            <table id="skillLocaleNames" style="width:100%">
+                                <tbody>
+                                </tbody>
+                            </table>
+                            </br></br>
+                            <label for="hostedSkillRuntime">Hosted Skill Runtime : ${skillInfo.data.hostedSkillMetadata.alexaHosted.runtime}</label>
+                            </br></br>
+                            <label for="publishingInformation">Publishing Information : ${skillInfo.data.skillSummary.publicationStatus}</label>
+                            </br></br>
+                            <label for="lastUpdate">Last Update Time (UTC) : ${lastUpdated}</label>
+                            </br></br>
+                            </br></br>
+                        <input type="submit" value="Clone">
+                    </form>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </body>
+</html>

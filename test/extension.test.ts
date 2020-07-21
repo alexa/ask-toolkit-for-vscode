@@ -4,7 +4,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 
 // package.json publisher + name. Test cannot access package.json, so hardcore here.
-const extensionId = 'Alexa.alexa-skill-kit';
+const extensionId = 'ask-toolkit.alexa-skills-kit-toolkit';
 
 suite('Alexa Skill Kit Extension', () => {
 

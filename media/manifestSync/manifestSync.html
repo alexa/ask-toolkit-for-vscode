@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;"
+        />
+        <title>Download manifest</title>
+        <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+        <script src="${javascript}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Download latest skill manifest</h1>
+        </div>
+
+        <div class="body">
+            <div class="container">
+                <div class="flex-item">
+                    This tool allows you to download your skill's latest manifest from the Developer Console to your local workspace.
+                    <form id="syncManifest">
+                        <input type="submit" value="Download">
+                    </form>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </body>
+</html>

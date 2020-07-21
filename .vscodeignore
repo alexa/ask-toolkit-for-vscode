@@ -1,0 +1,18 @@
+.vscode/**
+.vscode-test/**
+out/test/**
+out/**/*.map
+src/**
+.gitignore
+tsconfig.json
+tslint.json
+.idea/**
+
+# Extra webpack files
+.vscode
+node_modules
+out/
+src/
+tsconfig.json
+webpack.config.js
+

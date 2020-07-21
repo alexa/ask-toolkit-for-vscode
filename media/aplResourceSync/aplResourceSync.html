@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;"
+        />
+        <title>Download APL document</title>
+        <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+        <script src="${javascript}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Download APL document</h1>
+        </div>
+
+        <div class="body">
+            <p>
+                This tool allows you to retrieve your skill's APL documents from the Developer Console and sync it to your local workspace.
+            </p>
+            <br/>
+            <div class="container">
+                <div class="flex-item">
+                    <form id="downloadApl">
+                        <select id="name">
+                        </select>
+                        <input id="downloadAplBtn" type="submit" value="Download">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

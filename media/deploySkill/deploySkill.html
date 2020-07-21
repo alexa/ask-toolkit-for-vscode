@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;"
+        />
+        <title>Deploy skill</title>
+        <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+        <script src="${javascript}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Skill deploy and build</h1>
+        </div>
+
+        <div class="body">
+            <p>
+                The Alexa-hosted skills service will deploy and build any committed changes to your project. 
+                <!-- You can also use <code>git push</code> to deploy the skill. -->
+            </p>
+
+            <p>
+                The <strong>Deploy & build</strong> button does some internal validations, before pushing your committed changes 
+                to the repo.
+            </p>
+            
+            <p>
+                Once deployed, the Alexa-hosted skills service will build your skill code (<code>lambda</code> folder) and metadata (<code>skill-package</code> folder). 
+                This will take a few minutes to appear on the developer console. 
+            </p>
+            <p>
+                Interaction model and APL documents will be deployed from your local project and may overwrite recent changes in the ASK Console. Download the latest documents before deploying the skill.
+            </p>
+
+            </br></br>
+            <div class="container">
+                <div class="flex-item">
+                    <form id="deploySkill">
+                        <label id="skillName">Skill Name : </label><span>${skillName}</span></br></br>
+                        <label id="skillId">Skill ID : </label><span>${skillId}</span>
+                        <br/><br/>
+                        <input id="deployBtn" type="submit" style="float: left;" value="Deploy & build">
+                        <br/><br/><br/><br/>
+                        <span id="noteBtnActive">Only committed changes are deployed. Use <code>git commit</code> to commit changes before deploying your skill.</span>
+                        <span id="noteBtnInactive">There are no changes to deploy. To deploy this skill, commit a change to the project.<br/><br/><a href="#" id="refresh">Refresh changes</a></span>
+                    </form>
+                </div>
+            </div>
+            </br>
+            <p>
+                <details>
+                    <summary>Details</summary>
+                    <p>
+                        Here are the internal validations performed before code push : 
+
+                        <ul>
+                            <li>The current branch must be either <code>master</code> or <code>prod</code>.</li>
+                            <li>The skill stage must map to the appropriate branch. <code>master</code> branch maps to <code>development</code> stage, while <code>prod</code> branch maps to <code>live</code> stage. </li>
+                            <li>The skill is not currently being certified.</li>
+                            <li>Git credentials have not expired.</li>
+                        </ul>
+                    </p>
+
+                    
+                </details>
+            </p>
+        </div>
+    </body>
+</html>

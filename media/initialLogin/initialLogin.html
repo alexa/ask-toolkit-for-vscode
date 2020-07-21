@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https:; script-src 'unsafe-inline'; style-src 'unsafe-inline';"
+        />
+        <title>Sign in</title>
+        <style>
+          body {
+            padding: 0px;
+          }
+          body.vscode-light div.header {
+              color: white;
+          }
+          div.header {
+              background: #162A38;
+              height:58px;
+              padding: 10px;
+          }
+          .body {
+              margin: 30px 0;
+              padding: 0 50px;
+          }
+          .header img {
+              float: left;
+              width: 55px;
+              height: 55px;
+          }
+          .header h1 {
+              position: relative;
+              bottom: 5px;
+              left: 5px;
+          }
+          input[type="submit"] {
+            background-color: #00b0e6;
+            border: none;
+            padding: 10px 30px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            color: #fff;
+            border-bottom: 2px solid #0097c5;
+            float: right;
+            cursor: pointer;
+        }
+        </style>
+        <script>
+            const vscode = acquireVsCodeApi();
+            window.onload = function(){
+                document.getElementById("signIn").onsubmit = function signIn() {
+                    vscode.postMessage();
+                };
+            };
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Sign in</h1>
+        </div>
+
+        <div class="body">
+            <p>
+                To start using the Alexa Skills Kit (ASK) Toolkit you first need to sign in with your Amazon Developer Account 
+                and grant permission to access your skills.
+            </p>
+            <form id="signIn">
+                <input id="signInButton" type="submit" value="Sign in">
+            </form>
+        </div>
+    </body>
+</html>
