@@ -41,10 +41,11 @@ export class CloneSkillCommand extends AbstractCommand<void> {
 
         // create skill folder in project path
         if (fs.existsSync(skillFolderAbsPath)) {
-
-            const errorMessage = `Skill folder ${skillFolderAbsPath} already exists. Would you like to override it?`;
+            Logger.debug(`Calling method: ${this.commandName}.createSkillFolder, fs.existsSync(), args: `, skillInfo);
+            const errorMessage = `Skill folder ${skillFolderAbsPath} already exists. Would you like to overwrite it?`;
             const overWriteSelection = await vscode.window.showInformationMessage(errorMessage, ...['Yes', 'No']);
             if (overWriteSelection === 'Yes') {
+                Logger.debug(`Calling method: ${this.commandName}.createSkillFolder, fs.existsSync, fsExtra.removeSync, args: `, skillInfo);
                 fsExtra.removeSync(skillFolderAbsPath);
             }
             else {
