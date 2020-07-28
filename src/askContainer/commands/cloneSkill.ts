@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as fsExtra from 'fs-extra';
 import * as path from 'path';
-import { 
+import {
     SmapiResource, AbstractCommand, CommandContext, Utils
 } from '../../runtime';
 
@@ -37,14 +38,23 @@ export class CloneSkillCommand extends AbstractCommand<void> {
             skillInfo.data.skillSummary.nameByLocale!);
         const filteredProjectName = Utils.filterNonAlphanumeric(skillName)
         const skillFolderAbsPath = path.join(projectFolder.fsPath, filteredProjectName);
-        
+
         // create skill folder in project path
         if (fs.existsSync(skillFolderAbsPath)) {
-            throw loggableAskError(`Skill folder ${skillFolderAbsPath} already exists.`);
+            Logger.debug(`Skill folder ${skillFolderAbsPath} already exists.`);
+            const errorMessage = `Skill folder ${skillFolderAbsPath} already exists. Would you like to overwrite it?`;
+            const overWriteSelection = await vscode.window.showInformationMessage(errorMessage, ...['Yes', 'No']);
+            if (overWriteSelection === 'Yes') {
+                Logger.debug(`Confirmed skill folder overwrite option. Overwriting ${skillFolderAbsPath}.`);
+                fsExtra.removeSync(skillFolderAbsPath);
+            }
+            else {
+                return undefined;
+            }
         }
 
         fs.mkdirSync(skillFolderAbsPath);
-    
+
         return vscode.Uri.file(skillFolderAbsPath);
     }
 
@@ -62,7 +72,7 @@ export class CloneSkillCommand extends AbstractCommand<void> {
                 cancellable: false
             }, async (progress, token) => {
                 await cloneSkill(
-                    skillInfo, skillFolderUri.fsPath, 
+                    skillInfo, skillFolderUri.fsPath,
                     context.extensionContext, progress);
             });
             const skillName = getSkillNameFromLocales(skillInfo.data.skillSummary.nameByLocale!);
@@ -70,7 +80,7 @@ export class CloneSkillCommand extends AbstractCommand<void> {
 
             Logger.info(cloneSkillMsg);
             vscode.window.showInformationMessage(cloneSkillMsg);
-            
+
             // Add skill folder to workspace
             await openWorkspaceFolder(skillFolderUri);
             return;
