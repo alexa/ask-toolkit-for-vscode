@@ -107,6 +107,23 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
 
 and many more ...
 
+----
+
+## FAQs
+
+- **How do I start Alexa Skills Kit Toolkit over SSH remote development?**
+    - Install [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension on Visual Studio Code, then connect to remote machine over SSH.
+    - Install Alexa Skills Kit Toolkit on SSH after connecting to remote machine over SSH.
+    - Forward port 9090 on Remote-SSH extension, please refer to [Forwarding a port / creating SSH tunne](https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel).
+    - Start Alexa Skills Kit Toolkit and sign in.
+
+
+- **What if I failed to sign in Amazon account over SSH remote development?**
+    - Please refer to [Forwarding a port / creating SSH tunne](https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel) to check whether you have forwarded port 9090.
+
+
+
+
 -----
 
 ## Got Feedback?
