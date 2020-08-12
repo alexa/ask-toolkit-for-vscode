@@ -16,8 +16,9 @@ import * as glob from 'glob';
 
 export function run(): Promise<void> {
 	const mocha = new Mocha({
-		ui: 'tdd',
-		useColors: true
+		ui: 'bdd',
+		useColors: true,
+		timeout: 0
 	});
 
 	const testsRoot = path.resolve(__dirname, '..');

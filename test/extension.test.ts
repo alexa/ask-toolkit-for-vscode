@@ -6,16 +6,19 @@ import * as vscode from 'vscode';
 // package.json publisher + name. Test cannot access package.json, so hardcore here.
 const extensionId = 'ask-toolkit.alexa-skills-kit-toolkit';
 
-suite('Alexa Skill Kit Extension', () => {
+describe('Alexa Skill Kit Extension', () => {
 
-	test('Extension should be present', () => {
+	it('Extension should be present', () => {
 		assert.ok(vscode.extensions.getExtension(extensionId));
 	});
 
-	test('should activate', function () {
-		this.timeout(20 * 1000);
-		return vscode.extensions.getExtension(extensionId)!.activate().then(() => {
-			assert.ok(true);
-		});
+	it('should activate', async() => {
+		const extension = vscode.extensions.getExtension(extensionId);
+		if (extension) {
+			await extension.activate();
+			assert.ok(extension.isActive);
+		} else {
+			assert.fail('Extension is not available');
+		}
 	});
 });
