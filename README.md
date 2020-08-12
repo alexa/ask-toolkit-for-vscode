@@ -115,11 +115,11 @@ and many more ...
     > **Note**: Install [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension on Visual Studio Code, then connect to remote machine over SSH.
 
     - Install Alexa Skills Kit Toolkit extension on SSH after connecting to remote machine over SSH.
-    - Forward port 9090 on Remote-SSH extension, please refer to [Forwarding a port / creating SSH tunne](https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel).
+    - Forward port 9090 on Remote-SSH extension, please refer to [Forwarding a port / creating SSH tunnel](https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel).
     - Click on the Alexa activity tab icon and sign in.
 
 - **What if I failed to sign in Amazon account over SSH remote development?**
-    - Please refer to [Forwarding a port / creating SSH tunne](https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel) to check whether you have forwarded port 9090.
+    - Please refer to [Forwarding a port / creating SSH tunnel](https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel) to check whether you have forwarded port 9090.
 
 ----
 
