@@ -3,7 +3,6 @@ import * as model from 'ask-smapi-model';
 import * as path from 'path';
 
 import { AbstractWebView, SmapiClientFactory, Utils } from '../../runtime';
-import { ExtensionContext, WebviewPanelOnDidChangeViewStateEvent } from 'vscode';
 import { DEFAULT_PROFILE, SKILL_FOLDER } from '../../constants';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
@@ -15,12 +14,12 @@ export class InteractionModelSyncWebview extends AbstractWebView {
     private loader: ViewLoader;
     private wsFolder: vscode.Uri | undefined;
 
-    constructor(viewTitle: string, viewId: string, context: ExtensionContext) {
+    constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
         this.loader = new ViewLoader(this.extensionContext, 'interactionModelSync', this);
     }
 
-    onViewChangeListener(event: WebviewPanelOnDidChangeViewStateEvent): void {
+    onViewChangeListener(): void {
         Logger.debug(`Calling method: ${this.viewId}.onViewChangeListener`);
 
         return;
@@ -28,12 +27,12 @@ export class InteractionModelSyncWebview extends AbstractWebView {
 
     async onReceiveMessageListener(message: any): Promise<void> {
         Logger.debug(`Calling method: ${this.viewId}.onReceiveMessageListener, args: `, message);
-        if (message.locale) {
+        if (message.locale !== undefined) {
             await this.updateInteractionModel(message.locale);
         }
     }
 
-    getHtmlForView(...args: any[]): string {
+    getHtmlForView(): string {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
         return this.loader.renderView({
             name: 'interactionModelSync',
@@ -66,20 +65,20 @@ export class InteractionModelSyncWebview extends AbstractWebView {
                 const scheme: string = existsSync(iModelPath) ? "file:" : "untitled:";
                 const textDoc = await vscode.workspace.openTextDocument(vscode.Uri.parse(scheme + iModelPath));
                 const editor = await vscode.window.showTextDocument(textDoc);
-                editor.edit(edit => {
+                void editor.edit(edit => {
                     const firstLine = editor.document.lineAt(0);
                     const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
                     edit.delete(new vscode.Range(firstLine.range.start, lastLine.range.end));
                     edit.insert(new vscode.Position(0, 0), json);
-                    textDoc.save();
-                    vscode.window.showInformationMessage('Interaction model downloaded.');
+                    void textDoc.save();
+                    void vscode.window.showInformationMessage('Interaction model downloaded.');
                 });
             } else {
                 throw new Error("Unable to determine current workspace.");
             }
         } catch (err) {
             if (err.statusCode === 404) {
-                vscode.window.showErrorMessage(`There is no interaction model for ${locale}. Select a different locale.`);
+                void vscode.window.showErrorMessage(`There is no interaction model for ${locale}. Select a different locale.`);
             }
             throw loggableAskError('There was a problem downloading the interaction model. Try the download again.', err);
         }

@@ -39,7 +39,7 @@ export class SkillActionsViewProvider implements vscode.TreeDataProvider<PluginT
         return element;
     }
 
-    async getChildren(element?: PluginTreeItem<Resource>): Promise<PluginTreeItem<Resource>[]> {
+    async getChildren(element?: PluginTreeItem<Resource>): Promise<Array<PluginTreeItem<Resource>>> {
         Logger.debug(`Calling method: ${SkillActionsViewProvider.name}.getChildren`);
         const treeItems: Array<PluginTreeItem<Resource>> = [];
         const skillFolder = getSkillFolderInWs(this.treeView.context);
@@ -51,7 +51,7 @@ export class SkillActionsViewProvider implements vscode.TreeDataProvider<PluginT
             if (!element) {
                 if (!Utils.isNonBlankString(skillId)) {
                     Logger.info(SKILL_NOT_DEPLOYED_MSG);
-                    vscode.window.showWarningMessage(SKILL_NOT_DEPLOYED_MSG);
+                    void vscode.window.showWarningMessage(SKILL_NOT_DEPLOYED_MSG);
                 }
 
                 treeItems.push(

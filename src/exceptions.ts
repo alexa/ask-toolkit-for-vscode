@@ -16,9 +16,9 @@ export class AskParameterAbsenceError extends AskError {
 }
 
 export function loggableAskError(message: string, error: any | undefined=undefined, exposeToUser=false): Error {
-    let errMsg;
-    if (error) {
-        let msg;
+    let errMsg: string;
+    if (error !== undefined) {
+        let msg: string;
         if (error instanceof Error) {
             msg = error.message;
         } else {
@@ -32,7 +32,7 @@ export function loggableAskError(message: string, error: any | undefined=undefin
     Logger.error(errMsg);
 
     if (exposeToUser) {
-        vscode.window.showErrorMessage(errMsg);
+        void vscode.window.showErrorMessage(errMsg);
     }
 
     return new AskError(errMsg);

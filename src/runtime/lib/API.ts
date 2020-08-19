@@ -1,10 +1,8 @@
 // This module will contain the abstract components for commands to implement
 import { TelemetryClient } from './telemetry';
-import { EXTENSION_STATE_KEY } from '../../constants';
-import { Disposable, ExtensionContext, commands, workspace , WorkspaceConfiguration, 
-    TreeDataProvider, Event, ProviderResult, TreeItem, TreeItemCollapsibleState, Uri, 
-    ThemeIcon, Command, EventEmitter, WebviewPanel, Webview, window, 
-    ViewColumn, WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent } from "vscode";
+import { Disposable, ExtensionContext, commands, TreeItem, TreeItemCollapsibleState,
+    Uri, ThemeIcon, Command, WebviewPanel, Webview, window, ViewColumn,
+    WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent } from "vscode";
 import * as path from 'path';
 
 export interface CommandContext {
@@ -14,12 +12,12 @@ export interface CommandContext {
     extensionContext: ExtensionContext;
 }
 
-export interface GenericCommand extends Disposable{
+export interface GenericCommand extends Disposable {
     context: ExtensionContext;
     execute(context: CommandContext, ...args: any[]): Promise<any>;
 }
 
-export function registerCommands(context: ExtensionContext, commands: Array<GenericCommand>): void {
+export function registerCommands(context: ExtensionContext, commands: GenericCommand[]): void {
     commands.forEach(command => {
         command.context = context;
         context.subscriptions.push(command);    
@@ -48,9 +46,8 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
         );
     }
 
-    dispose() {
-        // tslint:disable-next-line: no-unused-expression
-        this._disposableCommand && this._disposableCommand.dispose();
+    dispose(): void {
+        this._disposableCommand.dispose();
     }
 
     private async _invoke(commandName: string, ...args: any[]): Promise<T> {
@@ -63,7 +60,6 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
             command: commandName, 
             extensionContext: this.context
         };
-        // eslint-disable-next-line no-useless-catch
         try {
             telemetryClient.startAction(commandName, commandType);
             output = await this.execute(context, ...args);
@@ -104,8 +100,8 @@ export class PluginTreeItem<Resource> extends TreeItem {
 
 export abstract class AbstractWebView {
     private _panel!: WebviewPanel;
-    private _isPanelDisposed! : boolean;
-    protected readonly extensionContext : ExtensionContext;
+    private _isPanelDisposed!: boolean;
+    protected readonly extensionContext: ExtensionContext;
     viewTitle: string;
     viewId: string;
     options: WebviewPanelOptions & WebviewOptions;
@@ -118,7 +114,7 @@ export abstract class AbstractWebView {
         showOptions?: { viewColumn: ViewColumn, preserveFocus?: boolean }, 
         options?: WebviewPanelOptions & WebviewOptions
         ) {
-            if (!viewColumn && window.activeTextEditor) {
+            if (viewColumn === undefined && window.activeTextEditor) {
                 viewColumn = window.activeTextEditor.viewColumn;
             }
 
@@ -148,7 +144,7 @@ export abstract class AbstractWebView {
             this.extensionContext = context;
         }
 
-    public getWebview(): Webview | undefined {
+    public getWebview(): Webview {
         return this.getPanel().webview;
     }
 
@@ -164,7 +160,7 @@ export abstract class AbstractWebView {
                 undefined,
                 this.extensionContext.subscriptions
               );
-            this.getWebview()!.html = this.getHtmlForView(...args);
+            this.getWebview().html = this.getHtmlForView(...args);
             this._isPanelDisposed = false;
             this.setEventListeners();
         } else {
@@ -176,7 +172,7 @@ export abstract class AbstractWebView {
         return this._panel;
     }
 
-    public dispose() {
+    public dispose(): void {
         this._panel.dispose();
     }
 
@@ -192,7 +188,7 @@ export abstract class AbstractWebView {
     abstract getHtmlForView(...args: any[]): string;
 
     public reviveView(...args: any[]): void {
-        this.getWebview()!.html = this.getHtmlForView(...args);
+        this.getWebview().html = this.getHtmlForView(...args);
         this.getPanel().reveal();
     }
 

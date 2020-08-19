@@ -29,7 +29,7 @@ import { CreateSkillWebview } from './askContainer/webViews/createSkillWebview';
 import { DeploySkillWebview } from './askContainer/webViews/deploySkillWebview';
 import { InteractionModelSyncWebview } from './askContainer/webViews/interactionModelSync';
 import { ManifestSyncWebview } from './askContainer/webViews/manifestSync';
-import { EXTENSION_STATE_KEY, EXTENSION_ID, MULTIPLE_SKILLS_MSG, CLI_V1_SKILL_MSG, CLI_V1_GLOB_PATTERN, TELEMETRY_NOTIFICATION_MESSAGE, SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY } from './constants';
+import { EXTENSION_STATE_KEY, EXTENSION_ID, MULTIPLE_SKILLS_MSG, CLI_V1_SKILL_MSG, CLI_V1_GLOB_PATTERN, TELEMETRY_NOTIFICATION_MESSAGE, SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY, DEFAULT_PROFILE } from './constants';
 import { Logger, LogLevel } from './logger';
 import { AccessTokenCommand } from './askContainer/commands/accessToken';
 import { GetSkillIdFromWorkspaceCommand } from './askContainer/commands/skillIdFromWorkspaceCommand';
@@ -44,8 +44,6 @@ import { AplPreviewWebView } from './aplContainer/webViews/aplPreviewWebView';
 import { clearCachedSkills } from './utils/skillHelper';
 import { checkAllSkillS3Scripts } from './utils/s3ScriptChecker';
 import { authenticate } from './utils/webViews/authHelper';
-import { DEFAULT_PROFILE } from './constants';
-import { sortBy } from 'ramda';
 
 const DEFAULT_LOG_LEVEL = LogLevel.info;
 
@@ -67,7 +65,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
 async function registerSkillActionComponents(context: vscode.ExtensionContext): Promise<void> {
     // Register skill specific components, if skill is detected
     const skillFolders = await findSkillFoldersInWs();
-    context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
+    await context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
 
     if (skillFolders.length > 0) {
         const deploySkill: DeploySkillWebview = new DeploySkillWebview('Deploy skill', 'deploySkill', context);
@@ -90,7 +88,7 @@ async function registerSkillActionComponents(context: vscode.ExtensionContext): 
         } else {
             unsetSkillContext();
             if (skillFolders.length > 1) {
-                vscode.window.showWarningMessage(MULTIPLE_SKILLS_MSG);
+                void vscode.window.showWarningMessage(MULTIPLE_SKILLS_MSG);
                 Logger.info(MULTIPLE_SKILLS_MSG);
             }
         }
@@ -98,7 +96,7 @@ async function registerSkillActionComponents(context: vscode.ExtensionContext): 
         unsetSkillContext();
         const cliV1Folders = await vscode.workspace.findFiles(CLI_V1_GLOB_PATTERN);
         if (cliV1Folders.length > 0) {
-            vscode.window.showWarningMessage(CLI_V1_SKILL_MSG);
+            void vscode.window.showWarningMessage(CLI_V1_SKILL_MSG);
             Logger.info(CLI_V1_SKILL_MSG);
         }
     }
@@ -116,7 +114,7 @@ function registerTreeViews(context: vscode.ExtensionContext): void {
 
 function showLoginScreen(context: vscode.ExtensionContext): void {
     apiRegisterCommands(context, [new LoginCommand(context)]);
-    vscode.commands.executeCommand('ask.login');
+    void vscode.commands.executeCommand('ask.login');
 }
 
 async function registerViews(context: vscode.ExtensionContext): Promise<void> {
@@ -124,13 +122,13 @@ async function registerViews(context: vscode.ExtensionContext): Promise<void> {
 
     if (vscode.workspace.getConfiguration(
         EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(
-            EXTENSION_STATE_KEY.SHOW_WELCOME_SCREEN)) {
+            EXTENSION_STATE_KEY.SHOW_WELCOME_SCREEN) !== undefined) {
         const welcomeScreen: AbstractWebView = new WelcomeScreenWebview(
             'Alexa Skills Kit', 'welcomeScreen', context,
         );
 
         registerWebviews(welcomeScreen);
-        if (await Utils.isProfileAuth(context) && context.globalState.get('didFirstTimeLogin')) {
+        if (await Utils.isProfileAuth(context) && context.globalState.get('didFirstTimeLogin') !== undefined) {
             welcomeScreen.showView();
         } else {
             showLoginScreen(context);
@@ -141,10 +139,10 @@ async function registerViews(context: vscode.ExtensionContext): Promise<void> {
 function registerEventHandlers(context: vscode.ExtensionContext): void {
     Logger.debug('Registering event handlers in the extension');
     context.subscriptions.push(vscode.workspace.onDidChangeWorkspaceFolders(
-        async (e) => {
+        async () => {
             Logger.info('Workspace folders changed event handler');
             const skillFolders = await findSkillFoldersInWs();
-            context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
+            await context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
             if (skillFolders.length === 1) {
                 setSkillContext();
                 // tslint:disable-next-line: no-unused-expression
@@ -178,9 +176,9 @@ function registerUrlHooks(context: vscode.ExtensionContext): void {
             if (uri.path === '/clone') {
                 const profiles = Utils.listExistingProfileNames();
                 if (!profiles) {
-                    vscode.window.showInformationMessage("Before you can clone your skill, you'll need"
+                    await vscode.window.showInformationMessage("Before you can clone your skill, you'll need"
                     + " to login to your developer account in the extension.");
-                    vscode.commands.executeCommand('ask.login', true);
+                    await vscode.commands.executeCommand('ask.login', true);
                     await authenticate(context, undefined, DEFAULT_PROFILE);
                 }
                 await hostedSkillsClone(uri, context);
@@ -190,11 +188,11 @@ function registerUrlHooks(context: vscode.ExtensionContext): void {
 }
 
 function getProfileSBInfo(context: vscode.ExtensionContext): [string, string] {
-    const profileName = context.globalState.get(
+    const profileName: string | undefined = context.globalState.get(
         EXTENSION_STATE_KEY.LWA_PROFILE);
-    let title;
-    let tooltip;
-    if (!profileName) { 
+    let title: string;
+    let tooltip: string;
+    if (profileName === undefined) { 
         title = '$(person-filled) ASK Profile : None';
         tooltip = 'No profile selected. Please consider signing in first.';
     } else {
@@ -207,7 +205,7 @@ function getProfileSBInfo(context: vscode.ExtensionContext): [string, string] {
 function updateProfileIcon(context: vscode.ExtensionContext, sbItem: vscode.StatusBarItem): void {
     Logger.verbose('Updating profile icon in the extension');
     const onDidChangeTreeData = onSkillConsoleViewChangeEventEmitter.event;
-    onDidChangeTreeData(e => {
+    onDidChangeTreeData(() => {
         const [ title, tooltip ] = getProfileSBInfo(context);
         sbItem.text = title;
         sbItem.tooltip = tooltip;
@@ -224,7 +222,7 @@ function addStatusBarItems(context: vscode.ExtensionContext): void {
     
     const profileName = context.globalState.get(
         EXTENSION_STATE_KEY.LWA_PROFILE); 
-    if (!profileName) {
+    if (profileName === undefined) {
         // Hide status bar for first time user
         currentProfileIcon.hide();
     }
@@ -233,18 +231,18 @@ function addStatusBarItems(context: vscode.ExtensionContext): void {
     context.subscriptions.push(currentProfileIcon);
 }
 
-function checkIfUpdated(context: vscode.ExtensionContext): void {
+async function checkIfUpdated(context: vscode.ExtensionContext): Promise<void> {
     Logger.debug(`Checking if extension version is latest`);
     const lastKnownVersion = context.globalState.get(EXTENSION_STATE_KEY.CURRENT_VERSION);
     const extVersion = vscode.extensions.getExtension(EXTENSION_ID)?.packageJSON.version;
     if (lastKnownVersion !== extVersion) {
-        if (lastKnownVersion) {
+        if (lastKnownVersion !== undefined) {
             const msg = 'The Alexa Skills Kit extension has been updated. '
             + '[Release notes](https://developer.amazon.com/en-US/alexa/alexa-skills-kit)';
             Logger.info(msg);
-            vscode.window.showInformationMessage(msg);
+            void vscode.window.showInformationMessage(msg);
         }
-        context.globalState.update(EXTENSION_STATE_KEY.CURRENT_VERSION, extVersion);
+        await context.globalState.update(EXTENSION_STATE_KEY.CURRENT_VERSION, extVersion);
     }
 }
 
@@ -255,23 +253,23 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             EXTENSION_STATE_KEY.LOG_LEVEL, DEFAULT_LOG_LEVEL));
     Logger.info('Activating extension');
 
-    checkIfUpdated(context);
+    await checkIfUpdated(context);
     registerUrlHooks(context);
     // Register common components
     const profiles = Utils.listExistingProfileNames();
     if (!profiles) {
-        context.globalState.update(EXTENSION_STATE_KEY.LWA_PROFILE, undefined);
-        context.globalState.update(EXTENSION_STATE_KEY.CACHED_SKILLS, {});
+        await context.globalState.update(EXTENSION_STATE_KEY.LWA_PROFILE, undefined);
+        await context.globalState.update(EXTENSION_STATE_KEY.CACHED_SKILLS, {});
         Logger.debug('No profiles found in the extension.');
     } else {
         const currentProfile = Utils.getCachedProfile(context);
-        if (!currentProfile || !profiles.includes(currentProfile)) {
-            context.globalState.update(EXTENSION_STATE_KEY.LWA_PROFILE, profiles[0]);
+        if (currentProfile === undefined || !profiles.includes(currentProfile)) {
+            await context.globalState.update(EXTENSION_STATE_KEY.LWA_PROFILE, profiles[0]);
             clearCachedSkills(context);
         }
     }
     registerCommands(context);
-    registerViews(context);
+    await registerViews(context);
     registerEventHandlers(context);
 
     addStatusBarItems(context);
