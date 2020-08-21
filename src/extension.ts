@@ -122,13 +122,13 @@ async function registerViews(context: vscode.ExtensionContext): Promise<void> {
 
     if (vscode.workspace.getConfiguration(
         EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(
-            EXTENSION_STATE_KEY.SHOW_WELCOME_SCREEN) !== undefined) {
+            EXTENSION_STATE_KEY.SHOW_WELCOME_SCREEN) === true) {
         const welcomeScreen: AbstractWebView = new WelcomeScreenWebview(
             'Alexa Skills Kit', 'welcomeScreen', context,
         );
 
         registerWebviews(welcomeScreen);
-        if (await Utils.isProfileAuth(context) && context.globalState.get('didFirstTimeLogin') !== undefined) {
+        if (await Utils.isProfileAuth(context) && context.globalState.get('didFirstTimeLogin') === true) {
             welcomeScreen.showView();
         } else {
             showLoginScreen(context);
