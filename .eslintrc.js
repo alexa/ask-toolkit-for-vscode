@@ -99,6 +99,10 @@ module.exports = {
         ],
         "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/unified-signatures": "error",
+        // TODO: reEnable no-unsafe-assignment
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        // TODO: reEnable no-unsafe-member-access
+        "@typescript-eslint/no-unsafe-member-access": "off",
 
         // -- Rules form tsdoc
         // "tsdoc/syntax": "warn", // TODO: enable once we have better tsdoc coverage

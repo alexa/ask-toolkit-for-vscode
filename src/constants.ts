@@ -102,8 +102,8 @@ export const AUTH = {
 export const DEV_CONSOLE_ENDPOINT = 'https://developer.amazon.com/alexa/console/ask';
 
 export const SKILL_ACTION_URLS = {
-    IMODEL_EDITOR: (skillId: string, locale: string) => `${DEV_CONSOLE_ENDPOINT}/build/custom/${skillId}/development/${locale}/intents`,
-    SIMULATOR: (skillId: string, locale: string) => `${DEV_CONSOLE_ENDPOINT}/test/${skillId}/development/${locale}/`,
+    IMODEL_EDITOR: (skillId: string, locale: string): string => `${DEV_CONSOLE_ENDPOINT}/build/custom/${skillId}/development/${locale}/intents`,
+    SIMULATOR: (skillId: string, locale: string): string => `${DEV_CONSOLE_ENDPOINT}/test/${skillId}/development/${locale}/`,
 };
 
 export const SKILL = {
@@ -210,7 +210,7 @@ export const SKILL_FOLDER = {
     }
 };
 
-export const SYSTEM_ASK_FOLDER ={
+export const SYSTEM_ASK_FOLDER = {
     HIDDEN_ASK_FOLDER: '.ask',
     AUTH_INFO: 'auth_info',
     SCRIPTS_FOLDER: {
@@ -218,7 +218,7 @@ export const SYSTEM_ASK_FOLDER ={
         ASK_PRE_PUSH: 'ask-pre-push',
         GIT_CREDENTIAL_HELPER: 'git-credential-helper',
     }
-}
+};
 
 export const BASE_RESOURCES_CONFIG = {
     askToolkitResourcesVersion: '2020-04-15',
@@ -255,15 +255,15 @@ export const LOCAL_DEBUG = {
     },
     PYTHON_DEPENDENCIES: {
         LANG_TYPE: 'python',
-        SITE_PKGS_CHECK: (pythonInterpreter: string) => `"${pythonInterpreter}" -c "import site; print(site.getsitepackages())"`,
+        SITE_PKGS_CHECK: (pythonInterpreter: string): string => `"${pythonInterpreter}" -c "import site; print(site.getsitepackages())"`,
         DEP_PATH: path.join('ask_sdk_local_debug', 'local_debugger_invoker.py'),
         DEP_INSTALL_MSG: 'ask-sdk-local-debug package not found. Please install the ask-sdk-local-debug package from pypi'
     },
-    DEBUG_PATH_ERROR: (languageType: string) => `Invalid language type '${languageType}' provided`
+    DEBUG_PATH_ERROR: (languageType: string): string => `Invalid language type '${languageType}' provided`
 };
 
 export const CLI_HOSTED_SKILL_TYPE = "@ask-cli/hosted-skill-deployer";
-export const SKILL_NOT_DEPLOYED_MSG = 'This skill has not been previously deployed. Some extension functionalities will be unavailable until an intial deployment.';
+export const SKILL_NOT_DEPLOYED_MSG = 'This skill has not been previously deployed. Some extension functionalities will be unavailable until an initial deployment.';
 export const MULTIPLE_SKILLS_MSG = 'Multiple skills are open in the workspace, so some Alexa Toolkit Extension features will not work. Alexa Toolkit Extension works best when only one skill is open.';
 export const CLI_V1_GLOB_PATTERN = '**/.ask/config';
 export const CLI_V1_SKILL_MSG = 'This skill contains unsupported skill folder structure. Some Alexa Toolkit Extension features will not work. Please follow [this guide](https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-v1-to-v2-migration-guide.html#new-skill-project-structure-required-for-deployment-with-cli-v2) to upgrade your skill folder structure.';

@@ -19,7 +19,7 @@ export class SkillsConsoleView {
     }
 
     changeTitle(label: string): void {
-        if(this.view) {
+        if (this.view !== undefined) {
             this.view.title = label;
         }
     }
