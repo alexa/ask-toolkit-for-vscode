@@ -17,3 +17,17 @@ export const EXTENSION_STATE_KEY = {
     ASK_LWA_TOKEN_HOST: 'ASK_LWA_TOKEN_HOST',
     ASK_SMAPI_SERVER_BASE_URL: 'ASK_SMAPI_SERVER_BASE_URL'
 };
+
+export const FILE_PATH = {
+    ASK: {
+        HIDDEN_FOLDER: '.ask',
+        PROFILE_FILE: 'cli_config'
+    }
+};
+
+export const CONFIGURATION = {
+    FILE_PERMISSION: {
+        USER_READ_WRITE: '0600'
+    },
+    JSON_DISPLAY_INTENT: 2,
+};
