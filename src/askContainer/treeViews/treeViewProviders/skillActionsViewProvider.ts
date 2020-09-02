@@ -159,7 +159,7 @@ export class SkillActionsViewProvider implements vscode.TreeDataProvider<PluginT
                     {
                         title: 'openUrl',
                         command: 'ask.container.openUrl',
-                        arguments: [getSimulatorLink(skillId, skillDetails.defaultLocale)],
+                        arguments: [getSimulatorLink(skillId, skillDetails.defaultLocale), {CommandType: 'SIMULATOR'}],
                     }, undefined,
                     ContextValueTypes.SKILL,
                 ),
@@ -294,7 +294,7 @@ export class SkillActionsViewProvider implements vscode.TreeDataProvider<PluginT
                 {
                     title: 'openUrl',
                     command: 'ask.container.openUrl',
-                    arguments: [getIModelGeneratorLink(skillId, skillDetails.defaultLocale)],
+                    arguments: [getIModelGeneratorLink(skillId, skillDetails.defaultLocale), {CommandType: 'IM_EDITOR'}],
                 }, undefined,
                 ContextValueTypes.SKILL,
             ),

@@ -45,7 +45,7 @@ export async function hostedSkillsClone(uri: vscode.Uri, context: vscode.Extensi
             const targetSkill: SkillSummary  = listSkills.skills![0];
             if (targetSkill) {
                 vscode.commands.executeCommand(
-                    'askContainer.skillsConsole.cloneSkill', new SmapiResource<SkillInfo>(
+                    'askContainer.skillsConsole.cloneSkillFromConsole', new SmapiResource<SkillInfo>(
                         new SkillInfo(targetSkill, true, hostedSkillMetadata), targetSkillId));
                 return;
             }
