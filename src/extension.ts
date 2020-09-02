@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { registerCommands as apiRegisterCommands, AbstractWebView, Utils } from './runtime';
 
 import { CloneSkillCommand } from './askContainer/commands/cloneSkill';
+import { CloneSkillFromConsoleCommand } from './askContainer/commands/cloneSkillFromConsole';
 import { DeploySkillCommand } from './askContainer/commands/deploySkill';
 import { SyncInteractionModelCommand } from './askContainer/commands/syncInteractionModel';
 import { SyncManifestCommand } from './askContainer/commands/syncManifest';
@@ -59,7 +60,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         new InitCommand(profileManager), new GetToolkitInfoCommand(),
         new ViewAllSkillsCommand(), new CreateSkillCommand(createSkill),
         new CloneSkillCommand(), new ChangeProfileCommand(), new AccessTokenCommand(),
-        new DebugAdapterPathCommand()]);
+        new DebugAdapterPathCommand(), new CloneSkillFromConsoleCommand()]);
 }
 
 async function registerSkillActionComponents(context: vscode.ExtensionContext): Promise<void> {

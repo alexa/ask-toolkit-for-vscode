@@ -53,7 +53,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.RELEASE_UPDATES, true],
+                arguments: [EXTERNAL_LINKS.RELEASE_UPDATES, true, {CommandType: 'RELEASE_UPDATES'}],
             }, undefined, ContextValueTypes.SKILL,
         ));
     
@@ -75,7 +75,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             vscode.TreeItemCollapsibleState.None, {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.CLI, true],
+                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.CLI, true, {CommandType: 'TOOLS_DOCS_CLI'}],
             }, undefined,
             ContextValueTypes.SKILL,
         ));
@@ -85,7 +85,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             vscode.TreeItemCollapsibleState.None, {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.VSCODE, true],
+                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.VSCODE, true, {CommandType: 'TOOLS_DOCS_VSCODE'}],
             }, undefined,
             ContextValueTypes.SKILL,
         ));
@@ -103,7 +103,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.ASK_SDK, true],
+                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.ASK_SDK, true, {CommandType: 'TOOLS_DOCS_ASK_SDK'}],
             }, undefined,
             ContextValueTypes.SKILL,
         ));
@@ -113,7 +113,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             vscode.TreeItemCollapsibleState.None, {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.SMAPI_SDK, true],
+                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.SMAPI_SDK, true, {CommandType: 'TOOLS_DOCS_SMAPI_SDK'}],
             }, undefined,
             ContextValueTypes.SKILL,
         ));

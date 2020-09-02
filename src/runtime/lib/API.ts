@@ -25,7 +25,7 @@ export function registerCommands(context: ExtensionContext, commands: GenericCom
 }
 
 export abstract class AbstractCommand<T> implements GenericCommand, Command {
-    // Need this for adding AbstractCommand as a valid type t
+    // Need this for adding AbstractCommand as a valid type
     title: string;
     command: string;
     tooltip?: string;
@@ -51,7 +51,8 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
     }
 
     private async _invoke(commandName: string, ...args: any[]): Promise<T> {
-        const commandType = 'command';
+        const typeArg = args.find(arg => arg.CommandType);
+        const commandType = typeArg ? typeArg.CommandType : 'command';
         const telemetryClient = new TelemetryClient({});
         let output: any;
 
