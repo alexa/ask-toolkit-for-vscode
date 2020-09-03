@@ -1,6 +1,21 @@
+## 2.0.1 - Sep 02, 2020
+
+- Adds folder overwrite options for clone skill flow, if skill already exists
+locally.
+- Sets additional telemetry information on the URL links.
+- Fixes some linter issues.
+- Improves some log messages in the workflows.
+
 ## 2.0.0 - Jul 21, 2020
 
-Updated sources.
+- Adds 'ASK Toolkit' container in side bar, containing skill management, 
+skill actions & documentation views.
+- Adds support for syncing interaction model, skill manifest, APL documents from
+developer console.
+- Adds local APL-Preview functionality in skill actions.
+- Adds local debugging configuration support for Node/Python based alexa skills.
+- Adds opt-out telemetry support in the extension.
+- Removed `ask-cli` dependency and wrapper functions from command palette.
 
 ## 1.0.3 - Apr 15, 2020
 

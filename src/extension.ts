@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { registerCommands as apiRegisterCommands, AbstractWebView, Utils } from './runtime';
 
 import { CloneSkillCommand } from './askContainer/commands/cloneSkill';
+import { CloneSkillFromConsoleCommand } from './askContainer/commands/cloneSkillFromConsole';
 import { DeploySkillCommand } from './askContainer/commands/deploySkill';
 import { SyncInteractionModelCommand } from './askContainer/commands/syncInteractionModel';
 import { SyncManifestCommand } from './askContainer/commands/syncManifest';
@@ -59,13 +60,13 @@ function registerCommands(context: vscode.ExtensionContext): void {
         new InitCommand(profileManager), new GetToolkitInfoCommand(),
         new ViewAllSkillsCommand(), new CreateSkillCommand(createSkill),
         new CloneSkillCommand(), new ChangeProfileCommand(), new AccessTokenCommand(),
-        new DebugAdapterPathCommand()]);
+        new DebugAdapterPathCommand(), new CloneSkillFromConsoleCommand()]);
 }
 
 async function registerSkillActionComponents(context: vscode.ExtensionContext): Promise<void> {
     // Register skill specific components, if skill is detected
     const skillFolders = await findSkillFoldersInWs();
-    await context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
+    void context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
 
     if (skillFolders.length > 0) {
         const deploySkill: DeploySkillWebview = new DeploySkillWebview('Deploy skill', 'deploySkill', context);
@@ -142,7 +143,7 @@ function registerEventHandlers(context: vscode.ExtensionContext): void {
         async () => {
             Logger.info('Workspace folders changed event handler');
             const skillFolders = await findSkillFoldersInWs();
-            await context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
+            void context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
             if (skillFolders.length === 1) {
                 setSkillContext();
                 // tslint:disable-next-line: no-unused-expression
@@ -176,9 +177,9 @@ function registerUrlHooks(context: vscode.ExtensionContext): void {
             if (uri.path === '/clone') {
                 const profiles = Utils.listExistingProfileNames();
                 if (!profiles) {
-                    await vscode.window.showInformationMessage("Before you can clone your skill, you'll need"
+                    void vscode.window.showInformationMessage("Before you can clone your skill, you'll need"
                     + " to login to your developer account in the extension.");
-                    await vscode.commands.executeCommand('ask.login', true);
+                    void vscode.commands.executeCommand('ask.login', true);
                     await authenticate(context, undefined, DEFAULT_PROFILE);
                 }
                 await hostedSkillsClone(uri, context);
@@ -231,7 +232,7 @@ function addStatusBarItems(context: vscode.ExtensionContext): void {
     context.subscriptions.push(currentProfileIcon);
 }
 
-async function checkIfUpdated(context: vscode.ExtensionContext): Promise<void> {
+function checkIfUpdated(context: vscode.ExtensionContext): void {
     Logger.debug(`Checking if extension version is latest`);
     const lastKnownVersion = context.globalState.get(EXTENSION_STATE_KEY.CURRENT_VERSION);
     const extVersion = vscode.extensions.getExtension(EXTENSION_ID)?.packageJSON.version;
@@ -242,7 +243,7 @@ async function checkIfUpdated(context: vscode.ExtensionContext): Promise<void> {
             Logger.info(msg);
             void vscode.window.showInformationMessage(msg);
         }
-        await context.globalState.update(EXTENSION_STATE_KEY.CURRENT_VERSION, extVersion);
+        void context.globalState.update(EXTENSION_STATE_KEY.CURRENT_VERSION, extVersion);
     }
 }
 
@@ -253,18 +254,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             EXTENSION_STATE_KEY.LOG_LEVEL, DEFAULT_LOG_LEVEL));
     Logger.info('Activating extension');
 
-    await checkIfUpdated(context);
+    checkIfUpdated(context);
     registerUrlHooks(context);
     // Register common components
     const profiles = Utils.listExistingProfileNames();
     if (!profiles) {
-        await context.globalState.update(EXTENSION_STATE_KEY.LWA_PROFILE, undefined);
-        await context.globalState.update(EXTENSION_STATE_KEY.CACHED_SKILLS, {});
+        void context.globalState.update(EXTENSION_STATE_KEY.LWA_PROFILE, undefined);
+        void context.globalState.update(EXTENSION_STATE_KEY.CACHED_SKILLS, {});
         Logger.debug('No profiles found in the extension.');
     } else {
         const currentProfile = Utils.getCachedProfile(context);
         if (currentProfile === undefined || !profiles.includes(currentProfile)) {
-            await context.globalState.update(EXTENSION_STATE_KEY.LWA_PROFILE, profiles[0]);
+            void context.globalState.update(EXTENSION_STATE_KEY.LWA_PROFILE, profiles[0]);
             clearCachedSkills(context);
         }
     }
@@ -283,8 +284,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     
     const seenNotification = context.globalState.get(SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY);
     if(seenNotification === undefined) {
-        await vscode.window.showInformationMessage(TELEMETRY_NOTIFICATION_MESSAGE);
-        await context.globalState.update(SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY, true);
+        void vscode.window.showInformationMessage(TELEMETRY_NOTIFICATION_MESSAGE);
+        void context.globalState.update(SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY, true);
     }
 }
 
