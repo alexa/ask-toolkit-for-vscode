@@ -1,3 +1,7 @@
+## 2.0.2 - Sep 03, 2020
+
+- Revert extension main class on package.json file.
+
 ## 2.0.1 - Sep 02, 2020
 
 - Adds folder overwrite options for clone skill flow, if skill already exists
