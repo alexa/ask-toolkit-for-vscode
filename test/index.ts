@@ -21,9 +21,11 @@ import * as glob from "glob";
 import * as paths from "path";
 import * as Mocha from "mocha";
 
+// The test coverage approach is inspired by https://github.com/microsoft/vscode-js-debug/blob/master/src/test/testRunner.ts
 function setupCoverage() {
     const NYC = require("nyc");
     const nyc = new NYC({
+        // set the project root
         cwd: paths.join(__dirname, "..", ".."),
         exclude: ["**/test/**", ".vscode-test/**"],
         reporter: ["html"],
@@ -50,6 +52,7 @@ const mocha = new Mocha({
 export async function run(): Promise<any> {
 
     const nyc = setupCoverage();
+    // only search test files under out/test
     const options = { cwd: __dirname };
     const files = glob.sync("**/**.test.js", options);
     for (const file of files) {
