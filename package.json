@@ -49,7 +49,7 @@
         "workspaceContains:**/ask-resources.json",
         "onUri"
     ],
-    "main": "./out/src/extension",
+    "main": "./dist/extension",
     "contributes": {
         "viewsContainers": {
             "activitybar": [
