@@ -1,0 +1,4 @@
+node_modules/**
+third-party
+**/*.json
+scripts
