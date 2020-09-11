@@ -49,7 +49,7 @@
         "workspaceContains:**/ask-resources.json",
         "onUri"
     ],
-    "main": "./dist/extension",
+    "main": "./extensionMain",
     "contributes": {
         "viewsContainers": {
             "activitybar": [
@@ -243,13 +243,13 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "node ./scripts/main-dist.js && npm run compile && webpack --mode production",
-        "webpack": "node ./scripts/main-dist.js && npm run compile && webpack --mode development",
-        "webpack-dev": "node ./scripts/main-dist.js && webpack --mode development --watch",
+        "vscode:prepublish": "npm run compile && webpack --mode production",
+        "webpack": "npm run compile && webpack --mode development",
+        "webpack-dev": "webpack --mode development --watch",
         "compile": "shx rm -rf ./out/ && shx rm -rf ./dist/ && tsc -p ./",
         "lint": "eslint src --ext ts",
         "watch": "tsc -watch -p ./",
-        "pretest": "node ./scripts/main-out.js && npm run compile",
+        "pretest": "npm run compile",
         "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
@@ -318,5 +318,14 @@
         "typed-rest-client": "1.7.3",
         "uuidv4": "^6.1.1",
         "vscode-debugadapter": "^1.39.1"
+    },
+    "prettier": {
+        "semi": true,
+        "tabWidth": 4,
+        "printWidth": 120,
+        "trailingComma": "es5",
+        "bracketSpacing": true,
+        "arrowParens": "avoid",
+        "endOfLine": "lf"
     }
 }

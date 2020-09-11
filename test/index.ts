@@ -51,12 +51,16 @@ const mocha = new Mocha({
 
 export async function run(): Promise<any> {
 
-    const nyc = setupCoverage();
+    let nyc; 
+    if (shouldGenerateCoverage()) {
+        nyc = setupCoverage();
+    }   
     // only search test files under out/test
-    const options = { cwd: __dirname };
+    const testsRoot = paths.resolve(__dirname, '..');
+    const options = { cwd: testsRoot };
     const files = glob.sync("**/**.test.js", options);
     for (const file of files) {
-        mocha.addFile(`${__dirname}/${file}`);
+        mocha.addFile(paths.resolve(testsRoot, file));
     }
     try {
         await new Promise((resolve, reject) =>
@@ -68,4 +72,10 @@ export async function run(): Promise<any> {
             nyc.report();
         }
     }
+}
+
+function shouldGenerateCoverage(): boolean {
+
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    return (process.env.ASK_TOOLKIT_NO_COVERAGE || 'false').toLowerCase() !== 'true';
 }
