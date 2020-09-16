@@ -29,6 +29,7 @@ function setupCoverage() {
         cwd: paths.join(__dirname, "..", ".."),
         exclude: ["**/test/**", ".vscode-test/**"],
         reporter: ["html"],
+        tempDir: paths.join(__dirname, "..", "..", "coverage", ".nyc_output"),
         all: true,
         instrument: true,
         hookRequire: true,
