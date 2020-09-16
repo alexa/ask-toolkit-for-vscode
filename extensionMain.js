@@ -9,7 +9,7 @@ const join = require('path').join
 /**
  * This file serves as the extension's entryPoint.
  * It loads the actual entryPoint from a webpack bundle or from
- * tsc compiled source based on the AWS_TOOLKIT_IGNORE_WEBPACK_BUNDLE environment variable.
+ * tsc compiled source based on the ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE environment variable.
  *
  * This allows us to activate the extension from tests.
  */
@@ -29,7 +29,7 @@ async function activate(context) {
 }
 
 async function deactivate() {
-    await extension.awsToolkitDeactivate();
+    await extension.deactivate();
 }
 
 function useBundledEntryPoint() {

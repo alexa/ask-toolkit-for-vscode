@@ -49,7 +49,7 @@ const mocha = new Mocha({
     timeout: 10 * 1000,
 });
 
-export async function run(): Promise<any> {
+export async function run(): Promise<void> {
 
     let nyc; 
     if (shouldGenerateCoverage()) {
