@@ -1,4 +1,3 @@
-//
 // PLEASE DO NOT MODIFY / DELETE UNLESS YOU KNOW WHAT YOU ARE DOING
 //
 // This file is providing the test runner to use when running extension tests.
@@ -10,40 +9,74 @@
 // to report the results back to the caller. When the tests are finished, return
 // a possible error to the callback or null if none.
 
-import * as path from 'path';
-import * as Mocha from 'mocha';
-import * as glob from 'glob';
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/no-this-alias */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-var-requires */
 
-export function run(): Promise<void> {
-	const mocha = new Mocha({
-		ui: 'bdd',
-		useColors: true,
-		timeout: 0
-	});
+"use strict";
 
-	const testsRoot = path.resolve(__dirname, '..');
+import * as glob from "glob";
+import * as paths from "path";
+import * as Mocha from "mocha";
 
-	return new Promise((c, e) => {
-		glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
-			if (err) {
-				return e(err);
-			}
+// The test coverage approach is inspired by https://github.com/microsoft/vscode-js-debug/blob/master/src/test/testRunner.ts
+function setupCoverage() {
+    const NYC = require("nyc");
+    const nyc = new NYC({
+        // set the project root
+        cwd: paths.join(__dirname, "..", ".."),
+        exclude: ["**/test/**", ".vscode-test/**"],
+        reporter: ["html"],
+        tempDir: paths.join(__dirname, "..", "..", "coverage", ".nyc_output"),
+        all: true,
+        instrument: true,
+        hookRequire: true,
+        hookRunInContext: true,
+        hookRunInThisContext: true,
+    });
 
-			// Add files to the test suite
-			files.forEach(f => mocha.addFile(path.resolve(testsRoot, f)));
+    nyc.reset();
+    nyc.wrap();
 
-			try {
-				// Run the mocha test
-				mocha.run(failures => {
-					if (failures > 0) {
-						e(new Error(`${failures} tests failed.`));
-					} else {
-						c();
-					}
-				});
-			} catch (err) {
-				e(err);
-			}
-		});
-	});
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return nyc;
+}
+
+const mocha = new Mocha({
+    ui: "bdd",
+    color: true,
+    timeout: 10 * 1000,
+});
+
+export async function run(): Promise<void> {
+
+    let nyc; 
+    if (shouldGenerateCoverage()) {
+        nyc = setupCoverage();
+    }   
+    // only search test files under out/test
+    const testsRoot = paths.resolve(__dirname, '..');
+    const options = { cwd: testsRoot };
+    const files = glob.sync("**/**.test.js", options);
+    for (const file of files) {
+        mocha.addFile(paths.resolve(testsRoot, file));
+    }
+    try {
+        await new Promise((resolve, reject) =>
+            mocha.run(failures => (failures ? reject(new Error(`${failures} tests failed`)) : resolve()))
+        );
+    } finally {
+        if (nyc !== undefined) {
+            nyc.writeCoverageFile();
+            nyc.report();
+        }
+    }
+}
+
+function shouldGenerateCoverage(): boolean {
+
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    return (process.env.ASK_TOOLKIT_NO_COVERAGE || 'false').toLowerCase() !== 'true';
 }

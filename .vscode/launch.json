@@ -26,10 +26,33 @@
                 "--extensionDevelopmentPath=${workspaceFolder}",
                 "--extensionTestsPath=${workspaceFolder}/out/test"
             ],
+            "env": {
+                "ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE": "true",
+                "ASK_TOOLKIT_NO_COVERAGE": "true"
+            },
             "outFiles": [
                 "${workspaceFolder}/out/test/**/*.js"
             ],
-            "preLaunchTask": "npm: compile"
+            "preLaunchTask": "npm: pretest"
+        },
+        {
+            "name": "Extension Tests (Coverage)", // needed for compiling and running unit test for ts files
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--extensionTestsPath=${workspaceFolder}/out/test"
+            ],
+            "env": {
+                "ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE": "true",
+                "ASK_TOOLKIT_NO_COVERAGE": "false"
+            },
+            "outFiles": [
+                "${workspaceFolder}/out/test/**/*.js"
+            ],
+            "preLaunchTask": "npm: pretest"
         }
     ]
 }
