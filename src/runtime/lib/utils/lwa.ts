@@ -124,7 +124,7 @@ async function _handleServerRequest(request: IncomingMessage, response: ServerRe
                                     </head>
                                     <body>
                                         <p class="heading">
-                                            <img src="https://m.media-amazon.com/images/G/01/mobile-apps/dex/avs/docs/ux/branding/mark1._TTH_.png"/>
+                                            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
                                             <h1>Sign in successful.</h1>
                                             You may now close this page and return to VSCode.
                                         </p>

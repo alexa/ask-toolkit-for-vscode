@@ -61,11 +61,13 @@ export class ViewLoader {
             Uri.file(
                 path.join(
                     this.context.extensionPath, 'media', 'toolkit.css',
-                ),
-            ));
+            ),
+        ));
+
         if (!toolkitCss) {
             return this.handleError(options.errorMsg);
         }
+
         html = html.replace('${toolkitCss}', toolkitCss.toString());
 
         if (options.args) {

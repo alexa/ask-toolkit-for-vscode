@@ -1,0 +1,579 @@
+body {
+    height: 100vh;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    font-family: "Amazon Ember Regular","Helvetica Neue",Arial,Helvetica,Roboto,sans-serif;
+}
+
+.right {
+    float: right;
+}
+
+.header {
+    background: #162A38;
+    height: 58px;
+    padding: 10px;
+}
+.header h1 {
+    position: relative;
+    bottom: 5px;
+    left: 5px;
+    -webkit-user-select: none;
+}
+.header img {
+    float: left;
+    width: 55px;
+    height: 55px;
+    -webkit-user-select: none;
+}
+body.vscode-light div.header {
+    color: white;
+}
+
+
+/* BODY: contains chat box & Skill I/O tab */
+.contentContainer {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 88vh;
+    margin: 6px;
+}
+
+
+.skillInfoBox {
+    width: 70%;
+    display: flex; 
+    flex-direction: column;
+    justify-content: start;
+    height: calc(100% - 25px);
+    margin: 0px 10px 0px 0px;
+    border: 2px solid #ddd;
+    background: #eee;
+}
+body.vscode-dark .skillInfoBox {
+    background: #272729;
+    border: 2px solid #363638;
+    color: #f3f3f3;
+}
+
+
+.skillInfoBoxHeader {
+    border-bottom: 2px solid #ddd;
+    background: #eee;
+    -webkit-user-select: none;
+}
+body.vscode-dark .skillInfoBoxHeader {
+    color: #dbdbdb;
+    border-bottom: 1px solid #454547;
+    background-color: #272729;
+}
+
+
+.skillInfoBoxHeader button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    padding: 10px 30px;
+    transition: 0.3s;
+    color: #666;
+    font-size: 125%;
+    font-weight: bold;
+}
+.skillInfoBoxHeader button:hover {
+    background-color: #dedede;
+}
+.skillInfoBoxHeader button.active {
+    background-color: #d4d4d4;
+}
+body.vscode-dark .skillInfoBoxHeader button {
+    background-color: inherit;
+    color: #dbdbdb;
+}
+body.vscode-dark .skillInfoBoxHeader button:hover {
+    background-color: #3a3e40;
+}
+body.vscode-dark .skillInfoBoxHeader button.active {
+    background-color: #414547;
+}
+
+
+.ioTab {
+    display: flex;
+    flex-direction: column;
+    flex-flow: row;
+    background-color: inherit;
+    cursor: not-allowed; /* changed based on skill enablement status */
+}
+
+
+.ioTab > .jsonBoxInput,
+.ioTab > .jsonBoxOutput {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 50%;
+    min-width: 15%;
+    height: 75vh;
+    min-height: 0px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    background-color: #fcfcfe;
+}
+.ioTab > .jsonBoxInput {
+    margin-right: 0px;
+    margin-left: 7px;
+    flex-grow: 0;
+}
+.ioTab > .jsonBoxOutput {
+    margin-right: 7px;
+    margin-left: 0px;
+    flex-shrink: 3;
+}
+body.vscode-dark .ioTab > .jsonBoxInput,
+body.vscode-dark .ioTab > .jsonBoxOutput {
+    border: 1px solid #454547;
+    background-color: #132430;
+}
+
+
+.resizer {
+    flex: 0 0 auto;
+    width: 7px; 
+    padding: 0px;
+    margin: 10px 7px;
+    background: var(--vscode-scrollbarSlider-background);
+    border-radius: 5px;
+    cursor: ew-resize;
+}
+.resizer::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+
+.jsonBoxHeader {
+    padding: 12px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #ddd;
+    color: #666;
+    font-size: 110%;
+    -webkit-user-select: none;
+}
+body.vscode-dark .jsonBoxHeader {
+    border-bottom: 1px solid #454547;
+    color: #ccc;
+}
+
+
+.codeDisplay {
+    padding: 3px;
+    flex: 1 1 auto;
+    min-height: 0px;
+    overflow: auto;
+}
+pre {
+    margin: 5px 5px;
+}
+.disabledJsonDisplay {
+    color: #cc9b9b;
+}
+body.vscode-dark .disabledJsonDisplay {
+    color: #a39c91;
+}
+
+
+.executionInfoTab {
+    background-color: inherit;
+    padding: 5px;
+    cursor: not-allowed;
+}
+.executionInfoBox {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 98%;
+    height: 75vh;
+    min-height: 0px;
+    margin: auto;
+    margin-top: 5px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    background-color: #fcfcfe;
+}
+body.vscode-dark .executionInfoBox {
+    border: 1px solid #454547;
+    background-color: #132430;
+}
+
+.aplViewTab {
+    background-color: inherit;
+    padding: 5px;
+    cursor: not-allowed;
+}
+.aplViewBox {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 98%;
+    height: 75vh;
+    min-height: 0px;
+    margin: auto;
+    margin-top: 5px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    background-color: #fcfcfe;
+    overflow: auto;
+}
+body.vscode-dark .aplViewBox {
+    border: 1px solid #454547;
+    background-color: #132430;
+}
+
+.aplView {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    background-color: #fcfcfe;
+    overflow: auto;
+}
+body.vscode-dark .aplView {
+    border: 1px solid #454547;
+    background-color: #132430;
+}
+
+.aplViewText{
+    text-align: center;
+    padding: 20px;
+}
+
+.chatbox {
+    display: flex;
+    flex: 1 0 auto;
+    flex-flow: column;
+    width: 25%;
+    margin: 15px 10px;
+    height: calc(100% - 25px);
+    border: 2px solid #ddd;
+    background: #ededed;
+}
+body.vscode-dark .chatbox {
+    border: 2px solid #363638;
+    background-color: #272729;
+}
+
+
+.skillSettingsDropdown {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+    padding: 8px 10px;
+    color: #666;
+    background: #f3f3f3;
+    border-bottom: 1px solid #ddd;
+    -webkit-user-select: none;
+}
+body.vscode-dark .skillSettingsDropdown {
+    color: #ccc;
+    background: #272729;
+    border-bottom: 1px solid #454547;
+}
+
+
+select {
+    font-family: "Amazon Ember Regular","Helvetica Neue",Arial,Helvetica,Roboto,sans-serif;
+    color: #00a0cc;
+    background: #fcfcfe;
+    font-size: 12px;
+    padding: 8px 10px;
+    padding-left: 8px;
+    width: 12vw;
+    background-position: 100% 70%;
+
+    /* from toolkit.css */
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;  
+    border-radius: 0px;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24' height='24' viewBox='0 0 24 24'><path fill='%23444' d='M7.406 7.828l4.594 4.594 4.594-4.594 1.406 1.406-6 6-6-6z'></path></svg>");
+    background-repeat: no-repeat;
+}
+body.vscode-dark select {
+    background-color: #132430;
+    border: 1px solid #454547;
+    color: #dae5e8;
+}
+
+
+.chatboxHeader {
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+    background: #eee;
+    color: #666;
+    font-size: 125%;
+    font-weight: bold;
+    -webkit-user-select: none;
+}
+body.vscode-dark .chatboxHeader {
+    background: #272729;
+    color: #dbdbdb;
+    border-bottom: 1px solid #454547;
+}
+.chatboxHeader * {
+    border: 2px solid #ddd;
+}
+body.vscode-dark .chatboxHeader * {
+    border: 2px solid #272729;
+}
+
+.chatboxChat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 7px;
+    padding-top: 10px;
+    padding-left: 0px;
+    background-color: #fcfcfe;
+}
+body.vscode-dark .chatboxChat {
+    background-color: #132430;
+    border-bottom: 1px solid #454547;
+}
+.chatboxChat::-webkit-scrollbar {
+    width: 7px;
+}
+
+
+.msg {
+    display: flex;
+    align-items: flex-end;
+}
+.msg:last-of-type {
+    margin: 0;
+}
+
+
+.msgImg {
+    width: 48px;
+    height: auto;
+    margin-right: 1px;
+    background: #fcfcfe;
+    border-radius: 50%;
+}
+body.vscode-dark .msgImg {
+    background: #132430;
+}
+img {
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+}
+
+
+.msgBubble {
+    width: auto;
+    min-width: 5px;
+    max-width: 150px;
+    word-wrap: break-word;
+    padding: 12px;
+    border-radius: 15px;
+    color: #fff;
+}
+body.vscode-dark .msgBubble {
+    color: #ededed;
+}
+
+
+.alexaBubble {
+    border-bottom-left-radius: 0;
+    margin-bottom: 10px;
+    margin-right: 15px;
+    background: #00b2e3;
+}
+.disabledAlexaBubble {
+    background: #bde2f0;
+}
+body.vscode-dark .disabledAlexaBubble {
+    background: #536d75;
+    color: #c0c1c2;
+}
+
+.userInput {
+    flex-direction: row-reverse;
+    margin-bottom: 10px;
+}
+.userBubble {
+    border-bottom-right-radius: 0;
+    margin-left: 15px;
+    background: #666666;
+}
+.disabledUserBubble {
+    background: #adadad;
+}
+body.vscode-dark .disabledUserBubble {
+    background: #727475;
+    color: #c0c1c2;
+}
+
+
+.typingDot {
+    height: 7px;
+    width: 7px;
+    float: left;
+    margin: 1px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: blink 1s infinite;
+}
+.dot1 {
+    animation-delay: 400ms;
+}
+.dot2 {
+    animation-delay: 600ms;
+}
+.dot3 {
+    animation-delay: 800ms;
+}
+@keyframes blink {
+    50% { opacity: 0.4; }
+    100% { opacity: 0.8; }
+}
+
+
+.chatboxInputArea {
+    display: flex;
+    padding: 8px;
+    border-top: 2px solid #ddd;
+    background: #eee;
+}
+body.vscode-dark .chatboxInputArea {
+    border-top: 2px solid #272729;
+    background-color: #272729;
+}
+
+
+.chatboxInputArea * {
+    padding: 10px;
+    border: 2px solid #ddd;
+    font-size: 13px;
+}
+body.vscode-dark .chatboxInputArea * {
+    border: 2px solid #272729;
+}
+
+
+.chatboxInputArea > .chatboxInput {
+    flex: 1;
+    width: 100%; 
+    background: #fcfcfe;
+    cursor: not-allowed;
+}
+body.vscode-dark .chatboxInputArea > .chatboxInput {
+    color: #dbdbdb;
+    border: 1px solid #454547;
+    background: #132430;
+}
+
+
+.chatboxInputArea > .chatboxInput:focus {
+    border-color: #00b2e3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,176,230,.25);
+}
+
+
+.chatboxInputArea > .chatboxSendButton {
+    margin-left: 8px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background: #00b0e6;
+    color: #fff;
+    transition: background 0.2s;
+    cursor: not-allowed;
+    -webkit-user-select: none;
+}
+body.vscode-dark .chatboxInputArea > .chatboxSendButton {
+    color: #dbdbdb;
+}
+.chatboxSendButton:hover:not([disabled]) {
+    background: #0292ba;
+}
+.chatboxSendButton:disabled {
+    background: #b9c5c9;
+}
+body.vscode-dark .chatboxSendButton:disabled {
+    background: #52686e;
+    color: #b3b3b3;
+}
+.chatboxSendButton:focus {
+    outline: none;
+}
+
+.chatboxHeader > .exportBtn {
+    margin-left: 8px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background: #00b0e6;
+    color: #fff;
+    transition: background 0.2s;
+    cursor: not-allowed;
+    -webkit-user-select: none;
+    float:right;
+}
+body.vscode-dark .chatboxHeader > .exportBtn {
+    color: #dbdbdb;
+}
+.exportBtn:hover:not([disabled]) {
+    background: #0292ba;
+}
+.exportBtn:disabled {
+    background: #b9c5c9;
+}
+body.vscode-dark .exportBtn:disabled {
+    background: #52686e;
+    color: #b3b3b3;
+}
+.exportBtn:focus {
+    outline: none;
+}
+
+.chatboxHeader > .resetBtn {
+    margin-left: 8px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background: #00b0e6;
+    color: #fff;
+    transition: background 0.2s;
+    cursor: not-allowed;
+    -webkit-user-select: none;
+    float:right;
+}
+body.vscode-dark .chatboxHeader > .resetBtn {
+    color: #dbdbdb;
+}
+.resetBtn:hover:not([disabled]) {
+    background: #0292ba;
+}
+.resetBtn:disabled {
+    background: #b9c5c9;
+}
+body.vscode-dark .resetBtn:disabled {
+    background: #52686e;
+    color: #b3b3b3;
+}
+.resetBtn:focus {
+    outline: none;
+}

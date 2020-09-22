@@ -11,10 +11,6 @@ export const EXTERNAL_LINKS = {
     DEV_PORTAL: 'https://developer.amazon.com/alexa/console/ask',
     HELP_DOC: 'https://developer.amazon.com/docs/ask-toolkit/get-started-with-the-ask-toolkit-for-visual-studio-code.html',
     ASK_CLI_INSTALL_DOC: 'https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html',
-    CONTACT_US: 'https://developer.amazon.com/support/contact-us?subjectCategory=ALEXA',
-    DEVELOPER_FORUMS: 'https://forums.developer.amazon.com/spaces/165/index.html',
-    FEATURE_REQUEST: 'https://alexa.uservoice.com/',
-    REPORT_ISSUE : 'https://github.com/alexa-labs/ask-toolkit-for-vscode/issues',
     INIT_COMMAND_DOC : 'https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#init-command',
     GETTING_STARTED : 'https://developer.amazon.com/en-US/alexa/alexa-skills-kit',
     TOOLS_DOCS : {
@@ -24,7 +20,25 @@ export const EXTERNAL_LINKS = {
         VSCODE : 'https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/get-started-with-the-ask-toolkit-for-visual-studio-code.html'
     },
     ALEXA_FEATURES : 'https://developer.amazon.com/en-US/docs/alexa/quick-reference/custom-skill-quick-reference.html#',
-    RELEASE_UPDATES : 'https://developer.amazon.com/en-US/alexa/alexa-skills-kit/resources#whats-new-with-the-alexa-skills-kit'
+    RELEASE_UPDATES : 'https://developer.amazon.com/en-US/alexa/alexa-skills-kit/resources#whats-new-with-the-alexa-skills-kit',
+    CONTACT_ALEXA_TEAM: {
+        LEAVE_REVIEW: {
+            TITLE: 'Leave a review',
+            URL: 'https://marketplace.visualstudio.com/items?itemName=ask-toolkit.alexa-skills-kit-toolkit&ssr=false#review-details'
+        },
+        ASK_QUESTION: {
+            TITLE: 'Ask a question',
+            URL: 'https://github.com/alexa/ask-toolkit-for-vscode/issues/new?labels=guidance&template=guidance_request.md'
+        },
+        REPORT_ISSUE: {
+            TITLE: 'Report an issue',
+            URL: 'https://github.com/alexa/ask-toolkit-for-vscode/issues/new?labels=bug&template=bug_report.md'
+        },
+        SUBMIT_FEATURE_REQUEST: {
+            TITLE: 'Submit a feature request',
+            URL: 'https://github.com/alexa/ask-toolkit-for-vscode/issues/new?labels=feature-request&template=feature_request.md'
+        }
+    }
 };
 
 export const TREE_VIEW_IDS = {
@@ -60,7 +74,12 @@ export const SKILL_ACTION_ITEMS = {
         LABEL: 'Deploy skill'
     },
     TEST: {
-        LABEL: 'Test skill'
+        LABEL: 'Test skill',
+        ITEMS: {
+            OPEN: 'Open simulator',
+            REPLAY: 'Replay session',
+            VIEWPORT: 'Change viewport profile'
+        }
     },
     ALEXA_PRESENTATION_LANGUAGE: EXTENSION_TREE_VIEW_CONFIG.ALEXA_PRESENTATION_LANGUAGE
 };
@@ -230,9 +249,40 @@ export const BASE_STATES_CONFIG = {
     profiles: {}
 };
 
+export const ALEXA_RESPONSE_TYPES = {
+    SPEECH: 'Speech'
+};
+
+export const SIMULATOR_WEBVIEW_MESSAGES = {
+    ENABLE_SKILL: 'enable_skill',
+    DISABLE_SKILL: 'disable_skill',
+    ENABLED_SKILL: 'enabled_skill',
+    DISABLED_SKILL: 'disabled_skill',
+    CHECK_SKILL_STATUS: 'check_skill_status',
+    CHECK_AVAILABLE_LOCALES: 'check_available_locales',
+    UPDATE_LOCALE: 'update_locale'
+};
+
+export const SIMULATOR_MESSAGE_TYPE = {
+    SKILL_STATUS: 'skill_status',
+    LOCALE: 'locale',
+    UTTERANCE: 'utterance',
+    REPLAY: 'replay',
+    EXPORT: 'export',
+    ACTION: 'action',
+    VIEWPORT: 'viewport',
+    EXCEPTION: 'exception'
+};
+
+export const SIMULATION_IN_PROGRESS = 'Simulation in progress';
+
 export const LOCALHOST_PORT = 9090;
 
 export const EN_US_LOCALE = 'en-US';
+
+export const DEFAULT_SESSION_MODE = 'DEFAULT';
+
+export const NEW_SESSION_MODE = 'FORCE_NEW_SESSION';
 
 export const DEFAULT_PROFILE = 'default';
 
@@ -240,7 +290,24 @@ export const DEFAULT_ENCODING = 'utf8';
 
 export const ERRORS = {
     SKILL_ACCESS: (currentProfile: string, skillProfile: string): string => `'${currentProfile}' profile doesn't have access to the skill. Please use '${skillProfile}' profile.`,
-    MISSING_INFO_LOCAL_DEBUG: (cause: string): string => `Missing info: '${cause}'. Please configure manually.`
+    SIMULATION_TIMEOUT: 'Skill simulation request timed out. Please try again.',
+    SKILL_ENABLEMENT_FAIL: 'We failed to enable the skill simulator. Try again.',
+    SKILL_DISABLEMENT_FAIL: 'We failed to disable the skill simulator. Try again.',
+    SIMULATION_REQUEST_FAIL: 'The simulator did not respond to your request. Try again.',
+    SKILL_MANIFEST_REQUEST_FAIL: 'Could not access skill manifest information.',
+    UNRECOGNIZED_ALEXA_RESPONSE_TYPE: (responseType: string|undefined): string => `The simulator returned an unrecognized Alexa response of type '${responseType}.'`,
+    UNDEFINED_SIMULATION_ID: 'Error: The simulator ID was invalid. Try again.',
+    UNRECOGNIZED_SIMULATION_RETURN_MESSAGE: 'Error: Unrecognized simulation return message. Message must contain either \'error\' or \'alexaResponse\'.',
+    UNRECOGNIZED_MESSAGE_FROM_WEBVIEW: 'Error: Unrecognized message sent from Webview.',
+    MISSING_INFO_LOCAL_DEBUG: (cause: string): string => `Missing info: '${cause}'. Please configure manually.`,
+    OPEN_REPLAY_FILE_FAIL: (filePath: string|undefined): string => `Open replay file failed. File path: '${filePath}'. Please check the json file.`,
+    REPLAY_FAILED: 'Import replay file failed: This file is empty. Select another JSON file to replay.',
+    REPLAY_FAILED_ID: 'Import replay file failed: Skill id does not match. Select another JSON file to replay.',
+    REPLAY_FAILED_LOCALE: 'Failed to import replay file because the skill locale does not match the currently open skill.',
+    REPLAY_FAILED_ENABLE: 'Failed to import replay file because the Simulator is off. Turn the Skill stage to "development" before importing a replay file.',
+    EXPORT_FAILED: 'There is no utterance to export, please input some utterances.',
+    EXPORT_FILE_FAIL:  (filePath: string|undefined): string => `The file '${filePath}' could not be saved. Please make sure you have access to write to this path.`,
+    PROFILE_ERROR: (profile: string|undefined): string =>`This skill cannot be accessed by the current profile: ${profile}. To access this skill, switch to a different profile.`
 };
 
 export const GIT_MESSAGES = {
@@ -265,6 +332,7 @@ export const LOCAL_DEBUG = {
 export const CLI_HOSTED_SKILL_TYPE = "@ask-cli/hosted-skill-deployer";
 export const SKILL_NOT_DEPLOYED_MSG = 'This skill has not been previously deployed. Some extension functionalities will be unavailable until an initial deployment.';
 export const MULTIPLE_SKILLS_MSG = 'Multiple skills are open in the workspace, so some Alexa Toolkit Extension features will not work. Alexa Toolkit Extension works best when only one skill is open.';
+export const MULTIPLE_SKILLS_PRESENT_MSG = 'The workspace already contains one or more skill folders. Alexa Toolkit Extension works best when only one skill is open. Do you want to open the skill in a new workspace?';
 export const CLI_V1_GLOB_PATTERN = '**/.ask/config';
 export const CLI_V1_SKILL_MSG = 'This skill contains unsupported skill folder structure. Some Alexa Toolkit Extension features will not work. Please follow [this guide](https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-v1-to-v2-migration-guide.html#new-skill-project-structure-required-for-deployment-with-cli-v2) to upgrade your skill folder structure.';
 export const SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY = 'seenTelemetryNotificationMessage';

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Security-Policy"
+        content="default-src https: data:; img-src https: data:; script-src vscode-resource: https: data: 'unsafe-inline' 'unsafe-eval'; style-src vscode-resource: 'unsafe-inline';" />
+        
+        <title>Simulate skill</title>
+        <link rel="stylesheet" type="text/css" href="${simulateCss}">
+        <script src="https://d2o906d8ln7ui1.cloudfront.net/apl-wasm-1.4.js"></script>
+        <script>window.AplRenderer || document.write('<script src="${customJavascript}"><\\/script>')</script> 
+        <script src="${aplRenderUtils}"></script>
+        <script src="${javascript}"></script>
+   </head>
+
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Skill Simulation</h1>
+        </div>
+
+        <main class="contentContainer">
+            <section class="chatbox">
+                <header class="chatboxHeader">
+                    Talk to Alexa
+                    <input type="button" class="exportBtn" id="exportBtn" value="Export"/>
+                    <input type="button" class="resetBtn" id="resetBtn" value="Reset"/>
+                </header>
+
+                <div class="skillSettingsDropdown">
+                    <label for="stageDropdown">Skill stage: </label>
+                    <select id="stageDropdown">
+                        <option value="off">Off</option>
+                        <option value="development">Development</option>
+                    </select>
+                </div>
+    
+                <div class="skillSettingsDropdown">
+                    <label for="localeDropdown">Locale: </label>
+                    <select id="localeDropdown">
+                        <option value='loading'>Loading... </option>
+                    </select>
+                </div>
+    
+                <div class="chatboxChat" id="messageContainer">
+                </div>
+    
+                <form class="chatboxInputArea" id="chatArea">
+                    <input type="text" class="chatboxInput" value=""
+                            id="chatboxInput" placeholder="" disabled>
+                    <button type="submit" class="chatboxSendButton" id="sendButton" disabled>Send</button>
+                </form>
+            </section>
+
+            <section class="skillInfoBox" id="skillInfoBox">      
+                <header class="skillInfoBoxHeader">
+                    <button class="tabButton active" id="skillIOButton">Skill I/O</button>
+                    <button class="tabButton" id="executionInfoButton">Execution Info</button>
+                    <button class="tabButton" id="previewAplButton">Device Preview</button>
+                </header> 
+    
+                <div class="ioTab" id="ioTab">
+                    <div class="jsonBoxInput" id="jsonBoxInput"> 
+                        <header class="jsonBoxHeader">JSON Input</header>
+                        <div class="codeDisplay">
+                            <pre><code id="jsonInputCode">
+                            </code></pre>
+                        </div>
+                    </div>
+                    <div class="resizer" id="resizer"></div>
+                    <div class="jsonBoxOutput" id="jsonBoxOutput">
+                        <header class="jsonBoxHeader">JSON Output</header>
+                        <div class="codeDisplay">
+                            <pre><code id="jsonOutputCode">
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="executionInfoTab" id="executionInfoTab">
+                    <div class="executionInfoBox"> 
+                        <header class="jsonBoxHeader">Alexa Execution Info</header>
+                        <div class="codeDisplay">
+                            <pre><code id="executionInfoCode">
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="aplViewTab" id="aplViewTab">
+                    <div class="aplViewBox" id="aplViewBox"> 
+                        <div class="aplView" id="aplView"> 
+                            <div class="aplViewText" id="aplViewText"> 
+                                There is no visual content to display.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

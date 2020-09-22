@@ -30,6 +30,7 @@ export class ProfileManagerWebview extends AbstractWebView {
 
     constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
+        this.isGlobal = true;
         this.loader = new ViewLoader(this.extensionContext, 'profileManager', this);
     }
     

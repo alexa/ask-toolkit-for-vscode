@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://m.media-amazon.com/images/G/01/mobile-apps/dex/avs/docs/ux/branding/mark1._TTH_.png">
+    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png">
     <br/>
     <h1 align="center">Alexa Skills Toolkit for Visual Studio Code</h1>
     <p align="center">
@@ -55,6 +55,15 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
   <br />
 </p>
 
+### Test skill through local simulator
+
+<p align="center">
+  <br />
+  <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/docs/simulator.gif" alt="Local simulator" />
+  <br />
+</p>
+
+
 ### Deploy and build skill
 
 <p align="center">
@@ -90,6 +99,8 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
 
 - **Test & Debug Skills Locally**
     - Add default Node/Python debug configurations in your skill's `launch.json` [debug configuration](https://code.visualstudio.com/docs/editor/debugging) file, install dependencies (`ask-sdk-local-debug`) and start a local debug session. More information can be found on the [getting started documentation](https://developer.amazon.com/docs/alexa/ask-toolkit/vs-code-ask-skills.html#test)
+    - Simulate alexa requests through local simulator in the extension.
+    - Save and replay the simulate session through the local simulator.
 
 > **Note**: If you are using any existing profiles, we recommend you to recreate them again from the **Skill Management** tab -> hamburger (`...`) menu -> **Profile Manager** view, so that the profile will contain all LWA scopes needed for local debugging. 
 
