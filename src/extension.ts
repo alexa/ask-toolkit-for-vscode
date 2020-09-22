@@ -30,7 +30,8 @@ import { CreateSkillWebview } from './askContainer/webViews/createSkillWebview';
 import { DeploySkillWebview } from './askContainer/webViews/deploySkillWebview';
 import { InteractionModelSyncWebview } from './askContainer/webViews/interactionModelSync';
 import { ManifestSyncWebview } from './askContainer/webViews/manifestSync';
-import { EXTENSION_STATE_KEY, EXTENSION_ID, MULTIPLE_SKILLS_MSG, CLI_V1_SKILL_MSG, CLI_V1_GLOB_PATTERN, TELEMETRY_NOTIFICATION_MESSAGE, SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY, DEFAULT_PROFILE } from './constants';
+import { EXTENSION_STATE_KEY, EXTENSION_ID, MULTIPLE_SKILLS_MSG, CLI_V1_SKILL_MSG, CLI_V1_GLOB_PATTERN,
+    TELEMETRY_NOTIFICATION_MESSAGE, SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY, DEFAULT_PROFILE } from './constants';
 import { Logger, LogLevel } from './logger';
 import { AccessTokenCommand } from './askContainer/commands/accessToken';
 import { GetSkillIdFromWorkspaceCommand } from './askContainer/commands/skillIdFromWorkspaceCommand';
@@ -45,6 +46,7 @@ import { AplPreviewWebView } from './aplContainer/webViews/aplPreviewWebView';
 import { clearCachedSkills } from './utils/skillHelper';
 import { checkAllSkillS3Scripts } from './utils/s3ScriptChecker';
 import { authenticate } from './utils/webViews/authHelper';
+import { ext } from './extensionGlobals';
 
 const DEFAULT_LOG_LEVEL = LogLevel.info;
 
@@ -54,13 +56,15 @@ function registerCommands(context: vscode.ExtensionContext): void {
     const createSkill: CreateSkillWebview = new CreateSkillWebview('Create new skill', 'createSkill', context);
 
     registerWebviews(profileManager, createSkill);
-
-    apiRegisterCommands(context, [
+    ext.askGeneralCommands = [
         new ListSkillsCommand(), new OpenWorkspaceCommand(), new OpenUrlCommand(),
         new InitCommand(profileManager), new GetToolkitInfoCommand(),
         new ViewAllSkillsCommand(), new CreateSkillCommand(createSkill),
         new CloneSkillCommand(), new ChangeProfileCommand(), new AccessTokenCommand(),
-        new DebugAdapterPathCommand(), new CloneSkillFromConsoleCommand()]);
+        new DebugAdapterPathCommand()
+    ];
+
+    apiRegisterCommands(context, ext.askGeneralCommands);
 }
 
 async function registerSkillActionComponents(context: vscode.ExtensionContext): Promise<void> {
@@ -74,13 +78,15 @@ async function registerSkillActionComponents(context: vscode.ExtensionContext): 
         const syncManifestView = new ManifestSyncWebview('Download manifest', 'syncManifest', context);
         const aplPreviewWebView: AplPreviewWebView = new AplPreviewWebView('APL Preview', 'previewApl', context);
         registerWebviews(deploySkill, syncInteractionModelView, aplPreviewWebView, syncManifestView);
-    
-        apiRegisterCommands(context, [new DeploySkillCommand(deploySkill), 
+
+        ext.askSkillCommands = [new DeploySkillCommand(deploySkill), 
             new SyncInteractionModelCommand(syncInteractionModelView), new GetSkillIdFromWorkspaceCommand(), new SyncManifestCommand(syncManifestView),
             new CreateAplDocumentFromSampleCommand(aplPreviewWebView), new ChangeViewportProfileCommand(aplPreviewWebView), 
             new PreviewAplCommand(aplPreviewWebView), new SyncAplResourceCommand(),
             new RefreshSkillActionsCommand()
-        ]);
+        ];
+    
+        apiRegisterCommands(context, ext.askSkillCommands);
 
         if (skillFolders.length === 1) {
             // tslint:disable-next-line: no-unused-expression
@@ -129,7 +135,7 @@ async function registerViews(context: vscode.ExtensionContext): Promise<void> {
         );
 
         registerWebviews(welcomeScreen);
-        if (await Utils.isProfileAuth(context) && context.globalState.get('didFirstTimeLogin') === true) {
+        if (await Utils.isProfileAuth(context) && context.globalState.get(EXTENSION_STATE_KEY.DID_FIRST_TIME_LOGIN) === true) {
             welcomeScreen.showView();
         } else {
             showLoginScreen(context);

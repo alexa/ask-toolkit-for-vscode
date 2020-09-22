@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as os from 'os';
 import * as child_process from 'child_process';
 
-import { AbstractCommand, CommandContext } from '../../runtime';
+import { AbstractCommand } from '../../runtime';
 import { Logger } from '../../logger';
 import { DEFAULT_ENCODING, EXTENSION_ID } from '../../constants';
 
@@ -27,7 +27,7 @@ export class GetToolkitInfoCommand extends AbstractCommand<void> {
         return toolkitDetails;
     }
 
-    async execute(context: CommandContext): Promise<void> {
+    async execute(): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}`);
         
         const toolkitEnvDetails = this.getToolkitDetails();

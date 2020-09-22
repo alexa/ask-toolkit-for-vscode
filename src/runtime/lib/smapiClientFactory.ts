@@ -7,7 +7,7 @@ import { AUTH } from "./utils/constants";
 import { EXTENSION_ID } from '../../constants';
 
 export class SmapiClientFactory {
-    private static readonly profileInstanceMap: Map<String, smapiModel.services.skillManagement.SkillManagementServiceClient> = new Map();
+    private static readonly profileInstanceMap: Map<string, smapiModel.services.skillManagement.SkillManagementServiceClient> = new Map();
 
     private constructor() { }
 

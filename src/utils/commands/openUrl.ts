@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { AbstractCommand, CommandContext, Utils } from '../../runtime';
+import { AbstractCommand, CommandContext } from '../../runtime';
 
 import { checkProfileSkillAccess } from '../skillHelper';
 import { loggableAskError } from '../../exceptions';

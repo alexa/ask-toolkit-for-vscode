@@ -1,24 +1,33 @@
-'use stirct';
+"use stirct";
 
-import * as assert from 'assert';
-import * as vscode from 'vscode';
+import * as assert from "assert";
+import * as vscode from "vscode";
+import { EXTENSION_PUBLISHER, EXTENSION_FULL_NAME } from "../src/constants";
+import { ext } from "../src/extensionGlobals";
 
-// package.json publisher + name. Test cannot access package.json, so hardcore here.
-const extensionId = 'ask-toolkit.alexa-skills-kit-toolkit';
+const extensionId = `${EXTENSION_PUBLISHER}.${EXTENSION_FULL_NAME}`;
 
-describe('Alexa Skill Kit Extension', () => {
+describe("Alexa Skill Kit Extension", () => {
+    let extension: vscode.Extension<any> | undefined;
 
-	it('Extension should be present', () => {
-		assert.ok(vscode.extensions.getExtension(extensionId));
-	});
+    it("Extension should be present", () => {
+        extension = vscode.extensions.getExtension(extensionId);
+        assert.ok(extension !== undefined);
+    });
 
-	it('should activate', async() => {
-		const extension = vscode.extensions.getExtension(extensionId);
-		if (extension) {
-			await extension.activate();
-			assert.ok(extension.isActive);
-		} else {
-			assert.fail('Extension is not available');
-		}
-	});
+    it("should activate", async () => {
+        extension = vscode.extensions.getExtension(extensionId);
+        if (extension !== undefined) {
+            await extension.activate();
+            assert.ok(extension.isActive);
+        } else {
+            assert.fail("Extension is not available");
+        }
+    });
+
+    after(() => {
+        ext.askGeneralCommands.forEach(command => {
+            command.dispose();
+        });
+    });
 });

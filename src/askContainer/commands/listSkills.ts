@@ -23,7 +23,7 @@ export class ListSkillsCommand extends AbstractCommand<Array<SmapiResource<skill
             vendorId);
         listSkills.skills?.forEach((listSkill) => {
             let skillName = 'someSkill';
-            if (listSkill.nameByLocale !== undefined) {
+            if (listSkill.nameByLocale !== undefined && Object.values(listSkill.nameByLocale).length > 0) {
                 if (listSkill.nameByLocale[EN_US_LOCALE]) {
                     skillName = listSkill.nameByLocale[EN_US_LOCALE];
                 } else {
