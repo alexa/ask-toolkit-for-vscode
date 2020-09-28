@@ -531,7 +531,7 @@ function displayLocales(message) {
         'it-IT': `<option value='it-IT'>Italian (IT)</option>`,
         'ja-JP': `<option value='ja-JP'>Japanese (JP)</option>`,
         'fr-CA': `<option value='fr-CA'>French (CA)</option>`,
-        'pt-BR': `<option value='pt-BR'>Portugese (BR)</option>`,
+        'pt-BR': `<option value='pt-BR'>Portuguese (BR)</option>`,
         'hi-IN': `<option value='hi-IN'>Hindi (IN)</option>`,
         'es-US': `<option value='es-US'>Spanish (US)</option>`
     };
