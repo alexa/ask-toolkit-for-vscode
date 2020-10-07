@@ -132,6 +132,12 @@ and many more ...
 - **What if I failed to sign in Amazon account over SSH remote development?**
     - Please refer to [Forwarding a port / creating SSH tunnel](https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel) to check whether you have forwarded port 9090.
 
+- **Why do I get a prompt for Git credentials when an Alexa hosted skill is created or downloaded?**
+    - The git credential is used to access the AWS CodeCommit repository that the hosted skill resides at. This is one of the AWS resources Alexa-hosted skills service provides when creating a skill, explained [here](https://developer.amazon.com/en-US/docs/alexa/hosted-skills/build-a-skill-end-to-end-using-an-alexa-hosted-skill.html#overview). 
+    - To get the hosted skills' git credentials, you can call [SMAPI API](https://developer.amazon.com/en-US/docs/alexa/smapi/alexa-hosted-skill.html#generate-credentials) manually, or use the [ASK CLI](https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-command-reference.html#git-credentials-helper) command. The git credentials are short-lived, and need to be refreshed periodically, to keep being able to access the locally cloned hosted skill git.
+    - The ASK Toolkit extension is able to automatically configure the credential helper for the hosted skills, and fetch the credentials whenever executing git operations. However, we observed that some specific versions(2.26.x and 2.25.x) of git cannot configure the credential helper properly, leading to the Git credentials prompt. 
+    - Therefore, we suggest checking your git version using `git version`. If it is versions 2.25.x or 2.26.x, you need to update to Git >= 2.27.x. This should prevent being asked for Git credentials again. 
+    - Otherwise, we suggest you create an issue report.
 ----
 
 ## Got Feedback?
