@@ -29,7 +29,7 @@ export class AplPreviewWebView extends AbstractWebView {
         context: vscode.ExtensionContext
     ) {
         const allowedLocalResourceUri: vscode.Uri = vscode.Uri.file(context.extensionPath);
-        super(viewTitle, viewId, context, vscode.ViewColumn.Beside, allowedLocalResourceUri, { preserveFocus: true, viewColumn: vscode.ViewColumn.Beside});
+        super(viewTitle, viewId, context, vscode.ViewColumn.Beside, allowedLocalResourceUri, { preserveFocus: true, viewColumn: vscode.ViewColumn.Beside });
         this.loader = new ViewLoader(this.extensionContext, "previewApl", this);
         this.viewport = DEFAULT_VIEWPORT_CHARACTERISTICS;
         this.disposables = [];
@@ -149,6 +149,14 @@ export class AplPreviewWebView extends AbstractWebView {
         }
         this.update(editor.document);
 
+        const webview: vscode.Webview = this.getWebview() as vscode.Webview;
+        const aplRenderPath: vscode.Uri = webview.asWebviewUri(
+            vscode.Uri.file(
+                path.join(
+                    this.extensionContext.extensionPath, 'media/previewApl', 'aplRenderUtils.js',
+                ),
+            ));
+
         const customJavascript = this.getWebview()?.asWebviewUri(
             vscode.Uri.file(
                 path.join(
@@ -158,6 +166,7 @@ export class AplPreviewWebView extends AbstractWebView {
             name: "previewApl",
             js: true,
             args: {
+                "aplRenderUtils": aplRenderPath,
                 customJavascript: customJavascript
             }
         });

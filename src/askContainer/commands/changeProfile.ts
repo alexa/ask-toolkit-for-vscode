@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import { onSkillConsoleViewChangeEventEmitter, onWorkspaceOpenEventEmitter } from '../../askContainer/events';
 import { Logger } from '../../logger';
 import { clearCachedSkills } from '../../utils/skillHelper';
+import { disposeWebviews } from '../../utils/webViews/viewManager';
 
 const VENDOR_ID = 'Vendor ID';
 
@@ -51,6 +52,8 @@ export class ChangeProfileCommand extends AbstractCommand<void> {
                 clearCachedSkills(context.extensionContext);
                 onSkillConsoleViewChangeEventEmitter.fire(undefined);
                 onWorkspaceOpenEventEmitter.fire(undefined);
+                // Close open web views upon profile change.
+                disposeWebviews();
                 profileQp.dispose();
             }
         });

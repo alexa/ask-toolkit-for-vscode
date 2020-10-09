@@ -18,6 +18,7 @@ export class WelcomeScreenWebview extends AbstractWebView {
 
     constructor(viewTitle: string, viewId: string, context: ExtensionContext) {
         super(viewTitle, viewId, context);
+        this.isGlobal = true;
         this.loader = new ViewLoader(this.extensionContext, 'welcomeScreen', this);
     }
 

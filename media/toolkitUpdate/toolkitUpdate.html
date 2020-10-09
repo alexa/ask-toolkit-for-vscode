@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;"
+        />
+        <title>Download interaction model</title>
+        <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+        <script src="${javascript}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>September 2020 update</h1>
+        </div>
+
+        <div class="body">
+            <p>
+                Welcome to the updated Alexa Skills Toolkit for September 2020 (version 2.1). This update introduces a number of new features, enhancements, and bug fixes.
+            </p>
+            <h2>What's new?</h2>
+            <div class="container">
+                <div class="flex-item">
+                    <h2>Local skill simulator</h2>
+                    <p>
+                        <h3>Invoke your skill</h3>
+                        The newly introduced skill simulator allows skill builders to directly invoke their skills from the toolkit. You can send text requests to your skill and see the corresponding text responses, as well as the complete JSON request and response payloads. The simulator maintains the skill session with your skill just as a device would, so you can test the dialog flow. If your skill supports multiple languages, select the language you want to test from the drop-down list.
+                        <h3>Preview APL responses</h3>
+                        The simulator also supports rendering Alexa Presentation Language (APL) responses if your skill returns them. These non interactive APL response previews let you see how the APL response will look on a variety of device shapes which can be selected.
+                        <h3>Replay requests</h3>
+                        In addition, the toolkit simulator allows you to export requests you've made to your skill to a file. This allows you to replay those requests at a later time or share them with other developers for testing.
+                        <br/><br/>
+                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/september2020/simulator.gif">
+                    </p>
+                </div>
+            </div>
+
+            <h2>Bug fixes</h2>
+            <p>
+                <ul>
+                    <li><a href="https://github.com/alexa/ask-toolkit-for-vscode/issues/21">21</a>: Extension overwriting existing <code>.code-workspace</code> file</li>
+                </ul>
+            </p>
+
+            <h2>Connect with us!</h2>
+            We'd love to hear from you and get feedback to help shape our future releases.
+            <ul>
+                <li>Write us a <a href="https://marketplace.visualstudio.com/items?itemName=ask-toolkit.alexa-skills-kit-toolkit&ssr=false#review-details">review</a></li>
+                <li>Upvote 👍 <a href="https://github.com/alexa/ask-toolkit-for-vscode/issues?q=is%3Aissue+is%3Aopen+label%3Afeature-request+sort%3Areactions-%2B1-desc">feature requests</a></li>
+                <li><a href="https://github.com/alexa/ask-toolkit-for-vscode/issues/new?labels=guidance&template=guidance_request.md">Ask a question</a></li>
+                <li><a href="https://github.com/alexa/ask-toolkit-for-vscode/issues/new?labels=feature-request&template=feature_request.md">Request a new feature</a></li>
+                <li><a href="https://github.com/alexa/ask-toolkit-for-vscode/issues/new?labels=bug&template=bug_report.md">File an issue</a></li>
+            </ul>
+
+        </div>
+    </body>
+</html>

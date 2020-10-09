@@ -8,9 +8,10 @@ import { SmapiResource, Utils, SmapiClientFactory } from '../runtime';
 
 import { loggableAskError } from '../exceptions';
 import { getSkillFolderInWs } from './workspaceHelper';
-import { 
-    EXTENSION_STATE_KEY, EN_US_LOCALE, DEFAULT_ENCODING, 
-    DEFAULT_PROFILE, ERRORS, SKILL_FOLDER } from '../constants';
+import {
+    EXTENSION_STATE_KEY, EN_US_LOCALE, DEFAULT_ENCODING,
+    DEFAULT_PROFILE, ERRORS, SKILL_FOLDER, SKILL
+} from '../constants';
 import { SkillInfo } from '../models/types';
 import { Logger } from '../logger';
 
@@ -18,7 +19,7 @@ import hostedSkillMetadata = model.v1.skill.AlexaHosted.HostedSkillMetadata;
 
 export function getAskResourceConfig(skillFolder: vscode.Uri): any {
     Logger.verbose(`Calling method: getAskResourceConfig`);
-    if(skillFolder) {
+    if (skillFolder) {
         const askResourcesPath = path.join(
             skillFolder.fsPath, SKILL_FOLDER.ASK_RESOURCES_JSON_CONFIG);
         if (fs.existsSync(askResourcesPath)) {
@@ -61,16 +62,16 @@ export interface SkillDetailsType {
     defaultLocale: string;
 }
 
-export function getSkillDetailsFromWorkspace(context: vscode.ExtensionContext, locale=EN_US_LOCALE): SkillDetailsType {
+export function getSkillDetailsFromWorkspace(context: vscode.ExtensionContext, locale = EN_US_LOCALE): SkillDetailsType {
     Logger.verbose(`Calling method: getSkillDetailsFromWorkspace`);
     const skillFolder = getSkillFolderInWs(context);
     if (skillFolder) {
         const skillConfig = getAskResourceConfig(skillFolder);
         const skillState = getAskState(skillFolder);
         const profile = Utils.getCachedProfile(context) ?? DEFAULT_PROFILE;
-    
-        const skillId: string | undefined = R.path(['profiles', profile, 'skillId'], skillState) 
-             || R.path(['profiles', profile, 'skillId'], skillConfig);
+
+        let skillId: string | undefined = R.path(['profiles', profile, 'skillId'], skillState)
+            || R.path(['profiles', profile, 'skillId'], skillConfig);
 
         const skillJson = getSkillManifestFromWorkspace(skillFolder);
         const localesInfo = skillJson.manifest.publishingInformation.locales;
@@ -78,6 +79,9 @@ export function getSkillDetailsFromWorkspace(context: vscode.ExtensionContext, l
         const skillName = getSkillNameFromLocales(localesInfo, undefined);
         const defaultSkillLocale = getDefaultSkillLocale(localesInfo).replace('-', '_');
 
+        if (!Utils.isNonBlankString(skillId)) {
+            Logger.error('Failed to get the skill id.');
+        }
         return {
             skillId: skillId ?? '',
             skillName: skillName,
@@ -110,7 +114,7 @@ export function getSkillNameFromLocales(localesInfo: LocalesInfoType, locale?: s
         }
         if (!skillName || (typeof skillName === 'string' && skillName.length === 0)) {
             throw loggableAskError('Get skill name error. Skill name should not be empty');
-        } 
+        }
         return typeof skillName === 'string' ? skillName : skillName.name;
     }
 }
@@ -155,7 +159,7 @@ export function getCachedSkills(
 }
 
 export function setCachedSkills(
-    context: vscode.ExtensionContext, skillsList: Array<SmapiResource<SkillInfo>>, 
+    context: vscode.ExtensionContext, skillsList: Array<SmapiResource<SkillInfo>>,
     profile?: string): void {
     Logger.verbose(`Calling method: setCachedSkills, args:`, skillsList, profile);
     profile = profile ?? Utils.getCachedProfile(context);
@@ -186,7 +190,7 @@ export function clearCachedSkills(
         // eslint-disable-next-line no-undef
         EXTENSION_STATE_KEY.CACHED_SKILLS, {});
     delete allSkills[profile];
-    
+
     context.globalState.update(EXTENSION_STATE_KEY.CACHED_SKILLS, allSkills);
 }
 
@@ -200,5 +204,33 @@ export async function getHostedSkillMetadata(skillId: string, context: vscode.Ex
     } catch (err) {
         Logger.verbose('Unable to get hosted skill metadata', err);
         return;
+    }
+}
+
+/**
+ * Return the locales for which the skill has a corresponding interaction model available
+ * @param profile user profile
+ * @param skillId Alexa Skill ID
+ * @param context VSCode extension context
+ */
+export async function getAvailableLocales(profile: string, skillId: string, context: vscode.ExtensionContext): Promise<Record<string, string[]>> {
+    try {
+        const skillManifestEnvelope: model.v1.skill.Manifest.SkillManifestEnvelope =
+            await SmapiClientFactory.getInstance(profile, context)
+                .getSkillManifestV1(skillId, SKILL.STAGE.DEVELOPMENT);
+        const localesArray = skillManifestEnvelope.manifest?.publishingInformation?.locales;
+        const availableLocales: string[] = localesArray ? Object.keys(localesArray) : [];
+
+        return ({ availableLocales });
+    }
+    catch (err) {
+        Logger.error(err);
+        if (err.statusCode === 401) {
+            const profile = Utils.getCachedProfile(context) ?? DEFAULT_PROFILE;
+            throw loggableAskError(ERRORS.PROFILE_ERROR(profile), true);
+        }
+        else {
+            throw loggableAskError(err.message, true);
+        }
     }
 }

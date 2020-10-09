@@ -1,104 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="Content-Security-Policy"
+    content="default-src https: data:; img-src https: data:; script-src vscode-resource: https: data: 'unsafe-inline' 'unsafe-eval'; style-src vscode-resource: 'unsafe-inline';" />
+    
     <title>APL Preview</title>
     <script src="https://d2o906d8ln7ui1.cloudfront.net/apl-wasm-1.4.js"></script>
     <script>window.AplRenderer || document.write('<script src="${customJavascript}"><\\/script>')</script> 
-    <script>
-      // has to put the script here
-      // load separate js file by vscode and renderer init sometimes has race condition
-      let renderer;
-      const vscode = acquireVsCodeApi();
-
-      window.onload = function(){
-        initialize();
-      };
-
-      window.addEventListener("message", (event) => {
-        const message = event.data; // The json data that the extension sent
-        loadDoc(
-          message.document,
-          message.datasources,
-          JSON.parse(message.viewport)
-        );
-      });
-
-      function initialize() {
-        // init renderer engine
-        AplRenderer.initEngine().then(() => {
-          vscode.postMessage({});
-        });
-      }
-
-      async function loadDoc(apl, datasources, deviceConfig) {
-        if (renderer) {
-          renderer.destroy();
-          renderer = undefined;
-        }
-        const content = createContent(apl, datasources);
-
-        const aplDiv = document.getElementById("aplView");
-        if (aplDiv) {
-          document.body.removeChild(aplDiv);
-        }
-        const div = document.createElement("div");
-        div.setAttribute("id", "aplView");
-        div.style.border = "1px solid #000";
-        div.style.position = "relative";
-        div.style.height = deviceConfig.height.toString();
-        div.style.width = deviceConfig.width.toString();
-
-        document.body.appendChild(div);
-        const options = {
-          content,
-          view: div,
-          environment: {
-            agentName: "APL Sandbox",
-            agentVersion: "1.0",
-            allowOpenUrl: true,
-            disallowVideo: false,
-          },
-          viewport: deviceConfig,
-          theme: "dark",
-          developerToolOptions: {
-            mappingKey: "auth-id",
-            writeKeys: ["auth-banana", "auth-id"],
-          },
-          utcTime: Date.now(),
-          localTimeAdjustment: -new Date().getTimezoneOffset() * 60 * 1000,
-        };
-
-        renderer = AplRenderer.default.create(options);
-        window.renderer = renderer;
-        await renderer.init();
-      }
-
-      function createContent(apl, datasources) {
-        const doc = apl;
-        const content = AplRenderer.Content.create(doc);
-        const data = datasources;
-        if (data) {
-          const jsonDoc = JSON.parse(doc);
-          if (
-            jsonDoc.mainTemplate &&
-            jsonDoc.mainTemplate.parameters &&
-            Array.isArray(jsonDoc.mainTemplate.parameters) &&
-            jsonDoc.mainTemplate.parameters.length > 0
-          ) {
-            const parsedData = JSON.parse(data);
-            const name = jsonDoc.mainTemplate.parameters[0];
-            if (typeof name === "string") {
-              if (name === "payload") {
-                content.addData(name, data);
-              } else if (parsedData[name]) {
-                content.addData(name, JSON.stringify(parsedData[name]));
-              }
-            }
-          }
-        }
-        return content;
-      }
-    </script>
+    <script src="${aplRenderUtils}"></script>
+    <script src="${javascript}"></script>
   </head>
   <style>
     body {

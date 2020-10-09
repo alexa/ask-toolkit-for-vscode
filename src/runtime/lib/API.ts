@@ -107,6 +107,7 @@ export abstract class AbstractWebView {
     viewId: string;
     options: WebviewPanelOptions & WebviewOptions;
     showOptions: { viewColumn: ViewColumn, preserveFocus?: boolean };
+    protected isGlobal = false;
 
     constructor(viewTitle: string, viewId: string, 
         context: ExtensionContext,
@@ -160,7 +161,11 @@ export abstract class AbstractWebView {
                 },
                 undefined,
                 this.extensionContext.subscriptions
-              );
+            );
+            this._panel.iconPath = {
+                dark: Uri.parse('https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png'),
+                light: Uri.parse('https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png')
+            };
             this.getWebview().html = this.getHtmlForView(...args);
             this._isPanelDisposed = false;
             this.setEventListeners();
@@ -175,6 +180,10 @@ export abstract class AbstractWebView {
 
     public dispose(): void {
         this._panel.dispose();
+    }
+
+    public getIsGlobal(): boolean {
+        return this.isGlobal;
     }
 
     public isDisposed(): boolean {

@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://m.media-amazon.com/images/G/01/mobile-apps/dex/avs/docs/ux/branding/mark1._TTH_.png">
+    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png">
     <br/>
     <h1 align="center">Alexa Skills Toolkit for Visual Studio Code</h1>
     <p align="center">
@@ -55,6 +55,15 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
   <br />
 </p>
 
+### Test skill through local simulator
+
+<p align="center">
+  <br />
+  <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/docs/simulator.gif" alt="Local simulator" />
+  <br />
+</p>
+
+
 ### Deploy and build skill
 
 <p align="center">
@@ -90,6 +99,8 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
 
 - **Test & Debug Skills Locally**
     - Add default Node/Python debug configurations in your skill's `launch.json` [debug configuration](https://code.visualstudio.com/docs/editor/debugging) file, install dependencies (`ask-sdk-local-debug`) and start a local debug session. More information can be found on the [getting started documentation](https://developer.amazon.com/docs/alexa/ask-toolkit/vs-code-ask-skills.html#test)
+    - Simulate alexa requests through local simulator in the extension.
+    - Save and replay the simulate session through the local simulator.
 
 > **Note**: If you are using any existing profiles, we recommend you to recreate them again from the **Skill Management** tab -> hamburger (`...`) menu -> **Profile Manager** view, so that the profile will contain all LWA scopes needed for local debugging. 
 
@@ -121,6 +132,12 @@ and many more ...
 - **What if I failed to sign in Amazon account over SSH remote development?**
     - Please refer to [Forwarding a port / creating SSH tunnel](https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel) to check whether you have forwarded port 9090.
 
+- **Why do I get a prompt for Git credentials when an Alexa hosted skill is created or downloaded?**
+    - The git credential is used to access the AWS CodeCommit repository that the hosted skill resides at. This is one of the AWS resources Alexa-hosted skills service provides when creating a skill, explained [here](https://developer.amazon.com/en-US/docs/alexa/hosted-skills/build-a-skill-end-to-end-using-an-alexa-hosted-skill.html#overview). 
+    - To get the hosted skills' git credentials, you can call [SMAPI API](https://developer.amazon.com/en-US/docs/alexa/smapi/alexa-hosted-skill.html#generate-credentials) manually, or use the [ASK CLI](https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-command-reference.html#git-credentials-helper) command. The git credentials are short-lived, and need to be refreshed periodically, to keep being able to access the locally cloned hosted skill git.
+    - The ASK Toolkit extension is able to automatically configure the credential helper for the hosted skills, and fetch the credentials whenever executing git operations. However, we observed that some specific versions(2.26.x and 2.25.x) of git cannot configure the credential helper properly, leading to the Git credentials prompt. 
+    - Therefore, we suggest checking your git version using `git version`. If it is versions 2.25.x or 2.26.x, you need to update to Git >= 2.27.x. This should prevent being asked for Git credentials again. 
+    - Otherwise, we suggest you create an issue report.
 ----
 
 ## Got Feedback?

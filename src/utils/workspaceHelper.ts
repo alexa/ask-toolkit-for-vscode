@@ -1,11 +1,8 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import * as path from 'path';
 import { Logger } from '../logger';
-import { loggableAskError } from '../exceptions';
 import { disposeWebviews } from './webViews/viewManager';
-import { EXTENSION_STATE_KEY, SKILL_FOLDER } from '../constants';
-import { onWorkspaceOpenEventEmitter } from '../askContainer/events';
+import { EXTENSION_STATE_KEY, MULTIPLE_SKILLS_PRESENT_MSG } from '../constants';
 
 export function doesWorkSpaceExist(): boolean {
     Logger.verbose('Calling method: doesWorkSpaceExist');
@@ -43,17 +40,22 @@ export function getSkillFolderInWs(context: vscode.ExtensionContext): vscode.Uri
     return;
 }
 
-export function setSkillContext() {
-    vscode.commands.executeCommand('setContext', 'inSkillWorkspace', true);
+export function setSkillContext(): void {
+    void vscode.commands.executeCommand('setContext', 'inSkillWorkspace', true);
 }
 
-export function unsetSkillContext() {
-    vscode.commands.executeCommand('setContext', 'inSkillWorkspace', false);
+export function unsetSkillContext(): void {
+    void vscode.commands.executeCommand('setContext', 'inSkillWorkspace', false);
 }
 
-export async function openWorkspaceFolder(workspaceUri: vscode.Uri): Promise<void> {
-    Logger.verbose('Calling method: openWorkspaceFolder');
-    disposeWebviews();
+async function openSkillInNewWorkspace(workspaceUri: vscode.Uri): Promise<void> {
+    Logger.verbose('Calling method: openSkillInNewWorkspace');
+    void await vscode.commands.executeCommand('vscode.openFolder', workspaceUri, true);
+}
+
+async function openSkillInCurrentWorkspace(workspaceUri: vscode.Uri): Promise<void> {
+    Logger.verbose('Calling method: openSkillInCurrentWorkspace');
+    disposeWebviews(true, true);
     for (const textDocument of vscode.workspace.textDocuments) {
         await vscode.window.showTextDocument(textDocument.uri, {preview: true, preserveFocus: false});
         await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
@@ -61,7 +63,28 @@ export async function openWorkspaceFolder(workspaceUri: vscode.Uri): Promise<voi
     // Disable skill actions view before opening new skill
     unsetSkillContext();
 
-    vscode.commands.executeCommand('workbench.view.explorer');
-    const openFolders = vscode.workspace.workspaceFolders;
-    vscode.workspace.updateWorkspaceFolders(0, openFolders ? openFolders.length : 0, { uri: workspaceUri });
+    void vscode.commands.executeCommand('workbench.view.explorer');
+    vscode.workspace.updateWorkspaceFolders(0, 0, { uri: workspaceUri });
+}
+
+export async function openWorkspaceFolder(workspaceUri: vscode.Uri): Promise<void> {
+    Logger.verbose('Calling method: openWorkspaceFolder');
+
+    if ((await findSkillFoldersInWs()).length > 0) {
+        Logger.debug('Current workspace already contains skills');
+        const openInDifferentWs = 'Yes';
+        const openInSameWs = 'No';
+        const option = await vscode.window.showInformationMessage(
+            MULTIPLE_SKILLS_PRESENT_MSG, openInDifferentWs, openInSameWs);
+        if (option !== undefined && option === openInDifferentWs) {
+            Logger.debug('Adding skill to a new workspace');
+            await openSkillInNewWorkspace(workspaceUri);
+        } else {
+            Logger.debug('Adding skill to the current workspace');
+            await openSkillInCurrentWorkspace(workspaceUri);
+        }
+    } else {
+        Logger.debug('No skills found in the workspace. Adding skill to the current workspace');
+        await openSkillInCurrentWorkspace(workspaceUri);
+    }
 }
