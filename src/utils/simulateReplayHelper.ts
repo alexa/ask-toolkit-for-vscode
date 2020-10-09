@@ -4,11 +4,11 @@ import { loggableAskError } from '../exceptions';
 import { ERRORS, SIMULATOR_MESSAGE_TYPE } from '../constants';
 import { IViewport } from "apl-suggester";
 import { DEFAULT_VIEWPORT_CHARACTERISTICS } from "../aplContainer/utils/viewportProfileHelper";
-import { getCurrentDate } from '../utils/dateHelper';
+import { getCurrentDate } from './dateHelper';
 import { getSkillFolderInWs } from './workspaceHelper';
 import { read, write } from '../runtime/lib/utils/jsonUtility';
-import * as simulateMessageHelper from '../utils/simulateMessageHelper';
-import * as simulateSkillHelper from '../utils/simulateSkillHelper';
+import {isSkillEnabled, currentLocale} from './simulateMessageHelper';
+import {aplDocument, aplDataSource} from './simulateSkillHelper';
 
 export let aplViewport = DEFAULT_VIEWPORT_CHARACTERISTICS;
 
@@ -16,7 +16,7 @@ export let aplViewport = DEFAULT_VIEWPORT_CHARACTERISTICS;
  * Choose replay file then replay conversation automatically.
  */
 export async function getReplayList(): Promise<void | Record<string, any>> {
-    Logger.verbose(`Calling method: simulateSkillHelper.getReplayList`);
+    Logger.verbose(`Calling method: simulateReplayHelper.getReplayList`);
 
     const selectFileDialog = await vscode.window.showOpenDialog({
         "canSelectFiles": true,
@@ -35,11 +35,11 @@ export async function getReplayList(): Promise<void | Record<string, any>> {
         const jsonObject = read(filePath);
         inputList = jsonObject.userInput;
         const locale = jsonObject.locale;
-        if (simulateMessageHelper.isSkillEnabled === false) {
+        if (isSkillEnabled === false) {
             void vscode.window.showErrorMessage(ERRORS.REPLAY_FAILED_ENABLE);
             return;
         }
-        else if (locale !== simulateMessageHelper.currentLocale) {
+        else if (locale !== currentLocale) {
             void vscode.window.showErrorMessage(ERRORS.REPLAY_FAILED_LOCALE);
             return;
         }
@@ -64,7 +64,7 @@ export async function getReplayList(): Promise<void | Record<string, any>> {
  * @param skillId Alexa Skill ID
  */
 export async function exportFileForReplay(message: Record<string, any>, skillId: string, skillName: string, context: vscode.ExtensionContext): Promise<void> {
-    Logger.verbose(`Calling method: simulateSkillHelper.exportFileForReplay`);
+    Logger.verbose(`Calling method: simulateReplayHelper.exportFileForReplay`);
 
     if (message.exportUtterance === undefined || message.exportUtterance.length <= 0) {
         void vscode.window.showWarningMessage(ERRORS.EXPORT_FAILED);
@@ -78,7 +78,7 @@ export async function exportFileForReplay(message: Record<string, any>, skillId:
 
     const dateToday = getCurrentDate();
     skillName = skillName.replace(' ', '');
-    const locale = simulateMessageHelper.currentLocale;
+    const locale = currentLocale;
     const skillLocale = locale.replace('-', '_').toLowerCase();
     const skillFolder = getSkillFolderInWs(context)?.fsPath;
     const fileName = vscode.Uri.file(skillFolder + '/' + skillName + '_' + skillLocale + '_' + dateToday);
@@ -107,11 +107,12 @@ export async function exportFileForReplay(message: Record<string, any>, skillId:
  * @returns object containing viewport type and document.
  */
 export function getNewViewPortMessage(viewport: IViewport): Record<string, any> {
+    Logger.verbose(`Calling method: simulateReplayHelper.getNewViewPortMessage`);
     aplViewport = viewport;
     return {
         newViewport: JSON.stringify(aplViewport),
-        documents: simulateSkillHelper.aplDocument,
-        dataSources: simulateSkillHelper.aplDataSource,
+        documents: aplDocument,
+        dataSources: aplDataSource,
         type: SIMULATOR_MESSAGE_TYPE.VIEWPORT
     }
 }

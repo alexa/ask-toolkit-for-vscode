@@ -4,10 +4,10 @@ import { loggableAskError } from '../exceptions';
 import { getAvailableLocales } from '../utils/skillHelper';
 import {
     SKILL_ACTION_URLS,
-    ERRORS,SIMULATOR_WEBVIEW_MESSAGES, SIMULATOR_MESSAGE_TYPE, EN_US_LOCALE
+    ERRORS, SIMULATOR_WEBVIEW_MESSAGES, SIMULATOR_MESSAGE_TYPE, EN_US_LOCALE
 } from '../constants';
 import * as simulateSkillHelper from '../utils/simulateSkillHelper';
-import * as simulateNonSkillHelper from '../utils/simulateNonSkillHelper';
+import { exportFileForReplay } from './simulateReplayHelper';
 
 export let currentLocale = EN_US_LOCALE;
 export let currentSkillId: string;
@@ -22,7 +22,7 @@ export let isSkillEnabled = false;
  */
 export async function handleSkillStatusMessageFromWebview(webviewMessage: Record<string, any>, profile: string, skillId: string,
     context: vscode.ExtensionContext): Promise<string> {
-    Logger.verbose(`Calling method: simulateSkillHelper.handleSkillStatusMessageFromWebview`);
+    Logger.verbose(`Calling method: simulateMessageHelper.handleSkillStatusMessageFromWebview`);
     if (webviewMessage.message === SIMULATOR_WEBVIEW_MESSAGES.ENABLE_SKILL) {
         await simulateSkillHelper.enableSkill(profile, skillId, context);
         isSkillEnabled = true;
@@ -56,7 +56,7 @@ export async function handleSkillStatusMessageFromWebview(webviewMessage: Record
  */
 export async function handleLocaleMessageFromWebview(webviewMessage: Record<string, any>, profile: string, skillId: string,
     context: vscode.ExtensionContext): Promise<void | Record<string, any>> {
-    Logger.verbose(`Calling method: simulateSkillHelper.handleLocaleMessageFromWebview`);
+    Logger.verbose(`Calling method: simulateMessageHelper.handleLocaleMessageFromWebview`);
     if (webviewMessage.message === SIMULATOR_WEBVIEW_MESSAGES.CHECK_AVAILABLE_LOCALES) {
         const availableLocales = await getAvailableLocales(profile, skillId, context);
         if (availableLocales.availableLocales.length < 1) {
@@ -86,7 +86,7 @@ export async function handleLocaleMessageFromWebview(webviewMessage: Record<stri
  */
 export async function handleUtteranceMessageFromWebview(webviewMessage: Record<string, any>, profile: string,
     skillId: string, context: vscode.ExtensionContext): Promise<void | Record<string, any>> {
-    Logger.verbose(`Calling method: simulateSkillHelper.handleUtteranceMessageFromWebview`);
+    Logger.verbose(`Calling method: simulateMessageHelper.handleUtteranceMessageFromWebview`);
     const userInput: string = webviewMessage.userInput;
     const skillLocale: string = webviewMessage.skillLocale;
     const sessionMode: boolean = webviewMessage.sessionMode;
@@ -112,8 +112,8 @@ export async function handleUtteranceMessageFromWebview(webviewMessage: Record<s
  */
 export async function handleExportMessageFromWebview(webviewMessage: Record<string, any>,
     skillId: string, skillName: string, context: vscode.ExtensionContext): Promise<void> {
-    Logger.verbose(`Calling method: simulateSkillHelper.handleExportMessageFromWebview`);
-    await simulateNonSkillHelper.exportFileForReplay(webviewMessage, skillId, skillName, context);
+    Logger.verbose(`Calling method: simulateMessageHelper.handleExportMessageFromWebview`);
+    await exportFileForReplay(webviewMessage, skillId, skillName, context);
 }
 
 /**
@@ -122,7 +122,7 @@ export async function handleExportMessageFromWebview(webviewMessage: Record<stri
  * @param skillId Alexa Skill ID
  */
 export function handleActionMessageFromWebview(webviewMessage: Record<string, string>, skillId: string): void {
-    Logger.verbose(`Calling method: simulateSkillHelper.handleActionMessageFromWebview`);
+    Logger.verbose(`Calling method: simulateMessageHelper.handleActionMessageFromWebview`);
     let locale = webviewMessage.locale ? webviewMessage.locale : 'en-US';
     locale = locale.replace('-', '_');
     const goToConsole = 'Go to Alexa Developer Console';

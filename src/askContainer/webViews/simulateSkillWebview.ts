@@ -8,7 +8,7 @@ import { DEFAULT_PROFILE, ERRORS, SIMULATOR_MESSAGE_TYPE } from '../../constants
 import { loggableAskError } from '../../exceptions';
 import { IViewport } from "apl-suggester";
 import * as simulateMessageHelper from '../../utils/simulateMessageHelper';
-import * as simulateNonSkillHelper from '../../utils/simulateNonSkillHelper';
+import { getReplayList, getNewViewPortMessage } from '../../utils/simulateReplayHelper';
 
 export class SimulateSkillWebview extends AbstractWebView {
     private loader: ViewLoader;
@@ -28,7 +28,6 @@ export class SimulateSkillWebview extends AbstractWebView {
     getHtmlForView(): string {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
 
-        //const webview: vscode.Webview = this.getWebview() as vscode.Webview;
         const simulateCss: vscode.Uri = this.getWebview()?.asWebviewUri(
             vscode.Uri.file(
                 path.join(
@@ -96,7 +95,7 @@ export class SimulateSkillWebview extends AbstractWebView {
 
     async replaySessionInSimulator(): Promise<void> {
         Logger.debug(`Calling method: ${this.viewId}.replaySessionInSimulator`);
-        const returnMessage = await simulateNonSkillHelper.getReplayList();
+        const returnMessage = await getReplayList();
         if (returnMessage !== null) {
             await this.getWebview()?.postMessage(returnMessage);
         }
@@ -105,7 +104,7 @@ export class SimulateSkillWebview extends AbstractWebView {
     //Get the document/datasource/new_viewport to change the preview.
     async changeViewport(viewport: IViewport): Promise<void> {
         Logger.verbose(`Calling method: ${this.viewId}.changeViewport, args: `, viewport.toString());
-        const returnMessage = simulateNonSkillHelper.getNewViewPortMessage(viewport);
+        const returnMessage = getNewViewPortMessage(viewport);
         await this.getWebview()?.postMessage(returnMessage);
     }
 }

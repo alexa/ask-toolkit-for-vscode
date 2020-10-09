@@ -7,7 +7,7 @@ import { SmapiClientFactory, Utils } from '../runtime';
 import { Logger } from '../logger';
 import { loggableAskError } from '../exceptions';
 import * as retry from 'async-retry';
-import * as simulateNonSkillHelper from '../utils/simulateNonSkillHelper';
+import {aplViewport} from './simulateReplayHelper';
 import {
     SKILL, DEFAULT_SESSION_MODE, NEW_SESSION_MODE, ALEXA_RESPONSE_TYPES,
     ERRORS, SIMULATION_IN_PROGRESS, SIMULATOR_MESSAGE_TYPE, DEFAULT_PROFILE
@@ -101,7 +101,7 @@ export async function getSimulationResponse(userInput: string, skillLocale: stri
         randomize: false
     };
 
-    const SESSION_MODE = createNewSession? NEW_SESSION_MODE : DEFAULT_SESSION_MODE;
+    const SESSION_MODE = createNewSession ? NEW_SESSION_MODE : DEFAULT_SESSION_MODE;
 
     const payload: SimulationsApiRequest = {
         'input': { 'content': userInput },
@@ -183,7 +183,7 @@ export function formatAlexaResponse(simulationResult: Record<string, any> | Simu
         const invocationRequestBodies: Array<Record<string, any>> | undefined = [];
         const invocationResponseBodies: Array<Record<string, any>> | undefined = [];
         const invocationsArray = simulationResult.skillExecutionInfo?.invocations;
-        if (invocationsArray !==undefined) {
+        if (invocationsArray !== undefined) {
             for (const invocation of invocationsArray) {
                 if (invocation.invocationRequest?.body && invocation.invocationResponse?.body) {
                     invocationRequestBodies.push(invocation.invocationRequest?.body);
@@ -235,7 +235,7 @@ export function formatAlexaResponse(simulationResult: Record<string, any> | Simu
             alexaResponse: alexaResponseTextContents,
             documents: aplDocument,
             dataSources: aplDataSource,
-            viewport: JSON.stringify(simulateNonSkillHelper.aplViewport),
+            viewport: JSON.stringify(aplViewport),
             skillId,
             type: SIMULATOR_MESSAGE_TYPE.UTTERANCE
         });
