@@ -5,6 +5,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
 import * as vscode from "vscode";
+import * as sinon from "sinon";
+
+import { TelemetryClient } from "../src/runtime/lib/telemetry";
+
 const SECOND = 1000;
 export const TIMEOUT = 30 * SECOND;
 
@@ -19,6 +23,11 @@ export class FakeExtensionContext implements vscode.ExtensionContext {
     public extensionMode;
     public extensionUri;
     public environmentVariableCollection;
+
+    // Flowing properties is required after @types/vscode v1.49.0
+    public storageUri;
+    public globalStorageUri;
+    public logUri;
 
     private _extensionPath = '';
 
@@ -126,4 +135,9 @@ export class FakeWebView implements vscode.Webview {
         const fakeWebView = new FakeWebView();
         return fakeWebView;
     }
+}
+
+export function stubTelemetryClient(sandBox: sinon.SinonSandbox) {
+    sandBox.stub(TelemetryClient.prototype, "sendData");
+    sandBox.stub(TelemetryClient.prototype, 'startAction');
 }

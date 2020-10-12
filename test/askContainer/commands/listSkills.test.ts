@@ -5,11 +5,11 @@ import * as model from "ask-smapi-model";
 import { CustomSmapiClientBuilder } from "ask-smapi-sdk";
 
 import { ListSkillsCommand } from "../../../src/askContainer/commands/listSkills";
-import { TelemetryClient } from "../../../src/runtime/lib/telemetry";
 import { SmapiClientFactory, SmapiResource } from "../../../src/runtime";
 import * as profileHelper from "../../../src/runtime/lib/utils/profileHelper";
+import { stubTelemetryClient } from '../../../test/testUtilities';
 
-describe("Command_listSkills tests", () => {
+describe("Command ask.container.listSkills", () => {
     let command: ListSkillsCommand;
     let sandbox: sinon.SinonSandbox;
     const fakeSmapiInstance = new CustomSmapiClientBuilder()
@@ -23,7 +23,7 @@ describe("Command_listSkills tests", () => {
     });
     beforeEach(() => {
         sandbox = sinon.createSandbox();
-        sandbox.stub(TelemetryClient.prototype, "sendData");
+        stubTelemetryClient(sandbox);
         sandbox.stub(profileHelper, "resolveVendorId").returns("fakeVendorId");
         sandbox.stub(profileHelper, "getCachedProfile").returns(undefined);
         sandbox.stub(SmapiClientFactory, "getInstance").returns(fakeSmapiInstance);
@@ -33,8 +33,8 @@ describe("Command_listSkills tests", () => {
         sandbox.restore();
     });
     it("Constructor should work as expected", () => {
-        assert.equal(command.title, "ask.container.listSkills");
-        assert.equal(command.command, "ask.container.listSkills");
+        assert.strictEqual(command.title, "ask.container.listSkills");
+        assert.strictEqual(command.command, "ask.container.listSkills");
     });
 
     it("Should be able to return full list of skills", async () => {

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { AbstractCommand } from '../../runtime';
+import { AbstractCommand, CommandContext } from '../../runtime';
 import { openWorkspaceFolder } from '../../utils/workspaceHelper';
 import { loggableAskError } from '../../exceptions';
 import { Logger } from '../../logger';
@@ -10,7 +10,7 @@ export class OpenWorkspaceCommand extends AbstractCommand<void> {
         super('ask.container.openWorkspace');
     }
 
-    async execute(): Promise<void> {
+    async execute(context: CommandContext): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}`);
         const userChoseWorkSpace = await vscode.window.showOpenDialog({
             "canSelectFiles": false,

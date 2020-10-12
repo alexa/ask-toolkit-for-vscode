@@ -275,6 +275,8 @@ function checkIfUpdated(context: vscode.ExtensionContext): void {
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+
+    ext.context = context;
     // Initialize the logger
     Logger.configure(
         context, vscode.workspace.getConfiguration(EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(

@@ -3,11 +3,10 @@ import * as assert from "assert";
 import * as sinon from "sinon";
 
 import { OpenWorkspaceCommand } from "../../../src/utils/commands/openWorkspace";
-import * as skillHelper from "../../../src/utils/skillHelper";
-import { TelemetryClient } from "../../../src/runtime/lib/telemetry";
 import * as workSpaceHelper from "../../../src/utils/workspaceHelper";
+import { stubTelemetryClient } from '../../../test/testUtilities';
 
-describe("Command_openWorkSpace tests", () => {
+describe("Command ask.container.openWorkspace", () => {
     let command: OpenWorkspaceCommand;
     let sandbox: sinon.SinonSandbox;
     before(() => {
@@ -18,15 +17,15 @@ describe("Command_openWorkSpace tests", () => {
     });
     beforeEach(() => {
         sandbox = sinon.createSandbox();
-        sandbox.stub(TelemetryClient.prototype, "sendData");
+        stubTelemetryClient(sandbox);
     });
 
     afterEach(() => {
         sandbox.restore();
     });
     it("Constructor should work as expected", () => {
-        assert.equal(command.title, "ask.container.openWorkspace");
-        assert.equal(command.command, "ask.container.openWorkspace");
+        assert.strictEqual(command.title, "ask.container.openWorkspace");
+        assert.strictEqual(command.command, "ask.container.openWorkspace");
     });
 
     it("Should be able to call showOpenDialog with fixed config, and openWorkSpace folder with user provided path", async () => {
@@ -49,7 +48,7 @@ describe("Command_openWorkSpace tests", () => {
         try {
             await vscode.commands.executeCommand("ask.container.openWorkspace");
         } catch(e) {
-            assert.equal(e.message, 'Cannot find a workspace to create the skill project.');
+            assert.strictEqual(e.message, 'Cannot find a workspace to create the skill project.');
 
             return;
         }

@@ -4,9 +4,8 @@ import * as sinon from "sinon";
 
 import { OpenUrlCommand } from "../../../src/utils/commands/openUrl";
 import * as skillHelper from "../../../src/utils/skillHelper";
-import { TelemetryClient } from "../../../src/runtime/lib/telemetry";
-
-describe("Command_openUrl tests", () => {
+import { stubTelemetryClient } from '../../../test/testUtilities';
+describe("Command ask.container.openUrl", () => {
     let command: OpenUrlCommand;
     let sandbox: sinon.SinonSandbox;
     before(() => {
@@ -17,15 +16,15 @@ describe("Command_openUrl tests", () => {
     });
     beforeEach(() => {
         sandbox = sinon.createSandbox();
-        sandbox.stub(TelemetryClient.prototype, "sendData");
+        stubTelemetryClient(sandbox);
     });
 
     afterEach(() => {
         sandbox.restore();
     });
     it("Constructor should work as expected", () => {
-        assert.equal(command.title, "ask.container.openUrl");
-        assert.equal(command.command, "ask.container.openUrl");
+        assert.strictEqual(command.title, "ask.container.openUrl");
+        assert.strictEqual(command.command, "ask.container.openUrl");
     });
 
     it("Should check skillProfileAccess by default", async () => {
@@ -53,7 +52,7 @@ describe("Command_openUrl tests", () => {
         try {
             await vscode.commands.executeCommand("ask.container.openUrl", testUrl, true);
         } catch (e) {
-            assert.equal(e.message, `Open URL failed. Reason: foo`);
+            assert.strictEqual(e.message, `Open URL failed. Reason: foo`);
 
             return;
         }

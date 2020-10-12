@@ -118,7 +118,12 @@ export class CreateSkillWebview extends AbstractWebView {
         Logger.verbose(`Calling method: ${this.viewId}.createSmapiResource, args: `, skillId, skillName);
         let profile = Utils.getCachedProfile(this.extensionContext);
         profile = profile ?? DEFAULT_PROFILE;
-        const vendorId = Utils.resolveVendorId(profile);
+        let vendorId: string;
+        try {
+            vendorId = Utils.resolveVendorId(profile);
+        } catch (err) {
+            throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+        }
 
         const smapiClient = SmapiClientFactory.getInstance(profile, this.extensionContext);
         const skillSummary = (await smapiClient.listSkillsForVendorV1(
@@ -128,7 +133,7 @@ export class CreateSkillWebview extends AbstractWebView {
         }
 
         const hostedSkillMetadata = await smapiClient.getAlexaHostedSkillMetadataV1(skillId);
-        if (!hostedSkillMetadata) {
+        if (hostedSkillMetadata === undefined) {
             throw loggableAskError("No Alexa hosted skill is found.");
         }
 

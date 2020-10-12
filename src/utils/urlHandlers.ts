@@ -19,7 +19,12 @@ export async function hostedSkillsClone(uri: vscode.Uri, context: vscode.Extensi
 
         let profile = Utils.getCachedProfile(context);
         profile = profile ?? DEFAULT_PROFILE;
-        const vendorId = Utils.resolveVendorId(profile);        
+        let vendorId: string;
+        try {
+            vendorId = Utils.resolveVendorId(profile);
+        } catch (err) {
+            throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+        }   
         if (vendorId !== targetVendorId) {
             const VENDOR_ID_MISMATCH = `Unable to clone: vendor ID for requested skill ${targetVendorId} \
             does not match current profile vendor ID ${vendorId}. \

@@ -20,7 +20,7 @@ describe("ProfileHelper tests", () => {
     describe("Function listExistingProfileNames tests", () => {
         it("Should return null when askConfig not exist", () => {
             sandbox.stub(fs, "existsSync").returns(false);
-            assert.equal(listExistingProfileNames(), null);
+            assert.strictEqual(listExistingProfileNames(), null);
         });
 
         it("Should return null when no profile in askConfig", () => {
@@ -29,7 +29,7 @@ describe("ProfileHelper tests", () => {
             };
             sandbox.stub(fs, "existsSync").returns(true);
             sandbox.stub(jsonUtility, "read").returns(fakeConfig);
-            assert.equal(listExistingProfileNames(), null);
+            assert.strictEqual(listExistingProfileNames(), null);
         });
 
         it("Should be able to list all exist profiles in askConfig", () => {
