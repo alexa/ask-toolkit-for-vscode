@@ -14,7 +14,7 @@ import ExportResponse = model.v1.skill.ExportResponse;
 import { SkillInfo } from '../models/types';
 import { SKILL_FOLDER, SKILL, DEFAULT_PROFILE } from '../constants';
 import { unzipFile } from './zipHelper';
-import { loggableAskError } from '../exceptions';
+import { AskError, loggableAskError } from '../exceptions';
 import { Logger } from '../logger';
 
 export async function downloadSkillPackage(
@@ -88,9 +88,8 @@ export function createSkillPackageFolder(skillFolder: string): void {
 
 async function pollExportStatus(
     exportId: string, context: vscode.ExtensionContext): Promise<ExportResponse> {
-    Logger.verbose(`Calling method: pollExportStatus, args:`, exportId);
+        Logger.verbose(`Calling method: pollExportStatus, args:`, exportId);
     
-    // These numbers are taken from CLI.
     const retryOptions: Options = {
         retries: 30,
         minTimeout: 2000,
@@ -101,16 +100,17 @@ async function pollExportStatus(
     profile = profile ?? DEFAULT_PROFILE;
     const smapiClient = SmapiClientFactory.getInstance(profile, context);
 
-    const skillStatus = await retry(async (bail: (err: Error) => void, attempt: number): Promise<ExportResponse> => {
+    const skillStatus = await retry(
+        async (bail: (err: Error) => void, attempt: number): Promise<ExportResponse> => {
         const exportStatus = await smapiClient.getStatusOfExportRequestV1(exportId);
         
-        // TODO: check the error when statusCode is not 200 or check the body strucutre when status is not SUCCEEDED or check non skill case
-
-        if (exportStatus === SKILL.PACKAGE_STATUS.IN_PROGRESS) {
-            throw loggableAskError('Skill package export in progress');
+        if (exportStatus.status === SKILL.PACKAGE_STATUS.FAILED) {
+            bail(new AskError('Get export skill package status failed'));
+            return exportStatus;
+        } else if (exportStatus.status === SKILL.PACKAGE_STATUS.SUCCEEDED) {
+            return exportStatus;
         }
-
-        return exportStatus;
+        throw loggableAskError('Skill package export in progress');
     }, retryOptions);
 
     return skillStatus;
@@ -118,31 +118,32 @@ async function pollExportStatus(
 
 export async function syncSkillPackage(
     skillPackageFolder: string, skillInfo: SmapiResource<SkillInfo>, 
-    context: vscode.ExtensionContext): Promise<void> {
+    context: vscode.ExtensionContext): Promise<ExportResponse> {
     Logger.verbose(`Calling method: syncSkillPackage, args:`, skillPackageFolder, skillInfo);
     try {
-        const skillPkgRemoteLocation = await getSkillPkgRemoteLocation(context, skillInfo.data.skillSummary.skillId);
+        const skillPackageStatus = await getSkillPackageStatus(context, skillInfo.data.skillSummary.skillId);
+        const skillPkgRemoteLocation = skillPackageStatus.skill?.location;
         const skillPkgZipLocation = await downloadSkillPackage(skillPkgRemoteLocation!, skillPackageFolder);
         unzipFile(skillPkgZipLocation, skillPackageFolder);
+        return skillPackageStatus;
     } catch (err) {
         throw loggableAskError(`Sync skill package failed, with error:`, err);
     }
 }
 
-export async function getSkillPkgRemoteLocation(context: vscode.ExtensionContext, skillId: string | undefined) {
+export async function getSkillPackageStatus(
+    context: vscode.ExtensionContext, skillId: string | undefined): Promise<ExportResponse> {
+    Logger.verbose(`Calling method: getSkillPackageStatus, args:`, skillId);
     try {
         let profile = Utils.getCachedProfile(context);
         profile = profile ?? DEFAULT_PROFILE;
         const smapiClient = SmapiClientFactory.getInstance(profile, context);
-        const exportResponse = await smapiClient.callCreateExportRequestForSkillV1(
-            skillId!, 'development');
+        const exportResponse = await smapiClient.callCreateExportRequestForSkillV1(skillId!, 'development');
 
         let exportId = exportResponse.headers.find(value => value.key === 'location')?.value;
         // Get the exact exportId from the Url
         exportId = exportId?.substring(exportId?.lastIndexOf('/') + 1);
-        
-        const exportStatus = await pollExportStatus(exportId!, context);
-        return exportStatus?.skill?.location;
+        return await pollExportStatus(exportId!, context);
     } catch (err) {
         throw loggableAskError(`Get skill package remote location failed, with error:`, err);
     }
@@ -151,8 +152,10 @@ export async function getSkillPkgRemoteLocation(context: vscode.ExtensionContext
 export async function getSkillPkgZipLocation(
     skillPackageFolder: string, skillId: string, 
     context: vscode.ExtensionContext): Promise<string> {
+    Logger.verbose(`Calling method: getSkillPkgZipLocation, args:`, skillPackageFolder, skillId);
     try {
-        const skillPkgRemoteLocation = await getSkillPkgRemoteLocation(context, skillId);
+        const skillPackageStatus = await getSkillPackageStatus(context, skillId);
+        const skillPkgRemoteLocation = skillPackageStatus.skill?.location;
         return await downloadSkillPackage(skillPkgRemoteLocation!, skillPackageFolder);
     } catch (err) {
         throw loggableAskError(`Download skill package failed, with error:`, err);

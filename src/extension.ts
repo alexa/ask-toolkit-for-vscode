@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { registerCommands as apiRegisterCommands, AbstractWebView, Utils } from './runtime';
 
 import { CloneSkillCommand } from './askContainer/commands/cloneSkill';
+import { CloneOtherSkillCommand } from './askContainer/commands/cloneOtherSkill';
 import { CloneSkillFromConsoleCommand } from './askContainer/commands/cloneSkillFromConsole';
 import { DeploySkillCommand } from './askContainer/commands/deploySkill';
 import { SimulateSkillCommand } from './askContainer/commands/simulateSkill';
@@ -66,8 +67,8 @@ function registerCommands(context: vscode.ExtensionContext): void {
         new ListSkillsCommand(), new OpenWorkspaceCommand(), new OpenUrlCommand(),
         new InitCommand(profileManager), new GetToolkitInfoCommand(),
         new ViewAllSkillsCommand(), new CreateSkillCommand(createSkill),
-        new CloneSkillCommand(), new ChangeProfileCommand(), new AccessTokenCommand(),
-        new DebugAdapterPathCommand(), new CloneSkillFromConsoleCommand(),
+        new CloneSkillCommand(), new CloneOtherSkillCommand(), new ChangeProfileCommand(),
+        new AccessTokenCommand(), new DebugAdapterPathCommand(), new CloneSkillFromConsoleCommand(),
         new ShowToolkitUpdatesCommand(toolkitUpdate), new ContactToolkitTeamCommand()]);
 }
 

@@ -7,7 +7,7 @@ import { DEFAULT_PROFILE } from '../../constants';
 import { createSkill } from '../../utils/createSkillHelper';
 import { solveCaptcha } from '../../utils/captchaValidator';
 import { SkillInfo } from '../../models/types';
-import { cloneSkill } from '../../utils/cloneSkillHelper';
+import { CloneHostedSkill } from '../../utils/cloneSkillHelper/cloneHostedSkill';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { openWorkspaceFolder } from '../../utils/workspaceHelper';
 import { loggableAskError } from '../../exceptions';
@@ -166,8 +166,9 @@ export class CreateSkillWebview extends AbstractWebView {
                 message: 'Skill details retrieved. Cloning into selected folder...'
             });
 
-            // Clone skill into local folder
-            await cloneSkill(
+            // Clone skill into local folder, only support Alexa-Hosted skill creation
+            const cloneHostedSkill = new CloneHostedSkill();
+            await cloneHostedSkill.cloneSkill(
                 smapiResource, skillFolderUri.fsPath, 
                 this.extensionContext, progress);
 

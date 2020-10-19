@@ -1,20 +1,20 @@
 import {
     SmapiResource, AbstractCommand, CommandContext
 } from '../../runtime';
- 
+
 import { SkillInfo } from '../../models/types';
-import { CloneHostedSkill } from '../../utils/cloneSkillHelper/cloneHostedSkill';
-import { Logger } from '../../logger';
 import { CloneOtherSkill } from '../../utils/cloneSkillHelper/cloneOtherSkill';
- 
-export class CloneSkillFromConsoleCommand extends AbstractCommand<void> {
+import { Logger } from '../../logger';
+
+export class CloneOtherSkillCommand extends AbstractCommand<void> {
+
     constructor() {
-        super('askContainer.skillsConsole.cloneSkillFromConsole');
+        super('askContainer.skillsConsole.cloneOtherSkill');
     }
- 
+
     async execute(context: CommandContext, skillInfo: SmapiResource<SkillInfo>): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}, args: `, skillInfo);
-        const cloneHostedSkill = new CloneOtherSkill();
-        await cloneHostedSkill.executeClone(context, skillInfo);
+        const cloneOtherSkill = new CloneOtherSkill();
+        await cloneOtherSkill.executeClone(context, skillInfo);
     }
 }

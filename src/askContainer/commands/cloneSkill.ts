@@ -3,7 +3,7 @@ import {
 } from '../../runtime';
 
 import { SkillInfo } from '../../models/types';
-import { executeClone } from '../../utils/cloneSkillHelper';
+import { CloneHostedSkill} from '../../utils/cloneSkillHelper/cloneHostedSkill';
 import { Logger } from '../../logger';
 
 export class CloneSkillCommand extends AbstractCommand<void> {
@@ -14,6 +14,7 @@ export class CloneSkillCommand extends AbstractCommand<void> {
 
     async execute(context: CommandContext, skillInfo: SmapiResource<SkillInfo>): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}, args: `, skillInfo);
-        await executeClone(context, skillInfo);
+        const cloneHostedSkill = new CloneHostedSkill();
+        await cloneHostedSkill.executeClone(context, skillInfo);
     }
 }
