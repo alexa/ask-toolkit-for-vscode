@@ -4,6 +4,5 @@ node_modules
 *.vsix
 npm-debug.log
 .idea/
-package-lock.json
 dist/
 coverage

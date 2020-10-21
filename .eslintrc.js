@@ -103,7 +103,9 @@ module.exports = {
         "@typescript-eslint/no-unsafe-assignment": "off",
         // TODO: reEnable no-unsafe-member-access
         "@typescript-eslint/no-unsafe-member-access": "off",
-
+        // TODO: reEnable restrict-template-expressions
+        "@typescript-eslint/restrict-template-expressions": "off",
+        // TODO: reEnable no-unused-vars
         "@typescript-eslint/no-unused-vars": "off",
         // TODO: reEnable explicit-module-boundary-types
         "@typescript-eslint/explicit-module-boundary-types": "off"
