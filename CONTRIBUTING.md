@@ -30,6 +30,14 @@ Contributions via pull requests are much appreciated. Before sending us a pull r
 2. You check existing open, and recently merged, pull requests to make sure someone else hasn't addressed the problem already.
 3. You open an issue to discuss any significant work - we would hate for your time to be wasted.
 
+### Setup steps
+Ensure that you have the following installed : 
+- NodeJS (preferably 12.x version)
+- npm
+- typescript
+- git
+- VSCode IDE
+
 ### Steps to contribute
 To send us a pull request, please:
 
@@ -45,8 +53,8 @@ dependencies.
 can use the [`Extension` launch configuration](https://github.com/alexa/ask-toolkit-for-vscode/blob/development/.vscode/launch.json#L6) for running the extension host.
 6. Add test cases for your changes.
 7. Run the following extension tests and make sure they pass : 
-    - [`Extension Tests`](https://github.com/alexa/ask-toolkit-for-vscode/blob/development/.vscode/launch.json#L20) and [`Extension Tests (Coverage)`](https://github.com/alexa/ask-toolkit-for-vscode/blob/development/.vscode/launch.json#L39) launch configurations through the extension
-    - `npm test` using the terminal
+    - [`Extension Tests`](https://github.com/alexa/ask-toolkit-for-vscode/blob/development/.vscode/launch.json#L20) and [`Extension Tests (Coverage)`](https://github.com/alexa/ask-toolkit-for-vscode/blob/development/.vscode/launch.json#L39) launch configurations through the extension. The `Extension Tests` allows you to set up breakpoints in the code but doesn;t generate coverage report. `Extension Tests (Coverage)` will generate test report under {workspace}/coverage but it can't hit any breakpoint.
+    - `npm test` using the terminal. Make sure that you close all the vscode instances before running this.
 8. Commit your work. Your commit message should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). We have a pre commit hook to validate the commit message.
 9. Send us a pull request, answering any default questions in the pull request interface. The pull request should be going to `development` branch.
 
