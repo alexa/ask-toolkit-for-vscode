@@ -258,6 +258,8 @@
         "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
+        "@commitlint/cli": "^11.0.0",
+        "@commitlint/config-conventional": "^11.0.0",
         "@types/adm-zip": "^0.4.32",
         "@types/async-retry": "^1.4.1",
         "@types/fs-extra": "^8.1.0",
@@ -287,6 +289,7 @@
         "eslint-plugin-react": "^7.20.0",
         "glob": "^7.1.6",
         "gulp": "^4.0.0",
+        "husky": "^4.3.0",
         "mocha": "^7.0.1",
         "nock": "^9.2.3",
         "nyc": "^13.0.1",
@@ -332,5 +335,10 @@
         "bracketSpacing": true,
         "arrowParens": "avoid",
         "endOfLine": "lf"
+    },
+    "husky": {
+        "hooks": {
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
     }
 }

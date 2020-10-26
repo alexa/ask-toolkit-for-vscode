@@ -19,25 +19,51 @@ reported the issue. Please try to include as much information as you can. Detail
 * Any modifications you've made relevant to the bug
 * Anything unusual about your environment or deployment
 
+To make it easier for you, we already provide an issue template when creating an 
+issue. It will be of great use to us if you can follow the template and capture as much detail as possible.
+
 
 ## Contributing via Pull Requests
 Contributions via pull requests are much appreciated. Before sending us a pull request, please ensure that:
 
-1. You are working against the latest source on the *master* branch.
+1. You are working against the latest source on the *development* branch.
 2. You check existing open, and recently merged, pull requests to make sure someone else hasn't addressed the problem already.
 3. You open an issue to discuss any significant work - we would hate for your time to be wasted.
 
+### Setup steps
+Ensure that you have the following installed : 
+- NodeJS (preferably 12.x version)
+- npm
+- typescript
+- git
+- VSCode IDE
+
+### Steps to contribute
 To send us a pull request, please:
 
 1. Fork the repository.
-2. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change.
-3. Ensure local tests pass.
-4. Commit to your fork using clear commit messages.
-5. Send us a pull request, answering any default questions in the pull request interface.
-6. Pay attention to any automated CI failures reported in the pull request, and stay involved in the conversation.
+2. Clone your forked repo
+````
+git clone git@github.com:<your-account>/ask-toolkit-for-vscode.git
+````
+3. Run `npm install` at the root of the repo, to install the extension 
+dependencies.
+4. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change.
+5. Run the extension and check if the functionality is working as expected. You 
+can use the [`Extension` launch configuration](https://github.com/alexa/ask-toolkit-for-vscode/blob/development/.vscode/launch.json#L6) for running the extension host.
+6. Add test cases for your changes.
+7. Run the following extension tests and make sure they pass : 
+    - [`Extension Tests`](https://github.com/alexa/ask-toolkit-for-vscode/blob/development/.vscode/launch.json#L20) and [`Extension Tests (Coverage)`](https://github.com/alexa/ask-toolkit-for-vscode/blob/development/.vscode/launch.json#L39) launch configurations through the extension. The `Extension Tests` allows you to set up breakpoints in the code but doesn;t generate coverage report. `Extension Tests (Coverage)` will generate test report under {workspace}/coverage but it can't hit any breakpoint.
+    - `npm test` using the terminal. Make sure that you close all the vscode instances before running this.
+8. Commit your work. Your commit message should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). We have a pre commit hook to validate the commit message.
+9. Send us a pull request, answering any default questions in the pull request interface. The pull request should be going to `development` branch.
 
-GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and 
-[creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
+## Branch Organization
+All new feature requests/bug fixes should be going to the `development` branch. We merge the `development` to `master` branch when we do a release. `master` is always a mirror of the latest version on [vscode marketplace](https://marketplace.visualstudio.com/items?itemName=ask-toolkit.alexa-skills-kit-toolkit).
+
+## Semantic Versioning
+We follow semantic versioning. Currently, we are not considering pull requests with breaking changes that would require major version bump. You are welcomed to open Github issues with ideas that require breaking change and we can discuss further on
+how to accommodate them.
 
 
 ## Finding contributions to work on
