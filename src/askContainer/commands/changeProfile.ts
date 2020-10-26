@@ -5,6 +5,7 @@ import { onSkillConsoleViewChangeEventEmitter, onWorkspaceOpenEventEmitter } fro
 import { Logger } from '../../logger';
 import { clearCachedSkills } from '../../utils/skillHelper';
 import { disposeWebviews } from '../../utils/webViews/viewManager';
+import { loggableAskError } from '../../exceptions';
 
 const VENDOR_ID = 'Vendor ID';
 
@@ -20,10 +21,15 @@ export class ChangeProfileCommand extends AbstractCommand<void> {
         if (profiles) {
             const qpItems: Array<vscode.QuickPickItem> = new Array<vscode.QuickPickItem>();
             profiles.forEach(profile => {
-                qpItems.push({
-                    label: profile,
-                    detail: `${VENDOR_ID} : ${Utils.resolveVendorId(profile)}`
-                });
+                try {
+                    const vendorId = Utils.resolveVendorId(profile);
+                    qpItems.push({
+                        label: profile,
+                        detail: `${VENDOR_ID} : ${vendorId}`
+                    });
+                } catch (err) {
+                    throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+                }
             });
             qp.items = qpItems;
             qp.enabled = true;

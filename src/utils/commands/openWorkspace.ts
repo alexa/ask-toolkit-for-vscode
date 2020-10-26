@@ -1,12 +1,9 @@
 import * as vscode from 'vscode';
-import {
-    AbstractCommand, CommandContext, PluginTreeItem, Resource
-} from '../../runtime';
 
+import { AbstractCommand, CommandContext } from '../../runtime';
 import { openWorkspaceFolder } from '../../utils/workspaceHelper';
 import { loggableAskError } from '../../exceptions';
 import { Logger } from '../../logger';
-
 
 export class OpenWorkspaceCommand extends AbstractCommand<void> {
     constructor() {

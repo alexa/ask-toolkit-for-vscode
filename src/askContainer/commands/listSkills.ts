@@ -6,6 +6,7 @@ import { EN_US_LOCALE, DEFAULT_PROFILE } from '../../constants';
 
 import skillSummary = model.v1.skill.SkillSummary;
 import { Logger } from '../../logger';
+import { loggableAskError } from '../../exceptions';
 
 export class ListSkillsCommand extends AbstractCommand<Array<SmapiResource<skillSummary>>> {
     constructor() {
@@ -17,13 +18,20 @@ export class ListSkillsCommand extends AbstractCommand<Array<SmapiResource<skill
         const skills: Array<SmapiResource<skillSummary>> = [];
         let profile = Utils.getCachedProfile(context.extensionContext);
         profile = profile ?? DEFAULT_PROFILE;
-        const vendorId = Utils.resolveVendorId(profile);
+        let vendorId: string;
+        try {
+            vendorId = Utils.resolveVendorId(profile);
+        } catch (err) {
+            throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+        }
+
+        
 
         const listSkills: model.v1.skill.ListSkillResponse = await SmapiClientFactory.getInstance(profile, context.extensionContext).listSkillsForVendorV1(
             vendorId);
         listSkills.skills?.forEach((listSkill) => {
             let skillName = 'someSkill';
-            if (listSkill.nameByLocale !== undefined) {
+            if (listSkill.nameByLocale !== undefined && Object.values(listSkill.nameByLocale).length > 0) {
                 if (listSkill.nameByLocale[EN_US_LOCALE]) {
                     skillName = listSkill.nameByLocale[EN_US_LOCALE];
                 } else {

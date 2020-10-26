@@ -107,7 +107,8 @@ export const EXTENSION_STATE_KEY = {
     CURRENT_VERSION: 'currentVersion',
     LOG_LEVEL: 'logLevel',
     CONFIG_SECTION_NAME: 'askToolkit',
-    SHOW_WELCOME_SCREEN: 'showWelcomeScreen'
+    SHOW_WELCOME_SCREEN: 'showWelcomeScreen',
+    DID_FIRST_TIME_LOGIN: 'didFirstTimeLogin'
 };
 
 export const AUTH = {
@@ -115,7 +116,7 @@ export const AUTH = {
     DEFAULT_CLIENT_ID: 'amzn1.application-oa2-client.aad322b5faab44b980c8f87f94fbac56',
     DEFAULT_CLIENT_SECRET: '1642d8869b829dda3311d6c6539f3ead55192e3fc767b9071c888e60ef151cf9',
     SIGNIN_URL: 'https://www.amazon.com/ap/signin',
-    SIGNIN_PATH: '/ap/signin'
+    SIGNIN_PATH: '/ap/signin',
 };
 
 export const DEV_CONSOLE_ENDPOINT = 'https://developer.amazon.com/alexa/console/ask';
