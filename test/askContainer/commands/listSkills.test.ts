@@ -59,7 +59,7 @@ describe("Command ask.container.listSkills", () => {
             new SmapiResource(fakeSkillOne, "FirstSkill"),
             new SmapiResource(fakeSkillTwo, "SecondSkill"),
         ];
-        assert.deepEqual(skills, expectedResult);
+        assert.deepStrictEqual(skills, expectedResult);
     });
 
     it("When en-US locale is not present, should use the first name in the list", async () => {
@@ -85,7 +85,7 @@ describe("Command ask.container.listSkills", () => {
             new SmapiResource(fakeSkillOne, "FirstSkill"),
             new SmapiResource(fakeSkillTwo, "SecondSkill"),
         ];
-        assert.deepEqual(skills, expectedResult);
+        assert.deepStrictEqual(skills, expectedResult);
     });
 
     it("When nameByLocale is missing, use the default name", async () => {
@@ -99,6 +99,6 @@ describe("Command ask.container.listSkills", () => {
         sandbox.stub(fakeSmapiInstance, "listSkillsForVendorV1").returns(fakeListSkillResponse);
         const skills = await vscode.commands.executeCommand("ask.container.listSkills");
         const expectedResult = [new SmapiResource(fakeSkillOne, "someSkill")];
-        assert.deepEqual(skills, expectedResult);
+        assert.deepStrictEqual(skills, expectedResult);
     });
 });

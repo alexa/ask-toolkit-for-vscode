@@ -41,7 +41,7 @@ describe("ProfileHelper tests", () => {
             };
             sandbox.stub(fs, "existsSync").returns(true);
             sandbox.stub(jsonUtility, "read").returns(fakeConfig);
-            assert.deepEqual(listExistingProfileNames(), ["foo", "bar"]);
+            assert.deepStrictEqual(listExistingProfileNames(), ["foo", "bar"]);
         });
     });
 

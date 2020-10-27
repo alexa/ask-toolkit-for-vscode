@@ -31,15 +31,15 @@ export class SimulateSkillWebview extends AbstractWebView {
     getHtmlForView(): string {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
 
-        const webview: vscode.Webview = this.getWebview() as vscode.Webview;
-        const simulateCss: vscode.Uri = webview.asWebviewUri(
+
+        const simulateCss: vscode.Uri = this.getWebview().asWebviewUri(
             vscode.Uri.file(
                 path.join(
                     this.extensionContext.extensionPath, 'media', 'simulate.css',
                 ),
             ));
 
-        const aplRenderUtils: vscode.Uri = webview.asWebviewUri(
+        const aplRenderUtils: vscode.Uri = this.getWebview().asWebviewUri(
             vscode.Uri.file(
                 path.join(
                     this.extensionContext.extensionPath, 'media/previewApl', 'aplRenderUtils.js',

@@ -7,15 +7,15 @@ import { Logger } from '../../logger';
 export class LoginCommand extends AbstractCommand<void> {
     private loginView: InitialLoginWebview;
 
-    constructor(context: vscode.ExtensionContext) {
+    constructor(loginView: InitialLoginWebview) {
         super('ask.login');
-        this.loginView = new InitialLoginWebview('Sign in', 'initialLogin', context);
-        registerWebviews(this.loginView);
+        this.loginView = loginView;
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async execute(context: CommandContext, dispose?: boolean): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}`);
-        if (dispose) {
+        if (dispose === true) {
             this.loginView.dispose();
         } else {
             this.loginView.showView();

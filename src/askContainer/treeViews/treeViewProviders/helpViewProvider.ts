@@ -28,7 +28,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
         return element;
     }
 
-    getChildren(element?: PluginTreeItem<Resource>): PluginTreeItem<Resource>[] {
+    getChildren(element?: PluginTreeItem<Resource>): Array<PluginTreeItem<Resource>> {
         Logger.debug(`Calling method: ${HelpViewProvider.name}.getChildren`);
         const treeItems: Array<PluginTreeItem<Resource>> = [];
         if (!element) {

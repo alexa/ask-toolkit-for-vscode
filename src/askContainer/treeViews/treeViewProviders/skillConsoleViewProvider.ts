@@ -78,11 +78,11 @@ export class SkillsConsoleViewProvider implements vscode.TreeDataProvider<Plugin
         return resourceArray;
     }
     
-    async getChildren(element?: PluginTreeItem<Resource>): Promise<PluginTreeItem<Resource>[]> {
+    async getChildren(element?: PluginTreeItem<Resource>): Promise<Array<PluginTreeItem<Resource>>> {
         Logger.debug(`Calling method: ${SkillsConsoleViewProvider.name}.getChildren`);
         const treeItems: Array<PluginTreeItem<Resource>> = [];
         try {
-            const isProfileAuth = await Utils.isProfileAuth(this.treeView.extensionContext);
+            const isProfileAuth = await Utils.isProfileAuth(this.treeView.context);
             if (isProfileAuth) {
                 if (!element) {
                     this.addRootResources(treeItems);
