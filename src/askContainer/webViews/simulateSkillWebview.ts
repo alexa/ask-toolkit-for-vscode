@@ -6,9 +6,12 @@ import * as path from 'path';
 import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
 import { DEFAULT_PROFILE, ERRORS, SIMULATOR_MESSAGE_TYPE } from '../../constants';
 import { loggableAskError } from '../../exceptions';
+import {
+    handleSkillStatusMessageFromWebview, handleLocaleMessageFromWebview,
+    handleUtteranceMessageFromWebview, handleExportMessageFromWebview,
+    handleActionMessageFromWebview, getReplayList, getNewViewPortMessage
+} from '../../utils/simulateSkillHelper';
 import { IViewport } from "apl-suggester";
-import * as simulateMessageHelper from '../../utils/simulateMessageHelper';
-import { getReplayList, getNewViewPortMessage } from '../../utils/simulateReplayHelper';
 
 export class SimulateSkillWebview extends AbstractWebView {
     private loader: ViewLoader;
@@ -28,21 +31,22 @@ export class SimulateSkillWebview extends AbstractWebView {
     getHtmlForView(): string {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
 
-        const simulateCss: vscode.Uri = this.getWebview().asWebviewUri(
+        const webview: vscode.Webview = this.getWebview() as vscode.Webview;
+        const simulateCss: vscode.Uri = webview.asWebviewUri(
             vscode.Uri.file(
                 path.join(
                     this.extensionContext.extensionPath, 'media', 'simulate.css',
                 ),
             ));
 
-        const aplRenderUtils: vscode.Uri = this.getWebview().asWebviewUri(
+        const aplRenderUtils: vscode.Uri = webview.asWebviewUri(
             vscode.Uri.file(
                 path.join(
                     this.extensionContext.extensionPath, 'media/previewApl', 'aplRenderUtils.js',
                 ),
             ));
 
-        const customJavascript = this.getWebview().asWebviewUri(
+        const customJavascript = this.getWebview()?.asWebviewUri(
             vscode.Uri.file(
                 path.join(
                     this.context.extensionPath, "/node_modules/apl-viewhost-web/index.js"))).toString();
@@ -57,6 +61,7 @@ export class SimulateSkillWebview extends AbstractWebView {
         });
     }
 
+
     async onReceiveMessageListener(message: Record<string, any>): Promise<void> {
         Logger.debug(`Calling method: ${this.viewId}.onReceiveMessageListener`);
 
@@ -66,27 +71,27 @@ export class SimulateSkillWebview extends AbstractWebView {
         const profile = Utils.getCachedProfile(this.extensionContext) ?? DEFAULT_PROFILE;
 
         if (message.type === SIMULATOR_MESSAGE_TYPE.SKILL_STATUS) {
-            const returnMessage: string | Record<string, any> = await simulateMessageHelper.handleSkillStatusMessageFromWebview(message, profile, skillId, this.extensionContext);
-            await this.getWebview().postMessage({
+            const returnMessage: string | Record<string, any> = await handleSkillStatusMessageFromWebview(message, profile, skillId, this.extensionContext);
+            await this.getWebview()?.postMessage({
                 message: returnMessage,
                 type: SIMULATOR_MESSAGE_TYPE.SKILL_STATUS
             });
         }
         else if (message.type === SIMULATOR_MESSAGE_TYPE.LOCALE) {
-            const returnMessage: void | Record<string, any> = await simulateMessageHelper.handleLocaleMessageFromWebview(message, profile, skillId, this.extensionContext);
+            const returnMessage: void | Record<string, any> = await handleLocaleMessageFromWebview(message, profile, skillId, this.extensionContext);
             if (returnMessage !== null) {
-                await this.getWebview().postMessage(returnMessage);
+                await this.getWebview()?.postMessage(returnMessage);
             }
         }
         else if (message.type === SIMULATOR_MESSAGE_TYPE.UTTERANCE) {
-            const returnMessage = await simulateMessageHelper.handleUtteranceMessageFromWebview(message, profile, skillId, this.extensionContext);
-            await this.getWebview().postMessage(returnMessage);
+            const returnMessage = await handleUtteranceMessageFromWebview(message, profile, skillId, this.extensionContext);
+            await this.getWebview()?.postMessage(returnMessage);
         }
         else if (message.type === SIMULATOR_MESSAGE_TYPE.EXPORT) {
-            void simulateMessageHelper.handleExportMessageFromWebview(message, skillId, skillName, this.extensionContext);
+            handleExportMessageFromWebview(message, skillId, skillName, this.extensionContext);
         }
         else if (message.type === SIMULATOR_MESSAGE_TYPE.ACTION) {
-            simulateMessageHelper.handleActionMessageFromWebview(message, skillId);
+            handleActionMessageFromWebview(message, skillId);
         }
         else {
             throw loggableAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
@@ -97,7 +102,7 @@ export class SimulateSkillWebview extends AbstractWebView {
         Logger.debug(`Calling method: ${this.viewId}.replaySessionInSimulator`);
         const returnMessage = await getReplayList();
         if (returnMessage !== null) {
-            await this.getWebview().postMessage(returnMessage);
+            await this.getWebview()?.postMessage(returnMessage);
         }
     }
 
@@ -105,6 +110,6 @@ export class SimulateSkillWebview extends AbstractWebView {
     async changeViewport(viewport: IViewport): Promise<void> {
         Logger.verbose(`Calling method: ${this.viewId}.changeViewport, args: `, viewport.toString());
         const returnMessage = getNewViewPortMessage(viewport);
-        await this.getWebview().postMessage(returnMessage);
+        await this.getWebview()?.postMessage(returnMessage);
     }
 }
