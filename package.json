@@ -255,7 +255,10 @@
         "lint": "eslint src --ext ts",
         "watch": "tsc -watch -p ./",
         "pretest": "npm run compile",
-        "test": "node ./out/test/runTest.js"
+        "test": "node ./out/test/runTest.js",
+        "pre-release": "standard-version",
+        "package": "vsce package",
+        "publish": "vsce publish"
     },
     "devDependencies": {
         "@commitlint/cli": "^11.0.0",
@@ -296,10 +299,12 @@
         "prettier": "^2.0.5",
         "shx": "^0.3.2",
         "sinon": "^4.5.0",
+        "standard-version": "^9.0.0",
         "ts-loader": "^7.0.5",
         "ts-node": "^6.0.1",
         "tslint": "^5.20.1",
         "typescript": "^3.7.5",
+        "vsce": "^1.81.1",
         "vscode-test": "^1.3.0",
         "webpack": "^4.43.0",
         "webpack-cli": "^3.3.11"
