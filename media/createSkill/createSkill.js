@@ -11,11 +11,13 @@ window.onload = function(){
         const runtime = document.getElementById('runtime').value;
         const locale = document.getElementById('defaultLanguage').value;
         const skillFolder = document.getElementById('skillFolder').value;
+        const region = document.getElementById('region').value;
         vscode.postMessage({
             skillName: skillName,
             runtime: runtime,
             locale: locale,
-            skillFolder: skillFolder
+            skillFolder: skillFolder,
+            region: region
         });
     };
     // Handle the message inside the webview

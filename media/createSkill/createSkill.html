@@ -42,11 +42,19 @@
                             <option value='es-US'>Spanish (US)</option>
                         </select>
                         <br/><br/>
-                        <label for="skillName">Hosting option</label><br/>
+                        <label for="skillRuntime">Hosting runtime</label><br/>
                         <span>With Alexa-Hosted skills you get free hosting with AWS Lambda (up to the AWS Free Tier). <a href='https://developer.amazon.com/en-US/docs/alexa/hosted-skills/build-a-skill-end-to-end-using-an-alexa-hosted-skill.html'>Learn more</a></span>
                         <select id="runtime" name="runtime">
                             <option value='NODE_10_X'>Alexa-Hosted (Node.js)</option>
                             <option value='PYTHON_3_7'>Alexa-Hosted (Python)</option>
+                        </select>
+                        <br/><br/>
+                        <label for="skillRegion">Hosting region</label><br/>
+                        <span>For reduced latency, you can select a region where your skill code default endpoint is hosted. <a href='https://developer.amazon.com/en-US/docs/alexa/hosted-skills/build-a-skill-end-to-end-using-an-alexa-hosted-skill.html#regions'>Learn more</a></span>
+                        <select id="region" name="region">
+                            <option value='US_EAST_1'>US East (N. Virginia)</option>
+                            <option value='EU_WEST_1'>Europe (Ireland)</option>
+                            <option value='US_WEST_1'>US West (Oregon)</option>
                         </select>
                         <br/><br/>
                         <label for="skillFolder">Local directory</label><br/>
