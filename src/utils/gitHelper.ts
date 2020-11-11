@@ -130,7 +130,7 @@ export class GitInTerminalHelper {
             stdio: [null, showOutput === true ? 1 : null, showStdErr === true ? 2 : null],
             windowsHide: this.logLevel === LogLevel.verbose,
         };
-        if (workingDir === true) {
+        if (workingDir !== undefined) {
             execOptions.cwd = options.workingDir;
         }
         if (showCommand === true) {
