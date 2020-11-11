@@ -205,7 +205,7 @@
                                 "--skillId", "^\"\\${command:ask.skillIdFromWorkspace}\"",
                                 "--handlerName", "handler",
                                 "--skillEntryFile", "^\"\\${workspaceFolder}/lambda/index.js\"",
-                                "--region", "NA"
+                                "--region", "${1|NA,EU,FE|}"
                             ]
                         }
                     }
@@ -231,7 +231,7 @@
                                 "--skillId", "^\"\\${command:ask.skillIdFromWorkspace}\"",
                                 "--skillHandler", "lambda_handler",
                                 "--skillFilePath", "^\"\\${workspaceFolder}/lambda/lambda_function.py\"",
-                                "--region", "NA"
+                                "--region", "${1|NA,EU,FE|}"
                             ],
                             "console": "internalConsole"
                         }
