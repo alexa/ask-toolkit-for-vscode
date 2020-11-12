@@ -201,11 +201,16 @@
                             "request": "launch",
                             "program": "^\"\\${command:ask.debugAdapterPath}\"",
                             "args": [
-                                "--accessToken", "^\"\\${command:ask.accessToken}\"",
-                                "--skillId", "^\"\\${command:ask.skillIdFromWorkspace}\"",
-                                "--handlerName", "handler",
-                                "--skillEntryFile", "^\"\\${workspaceFolder}/lambda/index.js\"",
-                                "--region", "${1|NA,EU,FE|}"
+                                "--accessToken",
+                                "^\"\\${command:ask.accessToken}\"",
+                                "--skillId",
+                                "^\"\\${command:ask.skillIdFromWorkspace}\"",
+                                "--handlerName",
+                                "handler",
+                                "--skillEntryFile",
+                                "^\"\\${workspaceFolder}/lambda/index.js\"",
+                                "--region",
+                                "${1|NA,EU,FE|}"
                             ]
                         }
                     }
@@ -227,11 +232,16 @@
                             "program": "^\"\\${command:ask.debugAdapterPath}\"",
                             "pythonPath": "^\"\\${command:python.interpreterPath}\"",
                             "args": [
-                                "--accessToken", "^\"\\${command:ask.accessToken}\"",
-                                "--skillId", "^\"\\${command:ask.skillIdFromWorkspace}\"",
-                                "--skillHandler", "lambda_handler",
-                                "--skillFilePath", "^\"\\${workspaceFolder}/lambda/lambda_function.py\"",
-                                "--region", "${1|NA,EU,FE|}"
+                                "--accessToken",
+                                "^\"\\${command:ask.accessToken}\"",
+                                "--skillId",
+                                "^\"\\${command:ask.skillIdFromWorkspace}\"",
+                                "--skillHandler",
+                                "lambda_handler",
+                                "--skillFilePath",
+                                "^\"\\${workspaceFolder}/lambda/lambda_function.py\"",
+                                "--region",
+                                "${1|NA,EU,FE|}"
                             ],
                             "console": "internalConsole"
                         }
