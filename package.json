@@ -201,11 +201,16 @@
                             "request": "launch",
                             "program": "^\"\\${command:ask.debugAdapterPath}\"",
                             "args": [
-                                "--accessToken", "^\"\\${command:ask.accessToken}\"",
-                                "--skillId", "^\"\\${command:ask.skillIdFromWorkspace}\"",
-                                "--handlerName", "handler",
-                                "--skillEntryFile", "^\"\\${workspaceFolder}/lambda/index.js\"",
-                                "--region", "${1|NA,EU,FE|}"
+                                "--accessToken",
+                                "^\"\\${command:ask.accessToken}\"",
+                                "--skillId",
+                                "^\"\\${command:ask.skillIdFromWorkspace}\"",
+                                "--handlerName",
+                                "handler",
+                                "--skillEntryFile",
+                                "^\"\\${workspaceFolder}/lambda/index.js\"",
+                                "--region",
+                                "${1|NA,EU,FE|}"
                             ]
                         }
                     }
@@ -227,11 +232,16 @@
                             "program": "^\"\\${command:ask.debugAdapterPath}\"",
                             "pythonPath": "^\"\\${command:python.interpreterPath}\"",
                             "args": [
-                                "--accessToken", "^\"\\${command:ask.accessToken}\"",
-                                "--skillId", "^\"\\${command:ask.skillIdFromWorkspace}\"",
-                                "--skillHandler", "lambda_handler",
-                                "--skillFilePath", "^\"\\${workspaceFolder}/lambda/lambda_function.py\"",
-                                "--region", "${1|NA,EU,FE|}"
+                                "--accessToken",
+                                "^\"\\${command:ask.accessToken}\"",
+                                "--skillId",
+                                "^\"\\${command:ask.skillIdFromWorkspace}\"",
+                                "--skillHandler",
+                                "lambda_handler",
+                                "--skillFilePath",
+                                "^\"\\${workspaceFolder}/lambda/lambda_function.py\"",
+                                "--region",
+                                "${1|NA,EU,FE|}"
                             ],
                             "console": "internalConsole"
                         }
@@ -262,7 +272,7 @@
         "@types/fs-extra": "^8.1.0",
         "@types/glob": "^7.1.3",
         "@types/jsonfile": "^6.0.0",
-        "@types/mocha": "^7.0.1",
+        "@types/mocha": "^8.0.4",
         "@types/node": "^12.12.30",
         "@types/portscanner": "^2.1.0",
         "@types/ramda": "^0.25.28",
@@ -285,11 +295,10 @@
         "eslint-plugin-prettier": "^3.1.4",
         "eslint-plugin-react": "^7.20.0",
         "glob": "^7.1.6",
-        "gulp": "^4.0.0",
         "husky": "^4.3.0",
-        "mocha": "^7.0.1",
+        "mocha": "^8.2.1",
         "nock": "^9.2.3",
-        "nyc": "^13.0.1",
+        "nyc": "^15.1.0",
         "prettier": "^2.0.5",
         "shx": "^0.3.2",
         "sinon": "^4.5.0",
@@ -301,7 +310,8 @@
         "vsce": "^1.81.1",
         "vscode-test": "^1.3.0",
         "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.11"
+        "webpack-cli": "^3.3.11",
+        "yargs-parser": ">=5.0.0-security.0"
     },
     "dependencies": {
         "adm-zip": "0.4.14",
