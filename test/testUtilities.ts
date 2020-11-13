@@ -16,7 +16,7 @@ export const TIMEOUT = 30 * SECOND;
 export class FakeExtensionContext implements vscode.ExtensionContext {
     public subscriptions: Array<{ dispose(): any }> = [];
     public workspaceState: vscode.Memento = new FakeMemento();
-    public globalState: vscode.Memento = new FakeMemento();
+    public globalState: vscode.Memento & {setKeysForSync(keys: string[]): void;} = new FakeGlobalStorage();
     public storagePath: string | undefined;
     public globalStoragePath = '.';
     public logPath = '';
@@ -33,7 +33,7 @@ export class FakeExtensionContext implements vscode.ExtensionContext {
 
     public constructor(preload?: FakeExtensionState) {
         if (preload !== undefined) {
-            this.globalState = new FakeMemento(preload.globalState);
+            this.globalState = new FakeGlobalStorage(preload.globalState);
             this.workspaceState = new FakeMemento(preload.workspaceState);
         }
     }
@@ -79,6 +79,12 @@ class FakeMemento implements vscode.Memento {
         this._storage[key] = value;
 
         return Promise.resolve();
+    }
+}
+
+class FakeGlobalStorage extends FakeMemento {
+    public setKeysForSync(keys: string[]): void {
+        return;
     }
 }
 

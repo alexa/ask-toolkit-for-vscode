@@ -166,8 +166,8 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
 
         const refreshButton: vscode.QuickInputButton = {
             iconPath: {
-                dark: path.join(getImagesFolder(context.extensionContext), 'dark', 'refresh.svg'),
-                light: path.join(getImagesFolder(context.extensionContext), 'light', 'refresh.svg')
+                dark: vscode.Uri.file(path.join(getImagesFolder(context.extensionContext), 'dark', 'refresh.svg')),
+                light: vscode.Uri.file(path.join(getImagesFolder(context.extensionContext), 'light', 'refresh.svg'))
             }, 
             tooltip: 'Refresh skills'
         };
