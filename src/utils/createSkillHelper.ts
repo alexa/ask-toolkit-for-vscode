@@ -82,14 +82,23 @@ function _getManifest(skillName: string, locale: string): model.v1.skill.Manifes
     return manifest;
 }
 
-export async function createSkill(skillName: string, runtime: string, locale: string, profile: string, vendorId: string, context: ExtensionContext): Promise<string> {
-    Logger.verbose(`Calling method: createSkill, args: `, skillName, runtime, locale, profile, vendorId);
+export async function createSkill(skillName: string, runtime: string, region: string, locale: string, profile: string, vendorId: string, context: ExtensionContext): Promise<string> {
+    Logger.verbose(
+        `Calling method: createSkill, args: `, {
+            "skillName": skillName,
+            "runtime": runtime,
+            "region": region,
+            "locale": locale,
+            "profile": profile,
+            "vendorId": vendorId
+        });
     const payload = {
         vendorId: vendorId,
         manifest: _getManifest(skillName, locale),
         hosting: {
             "alexaHosted": {
-                "runtime": runtime
+                "runtime": runtime,
+                "region": region
             }
         }
     } as model.v1.skill.CreateSkillRequest;
