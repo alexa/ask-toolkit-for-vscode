@@ -51,9 +51,8 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
         resourceArray.push(new PluginTreeItem<CustomResource>(
             HELP_VIEW_ITEMS.WHATS_NEW, null, vscode.TreeItemCollapsibleState.None,
             {
-                title: 'openUrl',
-                command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.RELEASE_UPDATES, true, {CommandType: 'RELEASE_UPDATES'}],
+                title: 'welcome',
+                command: 'ask.welcome',
             }, undefined, ContextValueTypes.SKILL,
         ));
     
