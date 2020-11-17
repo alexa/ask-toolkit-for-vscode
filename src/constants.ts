@@ -119,6 +119,11 @@ export const AUTH = {
     SIGNIN_PATH: '/ap/signin',
 };
 
+export const DYNAMIC_CONTENT = {
+    BLOG_POSTS_JSON: 'http://d177gaoewxhqz4.cloudfront.net/skills_blog.json',
+    ASK_UPDATES_JSON: 'http://d177gaoewxhqz4.cloudfront.net/ask_updates.json'
+};
+
 export const DEV_CONSOLE_ENDPOINT = 'https://developer.amazon.com/alexa/console/ask';
 
 export const SKILL_ACTION_URLS = {

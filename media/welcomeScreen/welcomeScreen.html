@@ -53,6 +53,31 @@
               font-family: "Amazon Ember Regular","Helvetica Neue",Arial,Helvetica,Roboto,sans-serif;
               font-weight: 700;
           }
+          .card-noanimate {
+            width: 100%;
+            background-color: #252526;
+            padding: 15px;
+            margin-top: 15px;
+          }
+          body.vscode-light .card-noanimate {
+            background-color: #F3F3F3;
+          }
+          .section {
+              margin-top: 0px;
+          }
+          h3 {
+              margin-bottom: 0px;
+          }
+          #newFeatures p {
+              display: inline;
+              margin-right: 5px;
+          }
+          #newFeatures p:before {
+            content: "• ";
+          }
+          a {
+            text-decoration: none;
+          }
         </style>
         <script>
           const vscode = acquireVsCodeApi();
@@ -78,9 +103,46 @@
 
           window.addEventListener("message", (event) => {
               const message = event.data;
+              if (message.blogUpdates) {
+                  if (message.blogUpdates.error) {
+                    document.getElementById("devBlog").innerHTML = 'Failed to retrieve blog updates at this time.';
+                  } else {
+                    document.getElementById("devBlog").innerHTML = '';
+                    message.blogUpdates.forEach(update => {
+                      const div = document.createElement('div');
+                      const summary = truncate(update.summary, 200);
+                      const date = new Date(update.date);
+                      const dateStr = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+                      div.innerHTML = "<h3>" + update.title + "</h3>";
+                      div.innerHTML += dateStr + "<br/>";
+                      div.innerHTML += "<i>" + summary + "</i><br/>";
+                      div.innerHTML += "• <a href='" + update.blogPostHeaderPagePath + "'>Read more</a>";
+                      document.getElementById("devBlog").appendChild(div);
+                    });
+                  }
+                  return;
+              } else if (message.featureUpdates) {
+                  if (message.featureUpdates.error) {
+                    document.getElementById("newFeatures").innerHTML = 'Failed to retrieve feature updates at this time.';
+                  } else {
+                    document.getElementById("newFeatures").innerHTML = '';
+                    message.featureUpdates.forEach(update => {
+                      const div = document.createElement('div');
+                      const summary = truncate(update.summary, 200);
+                      div.innerHTML = "<h3>" + update.name + "</h3>"
+                      div.innerHTML += update.date + "<br/>";
+                      div.innerHTML += "<i>" + summary + "</i><br/>" + update.links;
+                      document.getElementById("newFeatures").appendChild(div);
+                    });
+                  }
+                  return;
+              }
               const enabled = message.enabled;
               document.getElementById("showWelcome").checked = enabled;
           });
+          function truncate(str, n){
+              return (str.length > n) ? str.substr(0, n-1) + '&hellip;' : str;
+          };
         </script>
     </head>
     <body>
@@ -93,34 +155,51 @@
             <p>
                 Welcome to the Alexa Skills Kit (ASK) Toolkit for Visual Studio Code.
             </p>
-            <h2>Get started</h2>
-            <div class="card" id="createCard">
-                <div class="icon">
-                  <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/create.png"/>
+            <div>
+                <h2>Get started</h2>
+                <div class="card" id="createCard">
+                    <div class="icon">
+                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/create.png"/>
+                    </div>
+                    <div class="content">
+                    <h4><b>Create new skill</b></h4>
+                    <p>Quickly create a new Alexa-hosted skill from VS Code.</p>
+                    </div>
                 </div>
-                <div class="content">
-                  <h4><b>Create new skill</b></h4> 
-                  <p>Quickly create a new Alexa-hosted skill from VS Code.</p>
+
+                <div class="card" id="importCard">
+                    <div class="icon">
+                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/import.png"/>
+                    </div>
+                    <div class="content">
+                    <h4><b>Import existing skill</b></h4>
+                    <p>Download an existing skill and edit it locally in VS Code.</p>
+                    </div>
+                </div>
+
+                <div class="card" id="profileCard">
+                    <div class="icon">
+                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/accountLink.png"/>
+                    </div>
+                    <div class="content">
+                    <h4><b>Manage account profiles</b></h4>
+                    <p>Create and delete profiles to manage multiple accounts in the Alexa Developer Console.</p>
+                    </div>
                 </div>
             </div>
-
-            <div class="card" id="importCard">
-                <div class="icon">
-                  <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/import.png"/>
+            <div>
+                <h2>Alexa Skills Kit updates</h2>
+                <div class="card-noanimate">
+                    <h2 class="section">Developer blog</h2>
+                    <div id="devBlog"></div>
+                    <br/>
+                    <a href="https://developer.amazon.com/en-US/blogs/alexa/alexa-skills-kit">See more</a>
                 </div>
-                <div class="content">
-                  <h4><b>Import existing skill</b></h4> 
-                  <p>Download an existing skill and edit it locally in VS Code.</p>
-                </div>
-            </div>
-
-            <div class="card" id="profileCard">
-                <div class="icon">
-                  <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/welcomeScreen/accountLink.png"/>
-                </div>
-                <div class="content">
-                  <h4><b>Manage account profiles</b></h4> 
-                  <p>Create and delete profiles to manage multiple accounts in the Alexa Developer Console.</p>
+                <div class="card-noanimate">
+                    <h2 class="section">Feature updates</h2>
+                    <div id="newFeatures"></div>
+                    <br/>
+                    <a href="https://developer.amazon.com/en-US/alexa/alexa-skills-kit/new/feature-updates">See more</a>
                 </div>
             </div>
             <br/><br/>
