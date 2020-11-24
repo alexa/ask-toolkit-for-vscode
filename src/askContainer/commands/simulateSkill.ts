@@ -14,8 +14,7 @@ export class SimulateSkillCommand extends AbstractCommand<void> {
     async execute(context: CommandContext): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}`);
         try {
-            // eslint-disable-next-line @typescript-eslint/await-thenable
-            await this.simulateSkillWebview.showView();
+            this.simulateSkillWebview.showView();
         } catch (err) {
             throw loggableAskError(`Cannot open test skill view`, err, true);
         }
