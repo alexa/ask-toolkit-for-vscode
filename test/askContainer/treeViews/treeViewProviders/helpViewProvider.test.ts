@@ -30,8 +30,8 @@ describe("TreeView_helpViewProvider tests", () => {
         sandbox.restore();
     });
 
-    describe("getChildren", () => {
-        it ('when no element', () => {
+    describe("getChildren tests", () => {
+        it ('Should add root resources when no element', () => {
             const expectedGettingStarted = new PluginTreeItem<CustomResource>(
                 HELP_VIEW_ITEMS.GETTING_STARTED, null, vscode.TreeItemCollapsibleState.Collapsed,
                 undefined, undefined, ContextValueTypes.SKILL,
@@ -54,7 +54,7 @@ describe("TreeView_helpViewProvider tests", () => {
             assert.ok(others.length === 0);
         });
 
-        it ('when element label is getting started', () => {
+        it ('should add getting started resources when element label is getting started', () => {
             const fakeElement = new PluginTreeItem<CustomResource>(HELP_VIEW_ITEMS.GETTING_STARTED, null, vscode.TreeItemCollapsibleState.None);
             const expectedSdkResources = new PluginTreeItem<CustomResource>(
                 HELP_VIEW_ITEMS.GETTING_STARTED_SDK, null,
@@ -91,7 +91,7 @@ describe("TreeView_helpViewProvider tests", () => {
             assert.ok(others.length === 0);
         });
 
-        it ('when element label is sdk resources', () => {
+        it ('should add SDK resources when element label is sdk resources', () => {
             const fakeElement = new PluginTreeItem<CustomResource>(HELP_VIEW_ITEMS.GETTING_STARTED_SDK, null, vscode.TreeItemCollapsibleState.None);
             const expectedCustomSkills = new PluginTreeItem<CustomResource>(
                 HELP_VIEW_ITEMS.GETTING_STARTED_ASK_SDK, null,
@@ -144,7 +144,7 @@ describe("TreeView_helpViewProvider tests", () => {
     });
 
     describe('refresh', () => {
-        it('refresh should fire undefined', () => {
+        it('The refresh function should be able to use _onDidChangeTreeData eventEmitter to fire undefined', () => {
             const eventEmitterSpy = sandbox.stub(vscode.EventEmitter.prototype, 'fire');
             helpViewProvider.refresh();
             

@@ -1,4 +1,4 @@
-// This module will contain the abstract components for different Vscode contents to implement
+// This module will contain the abstract components for different VSCode contents to implement
 
 import * as path from 'path';
 

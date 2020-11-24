@@ -21,7 +21,9 @@ export class DeploySkillWebview extends AbstractWebView {
             .then(value => {
                 this.gitApi = value;
             })
-            .catch(() => {});
+            .catch(err => {
+                throw loggableAskError("Failed to retrieve git api.", err);
+            });
     }
 
     async onViewChangeListener(event: vscode.WebviewPanelOnDidChangeViewStateEvent): Promise<void> {
@@ -78,7 +80,7 @@ export class DeploySkillWebview extends AbstractWebView {
         const skillName: string = skillDetails.skillName;
         void this.checkIfChangesExistFromUpstream().then(value => {
             void this.getWebview().postMessage({
-                changesExist: value
+                changesExist: value,
             });
         });
         return this.loader.renderView({

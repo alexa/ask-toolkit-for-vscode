@@ -190,7 +190,7 @@ describe("Webview_deploySkill tests", () => {
 
     describe('getHtmlForView', () => {
 
-        it('Should return deploySkill view', () => {
+        it('Should be able to return deploySkill view', () => {
             const fakeSkillDetails = {
                 skillId: 'fakeSkillID',
                 skillName: 'fakeSkillName'
