@@ -68,14 +68,15 @@ function createContent(apl, datasources) {
             jsonDoc.mainTemplate.parameters.length > 0
         ) {
             const parsedData = JSON.parse(data);
-            const name = jsonDoc.mainTemplate.parameters[0];
-            if (typeof name === "string") {
-                if (name === "payload") {
-                    content.addData(name, data);
-                } else if (parsedData[name]) {
-                    content.addData(name, JSON.stringify(parsedData[name]));
+            jsonDoc.mainTemplate.parameters.forEach((name) => {
+                if (typeof name === "string") {
+                    if (name === "payload") {
+                        content.addData(name, data);
+                    } else if (parsedData[name]) {
+                        content.addData(name, JSON.stringify(parsedData[name]));
+                    }
                 }
-            }
+            });
         }
     }
     return content;

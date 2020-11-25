@@ -16,6 +16,7 @@ import { Logger } from '../../logger';
 type createSkillWebViewType = {
     locale: string;
     runtime: string;
+    region: string;
     skillFolder: string;
     skillName: string;
 };
@@ -82,7 +83,7 @@ export class CreateSkillWebview extends AbstractWebView {
             }
             try {
                 await this.authenticateNewUser();
-                const filteredProjectName = Utils.filterNonAlphanumeric(message.skillName)
+                const filteredProjectName = Utils.filterNonAlphanumeric(message.skillName);
                 const skillFolderUri = this.createSkillFolder(message.skillFolder, filteredProjectName);
                 const profile = Utils.getCachedProfile(this.extensionContext) ?? DEFAULT_PROFILE;
                 const vendorId = Utils.resolveVendorId(profile);
@@ -158,7 +159,7 @@ export class CreateSkillWebview extends AbstractWebView {
 
             const incrAmt = 25;
             const skillId = await createSkill(
-                message.skillName, message.runtime, message.locale, profile ?? DEFAULT_PROFILE, vendorId, this.extensionContext);
+                message.skillName, message.runtime, message.region, message.locale, profile ?? DEFAULT_PROFILE, vendorId, this.extensionContext);
             progress.report({
                 increment: incrAmt,
                 message: 'Skill created. Retrieving skill details...'

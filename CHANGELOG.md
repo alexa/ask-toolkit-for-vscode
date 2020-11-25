@@ -1,3 +1,26 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## 2.2.0 (2020-11-19)
+
+
+### Features
+
+* add default aws region for create hosted skill ([#51](https://github.com/alexa/ask-toolkit-for-vscode/issues/51)) ([5298da3](https://github.com/alexa/ask-toolkit-for-vscode/commits/5298da34a690552f12f3a37f08f0eda0cfee1ae5))
+* add dynamic content to welcome screen ([#63](https://github.com/alexa/ask-toolkit-for-vscode/issues/63)) ([30dad54](https://github.com/alexa/ask-toolkit-for-vscode/commits/30dad54bdf347df300823c8fea5c12469e1a21d4))
+* update debug configuration snippet in package.json with a choice region input ([#55](https://github.com/alexa/ask-toolkit-for-vscode/issues/55)) ([feeac28](https://github.com/alexa/ask-toolkit-for-vscode/commits/feeac281d2cb30d5fcceb133b510c9a30f48da9c))
+
+
+### Bug Fixes
+
+* iconpath for quick input button for vscode 1.51.1, update package lock and tests for new version ([a6d5f0a](https://github.com/alexa/ask-toolkit-for-vscode/commits/a6d5f0aec11bcfd520530dcb4787a83f10f4512f))
+* Portugese (BR) to Portuguese (BR) ([#43](https://github.com/alexa/ask-toolkit-for-vscode/issues/43)) ([cf3412a](https://github.com/alexa/ask-toolkit-for-vscode/commits/cf3412ae385341ba1017d7f05db917642f30753d))
+* Revert main class on package to fix extension run ([99de11e](https://github.com/alexa/ask-toolkit-for-vscode/commits/99de11e9544a43cc28f831ba6819c8a9796ee995))
+* simulateSkillHelper file into three smaller helper files ([#44](https://github.com/alexa/ask-toolkit-for-vscode/issues/44)) ([322573d](https://github.com/alexa/ask-toolkit-for-vscode/commits/322573da141370a38b46fde486dadb737c273fc2))
+* upgrade yargs-parser version in package-lock.json ([#48](https://github.com/alexa/ask-toolkit-for-vscode/issues/48)) ([462cea4](https://github.com/alexa/ask-toolkit-for-vscode/commits/462cea469e97cf2c1ec9620867028935c2ed7233))
+* working dir not assigned issue in git helper ([#56](https://github.com/alexa/ask-toolkit-for-vscode/issues/56)) ([be467b2](https://github.com/alexa/ask-toolkit-for-vscode/commits/be467b2c5fb151a9f6513dab278539a5d19d1913))
+
 ## 2.1.0 - September 22, 2020
 
 - Adds local simulator features in the toolkit.

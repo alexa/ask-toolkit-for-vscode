@@ -55,6 +55,7 @@ import { ext } from './extensionGlobals';
 import { ShowToolkitUpdatesCommand } from './askContainer/commands/showToolkitUpdates';
 import { ToolkitUpdateWebview } from './askContainer/webViews/toolkitUpdateWebview';
 import { InitialLoginWebview } from './askContainer/webViews/initialLogin';
+import { WelcomeCommand } from './askContainer/commands/welcome';
 
 const DEFAULT_LOG_LEVEL = LogLevel.info;
 
@@ -70,7 +71,8 @@ function registerCommands(context: vscode.ExtensionContext): void {
         new ViewAllSkillsCommand(), new CreateSkillCommand(createSkill),
         new CloneSkillCommand(), new ChangeProfileCommand(), new AccessTokenCommand(),
         new DebugAdapterPathCommand(), new CloneSkillFromConsoleCommand(),
-        new ShowToolkitUpdatesCommand(toolkitUpdate), new ContactToolkitTeamCommand()
+        new ShowToolkitUpdatesCommand(toolkitUpdate), new ContactToolkitTeamCommand(),
+        new WelcomeCommand(context)
     );
 
     apiRegisterCommands(context, ext.askGeneralCommands);
@@ -143,13 +145,13 @@ async function registerViews(context: vscode.ExtensionContext): Promise<void> {
     if (vscode.workspace.getConfiguration(
         EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(
             EXTENSION_STATE_KEY.SHOW_WELCOME_SCREEN) === true) {
-        const welcomeScreen: AbstractWebView = new WelcomeScreenWebview(
-            'Alexa Skills Kit', 'welcomeScreen', context,
-        );
+            const welcomeScreen: WelcomeScreenWebview = new WelcomeScreenWebview(
+                'Alexa Skills Kit', 'welcomeScreen', context,
+            );
 
         registerWebviews(welcomeScreen);
         if (await Utils.isProfileAuth(context) && context.globalState.get(EXTENSION_STATE_KEY.DID_FIRST_TIME_LOGIN) === true) {
-            welcomeScreen.showView();
+             void vscode.commands.executeCommand('ask.welcome');
         } else {
             showLoginScreen(context);
         }
