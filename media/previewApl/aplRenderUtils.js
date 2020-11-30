@@ -74,6 +74,8 @@ function createContent(apl, datasources) {
                         content.addData(name, data);
                     } else if (parsedData[name]) {
                         content.addData(name, JSON.stringify(parsedData[name]));
+                    } else {
+                        content.addData(name, '{}');
                     }
                 }
             });
