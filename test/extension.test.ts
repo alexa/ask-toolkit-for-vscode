@@ -4,6 +4,8 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 import { EXTENSION_PUBLISHER, EXTENSION_FULL_NAME } from "../src/constants";
 import { ext } from "../src/extensionGlobals";
+import * as sinon from "sinon";
+import * as s3ScriptChecker from "../src/utils/s3ScriptChecker";
 
 const extensionId = `${EXTENSION_PUBLISHER}.${EXTENSION_FULL_NAME}`;
 
@@ -18,6 +20,7 @@ describe("Alexa Skill Kit Extension", () => {
     it("should activate", async () => {
         extension = vscode.extensions.getExtension(extensionId);
         if (extension !== undefined) {
+            sinon.stub(s3ScriptChecker, 'checkAllSkillS3Scripts');
             await extension.activate();
             assert.ok(extension.isActive);
         } else {
