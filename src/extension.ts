@@ -133,9 +133,7 @@ function registerTreeViews(context: vscode.ExtensionContext): void {
 }
 
 function showLoginScreen(context: vscode.ExtensionContext): void {
-    const loginView = new InitialLoginWebview('Sign in', 'initialLogin', context);
-    ext.webViews.push(loginView);
-    apiRegisterCommands(context, [new LoginCommand(loginView)]);
+    apiRegisterCommands(context, [new LoginCommand(context)]);
     void vscode.commands.executeCommand('ask.login');
 }
 
