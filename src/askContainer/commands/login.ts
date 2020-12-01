@@ -1,3 +1,4 @@
+
 import { AbstractCommand, CommandContext } from '../../runtime';
 import { InitialLoginWebview } from '../webViews/initialLogin';
 import * as vscode from 'vscode';
@@ -7,15 +8,15 @@ import { Logger } from '../../logger';
 export class LoginCommand extends AbstractCommand<void> {
     private loginView: InitialLoginWebview;
 
-    constructor(loginView: InitialLoginWebview) {
+    constructor(context: vscode.ExtensionContext) {
         super('ask.login');
-        this.loginView = loginView;
+        this.loginView = new InitialLoginWebview('Sign in', 'initialLogin', context);
+        registerWebviews(this.loginView);
     }
 
-    // eslint-disable-next-line @typescript-eslint/require-await
     async execute(context: CommandContext, dispose?: boolean): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}`);
-        if (dispose === true) {
+        if (dispose) {
             this.loginView.dispose();
         } else {
             this.loginView.showView();

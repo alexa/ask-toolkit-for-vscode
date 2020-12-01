@@ -47,7 +47,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             HELP_VIEW_ITEMS.GETTING_STARTED, null, vscode.TreeItemCollapsibleState.Collapsed,
             undefined, undefined, ContextValueTypes.SKILL,
         ));
-    
+        // TODO: move title & command string to constant
         resourceArray.push(new PluginTreeItem<CustomResource>(
             HELP_VIEW_ITEMS.WHATS_NEW, null, vscode.TreeItemCollapsibleState.None,
             {

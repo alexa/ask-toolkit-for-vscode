@@ -1,23 +1,16 @@
-import * as vscode from "vscode";
-import * as assert from "assert";
-import * as sinon from "sinon";
-import * as model from "ask-smapi-model";
-import { CustomSmapiClientBuilder } from "ask-smapi-sdk";
+import * as assert from 'assert';
+import * as sinon from 'sinon';
 
-import { DeploySkillWebview } from "../../../src/askContainer/webViews/deploySkillWebview";
-import { ext } from "../../../src/extensionGlobals";
-import { Logger } from '../../../src/logger';
-import * as workspaceHelper from "../../../src/utils/workspaceHelper";
+import { DeploySkillWebview } from '../../../src/askContainer/webViews/deploySkillWebview';
+import * as workspaceHelper from '../../../src/utils/workspaceHelper';
 import { FakeExtensionContext, FakeWebviewPanelOnDidChangeViewStateEvent } from '../../testUtilities';
-import * as exceptions from "../../../src/exceptions";
-import * as helper from "../../../src/utils/deploySkillHelper";
-import * as skillHelper from "../../../src/utils/skillHelper";
+import * as exceptions from '../../../src/exceptions';
+import * as helper from '../../../src/utils/deploySkillHelper';
+import * as skillHelper from '../../../src/utils/skillHelper';
 
-describe("Webview_deploySkill tests", () => {
+describe('Webview_deploySkill tests', () => {
     let webView: DeploySkillWebview;
     let sandbox: sinon.SinonSandbox;
-    let debugSpy: sinon.SinonStub;
-    let verboseSpy: sinon.SinonStub;
 
     const fakeTitle = 'fakeTitle';
     const fakeID = 'fakeID';
@@ -25,8 +18,6 @@ describe("Webview_deploySkill tests", () => {
 
     beforeEach(() => {
         sandbox = sinon.createSandbox();
-        debugSpy = sandbox.stub(Logger, 'debug');
-        verboseSpy = sandbox.stub(Logger, 'verbose');
     });
 
     afterEach(() => {
@@ -43,7 +34,6 @@ describe("Webview_deploySkill tests", () => {
 
             await webView.onViewChangeListener(fakeEvent);
 
-            assert.ok(debugSpy.calledOnceWith(`Calling method: fakeID.onViewChangeListener`));
             assert.ok(refreshSpy.calledOnce);
         });
 
@@ -56,7 +46,6 @@ describe("Webview_deploySkill tests", () => {
 
             await webView.onViewChangeListener(fakeEvent);
 
-            assert.ok(debugSpy.calledOnceWith(`Calling method: fakeID.onViewChangeListener`));
             assert.ok(refreshSpy.notCalled);
         });
     });
@@ -71,7 +60,6 @@ describe("Webview_deploySkill tests", () => {
 
             await webView.onReceiveMessageListener(message);
 
-            assert.ok(debugSpy.calledOnceWith(`Calling method: ${fakeID}.onReceiveMessageListener, args: `, message));
             assert.ok(refreshSpy.calledOnce);
         });
 
@@ -102,18 +90,18 @@ describe("Webview_deploySkill tests", () => {
             webView.showView();
 
             await webView.onReceiveMessageListener(message);
-
-            assert.ok(debugSpy.calledOnceWith(`Calling method: ${fakeID}.onReceiveMessageListener, args: `, message));
-            assert.ok(renderSpy.calledOnceWith({
-                name: "deployInProgress",
-                errorMsg: "Skill deployment in progress...",
-            }));
+            assert.ok(
+                renderSpy.calledOnceWith({
+                    name: 'deployInProgress',
+                    errorMsg: 'Skill deployment in progress...',
+                })
+            );
             assert.ok(deploySpy.calledOnceWith(fakeSkillPath, fakeExtensionContext, webView));
         });
 
         it('When message is unknown, should throw unexpected message error', async () => {
             const message = 'invalidMessage';
-            const expectedError = exceptions.loggableAskError("Unexpected message received from webview.");
+            const expectedError = exceptions.loggableAskError('Unexpected message received from webview.');
             try {
                 await webView.onReceiveMessageListener(message);
             } catch (e) {
@@ -121,7 +109,7 @@ describe("Webview_deploySkill tests", () => {
 
                 return;
             }
-            
+
             assert.fail('Should throw an error');
         });
     });
@@ -138,14 +126,13 @@ describe("Webview_deploySkill tests", () => {
             const fakeSkillRepo = {
                 diffIndexWith() {
                     return [];
-                }
+                },
             };
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             sandbox.stub(webView['gitApi']!, 'getRepository').returns(fakeSkillRepo);
 
             const result = await webView['checkIfChangesExistFromUpstream']();
 
-            assert.ok(verboseSpy.calledOnceWith(`Calling method: ${fakeID}.checkIfChangesExistFromUpstream`));
             assert.strictEqual(result, false);
         });
 
@@ -153,14 +140,13 @@ describe("Webview_deploySkill tests", () => {
             const fakeSkillRepo = {
                 diffIndexWith() {
                     return ['changeOne'];
-                }
+                },
             };
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             sandbox.stub(webView['gitApi']!, 'getRepository').returns(fakeSkillRepo);
 
             const result = await webView['checkIfChangesExistFromUpstream']();
 
-            assert.ok(verboseSpy.calledOnceWith(`Calling method: ${fakeID}.checkIfChangesExistFromUpstream`));
             assert.strictEqual(result, true);
         });
     });
@@ -171,7 +157,7 @@ describe("Webview_deploySkill tests", () => {
             // Call showView to instantiate panel
             webView.showView();
         });
-        it('Should post {changeExist: true} when change exist', async() => {
+        it('Should post {changeExist: true} when change exist', async () => {
             sandbox.stub(webView, 'checkIfChangesExistFromUpstream' as any).returns(true);
             const postMessageSpy = sandbox.stub(webView.getWebview(), 'postMessage');
             await webView['refresh']();
@@ -179,7 +165,7 @@ describe("Webview_deploySkill tests", () => {
             assert.ok(postMessageSpy.calledOnceWith({ changesExist: true }));
         });
 
-        it('Should post {changeExist: false} when change not exist', async() => {
+        it('Should post {changeExist: false} when change not exist', async () => {
             sandbox.stub(webView, 'checkIfChangesExistFromUpstream' as any).returns(false);
             const postMessageSpy = sandbox.stub(webView.getWebview(), 'postMessage');
             await webView['refresh']();
@@ -189,11 +175,10 @@ describe("Webview_deploySkill tests", () => {
     });
 
     describe('getHtmlForView', () => {
-
         it('Should be able to return deploySkill view', () => {
             const fakeSkillDetails = {
                 skillId: 'fakeSkillID',
-                skillName: 'fakeSkillName'
+                skillName: 'fakeSkillName',
             };
             const renderSpy = sandbox.stub(webView['loader'], 'renderView');
             sandbox.stub(skillHelper, 'getSkillDetailsFromWorkspace').returns(fakeSkillDetails);
@@ -201,16 +186,16 @@ describe("Webview_deploySkill tests", () => {
 
             webView.getHtmlForView();
 
-            assert.ok(renderSpy.calledOnceWith({
-                name: "deploySkill",
-                js: true,
-                args: {
-                    skillId: 'fakeSkillID',
-                    skillName: 'fakeSkillName',
-                },
-            }));
+            assert.ok(
+                renderSpy.calledOnceWith({
+                    name: 'deploySkill',
+                    js: true,
+                    args: {
+                        skillId: 'fakeSkillID',
+                        skillName: 'fakeSkillName',
+                    },
+                })
+            );
         });
-
     });
-
 });
