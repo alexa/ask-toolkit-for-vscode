@@ -36,9 +36,9 @@ export class SkillActionsViewProvider implements vscode.TreeDataProvider<PluginT
     async getChildren(element?: PluginTreeItem<Resource>): Promise<Array<PluginTreeItem<Resource>>> {
         Logger.debug(`Calling method: ${SkillActionsViewProvider.name}.getChildren`);
         const treeItems: Array<PluginTreeItem<Resource>> = [];
-        const skillFolder = getSkillFolderInWs(this.treeView.context);
+        const skillFolder = getSkillFolderInWs(this.treeView.extensionContext);
         if(skillFolder) {
-            const skillDetails = getSkillDetailsFromWorkspace(this.treeView.context);
+            const skillDetails = getSkillDetailsFromWorkspace(this.treeView.extensionContext);
             const skillName: string = skillDetails.skillName;
             const skillId: string = skillDetails.skillId;
 
@@ -131,7 +131,7 @@ export class SkillActionsViewProvider implements vscode.TreeDataProvider<PluginT
         );
         
         if (Utils.isNonBlankString(skillId)) {
-            if (await getHostedSkillMetadata(skillId, this.treeView.context)) {
+            if (await getHostedSkillMetadata(skillId, this.treeView.extensionContext)) {
                 treeItemsArray.push(
                     new PluginTreeItem<Resource>(
                         SKILL_ACTION_ITEMS.DEPLOY.LABEL, null,

@@ -1,14 +1,15 @@
-import * as vscode from "vscode";
-import { AbstractWebView } from "../../runtime";
+import * as vscode from 'vscode';
+import { AbstractWebView } from '../../runtime';
 
-import { ViewLoader } from "../../utils/webViews/viewLoader";
-import { deploySkill } from "../../utils/deploySkillHelper";
-import { getSkillDetailsFromWorkspace } from "../../utils/skillHelper";
-import { getOrInstantiateGitApi } from "../../utils/gitHelper";
-import { API } from "../../@types/git";
-import { Logger } from "../../logger";
-import { loggableAskError } from "../../exceptions";
-import { getSkillFolderInWs } from "../../utils/workspaceHelper";
+import { ViewLoader } from '../../utils/webViews/viewLoader';
+import { deploySkill } from '../../utils/deploySkillHelper';
+import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
+import { getOrInstantiateGitApi } from '../../utils/gitHelper';
+import { API } from '../../@types/git';
+import { Logger } from '../../logger';
+import { loggableAskError } from '../../exceptions';
+import { getSkillFolderInWs } from '../../utils/workspaceHelper';
+import { WEB_VIEW_NAME } from '../../constants';
 
 export class DeploySkillWebview extends AbstractWebView {
     private loader: ViewLoader;
@@ -16,13 +17,13 @@ export class DeploySkillWebview extends AbstractWebView {
 
     constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
-        this.loader = new ViewLoader(this.extensionContext, "deploySkill", this);
+        this.loader = new ViewLoader(this.extensionContext, WEB_VIEW_NAME.DEPLOY_SKILL, this);
         getOrInstantiateGitApi(context)
             .then(value => {
                 this.gitApi = value;
             })
             .catch(err => {
-                throw loggableAskError("Failed to retrieve git api.", err);
+                throw loggableAskError('Failed to retrieve git api.', err);
             });
     }
 
@@ -35,21 +36,21 @@ export class DeploySkillWebview extends AbstractWebView {
 
     async onReceiveMessageListener(message: any): Promise<void> {
         Logger.debug(`Calling method: ${this.viewId}.onReceiveMessageListener, args: `, message);
-        if (message === "refresh") {
+        if (message === 'refresh') {
             void this.refresh();
-        } else if (message === "deploySkill") {
+        } else if (message === 'deploySkill') {
             try {
                 const skillWorkspace = getSkillFolderInWs(this.extensionContext);
                 this.getPanel().webview.html = this.loader.renderView({
-                    name: "deployInProgress",
-                    errorMsg: "Skill deployment in progress...",
+                    name: 'deployInProgress',
+                    errorMsg: 'Skill deployment in progress...',
                 });
                 await deploySkill(skillWorkspace!, this.extensionContext, this);
             } catch (err) {
                 throw loggableAskError(`Skill deploy failed`, err, true);
             }
         } else {
-            throw loggableAskError("Unexpected message received from webview.");
+            throw loggableAskError('Unexpected message received from webview.');
         }
     }
 
@@ -58,7 +59,7 @@ export class DeploySkillWebview extends AbstractWebView {
         const skillWorkspace = getSkillFolderInWs(this.extensionContext);
         const skillRepo = this.gitApi?.getRepository(skillWorkspace!);
 
-        const changes = await skillRepo?.diffIndexWith("@{upstream}");
+        const changes = await skillRepo?.diffIndexWith('@{upstream}');
         if (changes === undefined || changes.length === 0) {
             return false;
         } else {
@@ -84,7 +85,7 @@ export class DeploySkillWebview extends AbstractWebView {
             });
         });
         return this.loader.renderView({
-            name: "deploySkill",
+            name: WEB_VIEW_NAME.DEPLOY_SKILL,
             js: true,
             args: {
                 skillId,

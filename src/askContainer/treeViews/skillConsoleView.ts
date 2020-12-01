@@ -1,8 +1,8 @@
-import * as vscode from "vscode";
-import { PluginTreeItem, Resource, AbstractTreeView } from "../../runtime";
+import * as vscode from 'vscode';
+import { PluginTreeItem, Resource, AbstractTreeView } from '../../runtime';
 
-import { SkillsConsoleViewProvider } from "./treeViewProviders/skillConsoleViewProvider";
-import { TREE_VIEW_IDS } from "../../constants";
+import { SkillsConsoleViewProvider } from './treeViewProviders/skillConsoleViewProvider';
+import { TREE_VIEW_IDS } from '../../constants';
 
 export class SkillsConsoleView extends AbstractTreeView {
     protected view: vscode.TreeView<PluginTreeItem<Resource>>;

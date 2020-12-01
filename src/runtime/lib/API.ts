@@ -234,15 +234,9 @@ export abstract class AbstractWebView {
 
 export abstract class AbstractTreeView {
     protected abstract view: TreeView<PluginTreeItem<Resource>>;
-    public context: ExtensionContext;
+    public extensionContext: ExtensionContext;
 
     constructor(context: ExtensionContext) {
-        this.context = context;
-    }
-
-    changeTitle(label: string): void {
-        if (this.view !== undefined) {
-            this.view.title = label;
-        }
+        this.extensionContext = context;
     }
 }

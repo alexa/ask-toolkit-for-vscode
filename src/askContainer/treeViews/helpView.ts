@@ -1,8 +1,8 @@
-import * as vscode from "vscode";
-import { PluginTreeItem, Resource, AbstractTreeView } from "../../runtime";
+import * as vscode from 'vscode';
+import { PluginTreeItem, Resource, AbstractTreeView } from '../../runtime';
 
-import { HelpViewProvider } from "./treeViewProviders/helpViewProvider";
-import { TREE_VIEW_IDS } from "../../constants";
+import { HelpViewProvider } from './treeViewProviders/helpViewProvider';
+import { TREE_VIEW_IDS } from '../../constants';
 
 export class HelpView extends AbstractTreeView {
     protected view: vscode.TreeView<PluginTreeItem<Resource>>;

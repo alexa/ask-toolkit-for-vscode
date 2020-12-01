@@ -17,8 +17,6 @@ module.exports = {
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
     ],
     "rules": {
-
-
         // ---------------------------------------------------------
         // --- Rules from eslint:recommended that we override
         // ---------------------------------------------------------

@@ -41,6 +41,18 @@ export const EXTERNAL_LINKS = {
     }
 };
 
+export const WEB_VIEW_NAME = {
+    CREATE_SKILL: 'createSkill',
+    DEPLOY_SKILL: 'deploySkill',
+    INITIAL_LOGIN: 'initialLogin',
+    INTERACTION_MODEL_SYNC: 'interactionModelSync',
+    MANIFEST_SYNC: 'manifestSync',
+    PROFILE_MANAGER: 'profileManager',
+    SIMULATE_SKILL: 'simulateSkill',
+    TOOLKIT_UPDATE: 'toolkitUpdate',
+    WELCOME_SCREEN: 'welcomeScreen'
+}
+
 export const TREE_VIEW_IDS = {
     SKILLS_CONSOLE: 'askContainer.skills-console',
     HELP: 'askContainer.help-view',
