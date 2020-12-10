@@ -3,7 +3,7 @@ import * as model from 'ask-smapi-model';
 import * as path from 'path';
 
 import { AbstractWebView, SmapiClientFactory, Utils } from '../../runtime';
-import { DEFAULT_PROFILE, SKILL_FOLDER } from '../../constants';
+import { DEFAULT_PROFILE, SKILL_FOLDER, WEB_VIEW_NAME } from '../../constants';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
 import { existsSync } from 'fs';
@@ -16,7 +16,7 @@ export class InteractionModelSyncWebview extends AbstractWebView {
 
     constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
-        this.loader = new ViewLoader(this.extensionContext, 'interactionModelSync', this);
+        this.loader = new ViewLoader(this.extensionContext, WEB_VIEW_NAME.INTERACTION_MODEL_SYNC, this);
     }
 
     onViewChangeListener(): void {
@@ -35,7 +35,7 @@ export class InteractionModelSyncWebview extends AbstractWebView {
     getHtmlForView(): string {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
         return this.loader.renderView({
-            name: 'interactionModelSync',
+            name: WEB_VIEW_NAME.INTERACTION_MODEL_SYNC,
             js: true
         });
     }

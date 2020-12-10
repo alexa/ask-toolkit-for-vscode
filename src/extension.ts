@@ -54,6 +54,7 @@ import { authenticate } from './utils/webViews/authHelper';
 import { ext } from './extensionGlobals';
 import { ShowToolkitUpdatesCommand } from './askContainer/commands/showToolkitUpdates';
 import { ToolkitUpdateWebview } from './askContainer/webViews/toolkitUpdateWebview';
+import { InitialLoginWebview } from './askContainer/webViews/initialLogin';
 import { WelcomeCommand } from './askContainer/commands/welcome';
 
 const DEFAULT_LOG_LEVEL = LogLevel.info;
@@ -64,7 +65,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
     const createSkill: CreateSkillWebview = new CreateSkillWebview('Create new skill', 'createSkill', context);
     const toolkitUpdate: ToolkitUpdateWebview = new ToolkitUpdateWebview('What\'s New?', 'toolkitUpdate', context);
     registerWebviews(profileManager, createSkill, toolkitUpdate);
-    ext.askGeneralCommands = [
+    ext.askGeneralCommands.push(
         new ListSkillsCommand(), new OpenWorkspaceCommand(), new OpenUrlCommand(),
         new InitCommand(profileManager), new GetToolkitInfoCommand(),
         new ViewAllSkillsCommand(), new CreateSkillCommand(createSkill),
@@ -72,7 +73,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         new DebugAdapterPathCommand(), new CloneSkillFromConsoleCommand(),
         new ShowToolkitUpdatesCommand(toolkitUpdate), new ContactToolkitTeamCommand(),
         new WelcomeCommand(context)
-    ];
+    );
 
     apiRegisterCommands(context, ext.askGeneralCommands);
 }
@@ -92,19 +93,19 @@ async function registerSkillActionComponents(context: vscode.ExtensionContext): 
 
         registerWebviews(deploySkill, simulateSkill, syncInteractionModelView, aplPreviewWebView, syncManifestView);
 
-        ext.askSkillCommands = [new DeploySkillCommand(deploySkill), 
+        ext.askSkillCommands.push(new DeploySkillCommand(deploySkill), 
             new SyncInteractionModelCommand(syncInteractionModelView), new GetSkillIdFromWorkspaceCommand(), new SyncManifestCommand(syncManifestView),
             new CreateAplDocumentFromSampleCommand(aplPreviewWebView), new ChangeViewportProfileCommand(aplPreviewWebView), 
             new PreviewAplCommand(aplPreviewWebView), new SyncAplResourceCommand(),
             new RefreshSkillActionsCommand(), new SimulateSkillCommand(simulateSkill),
             new SimulateReplayCommand(simulateSkill), new ChangeSimulatorViewportCommand(simulateSkill)
-        ];
+        );
     
         apiRegisterCommands(context, ext.askSkillCommands);
 
         if (skillFolders.length === 1) {
-            // tslint:disable-next-line: no-unused-expression
-            new SkillActionsView(context);
+            const skillActionView = new SkillActionsView(context);
+            ext.treeViews.push(skillActionView);
             setSkillContext();
         } else {
             unsetSkillContext();
@@ -126,11 +127,9 @@ async function registerSkillActionComponents(context: vscode.ExtensionContext): 
 function registerTreeViews(context: vscode.ExtensionContext): void {
     Logger.debug('Registering treeviews in the extension');
 
-    // tslint:disable-next-line: no-unused-expression
-    new SkillsConsoleView(context);
-
-    // tslint:disable-next-line: no-unused-expression
-    new HelpView(context);
+    const skillConsoleView = new SkillsConsoleView(context);
+    const helpView = new HelpView(context);
+    ext.treeViews.push(skillConsoleView, helpView);
 }
 
 function showLoginScreen(context: vscode.ExtensionContext): void {
@@ -166,8 +165,8 @@ function registerEventHandlers(context: vscode.ExtensionContext): void {
             void context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
             if (skillFolders.length === 1) {
                 setSkillContext();
-                // tslint:disable-next-line: no-unused-expression
-                new SkillActionsView(context);
+                const skillActionView = new SkillActionsView(context);
+                ext.treeViews.push(skillActionView);
             } else {
                 unsetSkillContext();
             }

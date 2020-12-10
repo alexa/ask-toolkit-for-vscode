@@ -1,9 +1,12 @@
-// This module will contain the abstract components for commands to implement
+// This module will contain the abstract components for different VSCode contents to implement
+
+import * as path from 'path';
+
 import { TelemetryClient } from './telemetry';
 import { Disposable, ExtensionContext, commands, TreeItem, TreeItemCollapsibleState,
     Uri, ThemeIcon, Command, WebviewPanel, Webview, window, ViewColumn,
-    WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent } from "vscode";
-import * as path from 'path';
+    WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent, TreeView, TreeDataProvider } from "vscode";
+import { Resource } from '../../runtime';
 
 export interface CommandContext {
     // A common context that can be passed to all commands
@@ -52,7 +55,7 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
 
     private async _invoke(commandName: string, ...args: any[]): Promise<T> {
         const typeArg = args.find(arg => arg.CommandType);
-        const commandType = typeArg ? typeArg.CommandType : 'command';
+        const commandType = typeArg !== undefined ? typeArg.CommandType : 'command';
         const telemetryClient = new TelemetryClient({});
         let output: any;
 
@@ -226,5 +229,14 @@ export abstract class AbstractWebView {
             null,
             []
         );
+    }
+}
+
+export abstract class AbstractTreeView {
+    protected abstract view: TreeView<PluginTreeItem<Resource>>;
+    public extensionContext: ExtensionContext;
+
+    constructor(context: ExtensionContext) {
+        this.extensionContext = context;
     }
 }

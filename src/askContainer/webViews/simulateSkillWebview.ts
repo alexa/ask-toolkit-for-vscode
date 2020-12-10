@@ -4,7 +4,7 @@ import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { Logger } from '../../logger';
 import * as path from 'path';
 import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
-import { DEFAULT_PROFILE, ERRORS, SIMULATOR_MESSAGE_TYPE } from '../../constants';
+import { DEFAULT_PROFILE, ERRORS, SIMULATOR_MESSAGE_TYPE, WEB_VIEW_NAME } from '../../constants';
 import { loggableAskError } from '../../exceptions';
 import { IViewport } from "apl-suggester";
 import * as simulateMessageHelper from '../../utils/simulateMessageHelper';
@@ -16,7 +16,7 @@ export class SimulateSkillWebview extends AbstractWebView {
 
     constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
-        this.loader = new ViewLoader(this.extensionContext, 'simulateSkill', this);
+        this.loader = new ViewLoader(this.extensionContext, WEB_VIEW_NAME.SIMULATE_SKILL, this);
         this.context = context;
     }
 
@@ -47,7 +47,7 @@ export class SimulateSkillWebview extends AbstractWebView {
                 path.join(
                     this.context.extensionPath, "/node_modules/apl-viewhost-web/index.js"))).toString();
         return this.loader.renderView({
-            name: 'simulateSkill',
+            name: WEB_VIEW_NAME.SIMULATE_SKILL,
             js: true,
             args: {
                 simulateCss,

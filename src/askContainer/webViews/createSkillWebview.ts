@@ -2,8 +2,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { AbstractWebView, SmapiClientFactory, Utils, SmapiResource } from '../../runtime';
-import { WebviewPanelOnDidChangeViewStateEvent, ExtensionContext } from 'vscode';
-import { DEFAULT_PROFILE } from '../../constants';
+import { DEFAULT_PROFILE, WEB_VIEW_NAME } from '../../constants';
 import { createSkill } from '../../utils/createSkillHelper';
 import { solveCaptcha } from '../../utils/captchaValidator';
 import { SkillInfo } from '../../models/types';
@@ -24,21 +23,21 @@ type createSkillWebViewType = {
 export class CreateSkillWebview extends AbstractWebView {
     private loader: ViewLoader;
 
-    constructor(viewTitle: string, viewId: string, context: ExtensionContext) {
+    constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
         this.isGlobal = true;
-        this.loader = new ViewLoader(this.extensionContext, 'createSkill', this);
+        this.loader = new ViewLoader(this.extensionContext, WEB_VIEW_NAME.CREATE_SKILL, this);
     }
 
     getHtmlForView(...args: unknown[]): string {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
         return this.loader.renderView({
-            name: 'createSkill',
+            name: WEB_VIEW_NAME.CREATE_SKILL,
             js: true
         });
     }
 
-    onViewChangeListener(event: WebviewPanelOnDidChangeViewStateEvent): void {
+    onViewChangeListener(event: vscode.WebviewPanelOnDidChangeViewStateEvent): void {
         Logger.debug(`Calling method: ${this.viewId}.onViewChangeListener`);
 
         return;

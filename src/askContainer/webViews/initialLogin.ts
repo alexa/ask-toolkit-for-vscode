@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
+
 import { AbstractWebView } from '../../runtime';
-import { WebviewPanelOnDidChangeViewStateEvent, ExtensionContext, Uri, Webview } from 'vscode';
-import { DEFAULT_PROFILE } from '../../constants';
+import { DEFAULT_PROFILE, WEB_VIEW_NAME } from '../../constants';
 import { authenticate } from '../../utils/webViews/authHelper';
-import { AskParameterAbsenceError, loggableAskError, AskError } from '../../exceptions';
+import { AskParameterAbsenceError, loggableAskError } from '../../exceptions';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { AUTH_FLOW_RESULT } from './profileManagerWebview';
 import { Logger } from '../../logger';
+
 
 type SignInType = {
     profileName: string;
@@ -15,12 +16,12 @@ type SignInType = {
 export class InitialLoginWebview extends AbstractWebView {
     private loader: ViewLoader;
 
-    constructor(viewTitle: string, viewId: string, context: ExtensionContext) {
+    constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
-        this.loader = new ViewLoader(this.extensionContext, 'initialLogin', this);
+        this.loader = new ViewLoader(this.extensionContext, WEB_VIEW_NAME.INITIAL_LOGIN, this);
     }
 
-    onViewChangeListener(event: WebviewPanelOnDidChangeViewStateEvent): void {
+    onViewChangeListener(event: vscode.WebviewPanelOnDidChangeViewStateEvent): void {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
 
         return;
@@ -34,7 +35,7 @@ export class InitialLoginWebview extends AbstractWebView {
     getHtmlForView(...args: unknown[]): string {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
         return this.loader.renderView({
-            name: 'initialLogin',
+            name: WEB_VIEW_NAME.INITIAL_LOGIN,
             js: true
         });
     }
@@ -43,7 +44,7 @@ export class InitialLoginWebview extends AbstractWebView {
         Logger.debug(`Calling method: ${this.viewId}.doAuthenticate`);
         try {
             await authenticate(this.extensionContext, this, DEFAULT_PROFILE);
-            vscode.commands.executeCommand('workbench.action.reloadWindow');
+            void vscode.commands.executeCommand('workbench.action.reloadWindow');
         } catch (error) {
             Logger.error(error);
             let viewArgs;

@@ -4,6 +4,7 @@ import { authenticate } from '../../utils/webViews/authHelper';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { AskParameterAbsenceError } from '../../exceptions';
 import { Logger } from '../../logger';
+import { WEB_VIEW_NAME } from '../../constants';
 
 export const AUTH_FLOW_RESULT = {
     SUCCESS: {
@@ -31,7 +32,7 @@ export class ProfileManagerWebview extends AbstractWebView {
     constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
         this.isGlobal = true;
-        this.loader = new ViewLoader(this.extensionContext, 'profileManager', this);
+        this.loader = new ViewLoader(this.extensionContext, WEB_VIEW_NAME.PROFILE_MANAGER, this);
     }
     
     onViewChangeListener(event: vscode.WebviewPanelOnDidChangeViewStateEvent): void {
@@ -74,7 +75,7 @@ export class ProfileManagerWebview extends AbstractWebView {
     getHtmlForView(): string {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
         return this.loader.renderView({
-            name: 'profileManager',
+            name: WEB_VIEW_NAME.PROFILE_MANAGER,
             js: true
         });
     }
