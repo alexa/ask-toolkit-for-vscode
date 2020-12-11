@@ -6,14 +6,15 @@ on:
 
 jobs:
   stale:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/stale@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
+        stale-issue-message: 'This issue is stale since it has been open for 14 days with no activity. Please respond or this issue will be closed soon.'
+        close-issue-message: 'This stale issue has been closed now. Please reopen the issue if you are still having problems with the toolkit.'
+        stale-pr-message: 'This pr is stale since it has been open for 14 days with no activity. Please respond or this pr will be closed soon.'
         stale-issue-label: 'closing-soon-if-no-response'
         stale-pr-label: 'no-pr-activity'
+        exempt-issue-labels: 'feature-request,waiting: external dependency'
+        days-before-stale: 14
