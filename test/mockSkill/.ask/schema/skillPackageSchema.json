@@ -1,0 +1,257 @@
+{
+  "pathElement": "/",
+  "children": [
+    {
+      "pathElement": "response",
+      "children": [
+        {
+          "pathElement": "templates",
+          "children": [
+            {
+              "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+            }
+          ]
+        },
+        {
+          "pathElement": "display",
+          "children": [
+            {
+              "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}",
+              "children": [
+                {
+                  "pathElement": "document\\.(json|JSON)"
+                },
+                {
+                  "pathElement": "datasources",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "sources",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "pathElement": "prompts",
+          "children": [
+            {
+              "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}",
+              "children": [
+                {
+                  "pathElement": "document\\.(json|JSON)"
+                },
+                {
+                  "pathElement": "datasources",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "pathElement": "multimodal",
+          "children": [
+            {
+              "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}",
+              "children": [
+                {
+                  "pathElement": "document\\.(json|JSON)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pathElement": "tasks",
+      "children": [
+        {
+          "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+        },
+        {
+          "pathElement": "tst",
+          "children": [
+            {
+              "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pathElement": "dialogManagement",
+      "children": [
+        {
+          "pathElement": "alexaConversations",
+          "children": [
+            {
+              "pathElement": "[a-z]{2,2}\\-[A-Z]{2,2}",
+              "children": [
+                {
+                  "pathElement": "sampleDialogs",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "_sampleDialogs",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "userNLG",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "catalog",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                },
+                {
+                  "pathElement": "responseTemplates",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "_apis",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "_types",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "_userUtteranceGroups",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(json|JSON)"
+                    }
+                  ]
+                },
+                {
+                  "pathElement": "dialogs",
+                  "children": [
+                    {
+                      "pathElement": "[a-zA-Z0-9\\-\\_\\.]{1,64}\\.(acdl|ACDL)"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pathElement": "_lexicon",
+      "children": [
+        {
+          "pathElement": "[a-z]{2,2}\\-[A-Z]{2,2}",
+          "children": [
+            {
+              "pathElement": "definitions\\.(json|JSON)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pathElement": "skill\\.(json|JSON)"
+    },
+    {
+      "pathElement": "interactionModels",
+      "children": [
+        {
+          "pathElement": "custom",
+          "children": [
+            {
+              "pathElement": "[a-z]{2,2}\\-[A-Z]{2,2}\\.(json|JSON)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pathElement": "(package|package-lock)\\.(json|JSON)"
+    },
+    {
+      "pathElement": "node_modules",
+      "children": [
+        {
+          "pathElement": "^([A-z0-9-_+\\.\\/]+\\/)*[A-z0-9-_+\\.]+\\.(json|JSON)"
+        },
+        {
+          "pathElement": "^([A-z0-9-_+\\.\\/]+\\/)*[A-z0-9-_+\\.]+\\.(acdl|ACDL)"
+        }
+      ]
+    },
+    {
+      "pathElement": "assets",
+      "children": [
+        {
+          "pathElement": "images",
+          "children": [
+            {
+              "pathElement": "[a-zA-Z0-9\\-\\_\\.\\/]{1,64}\\.(png|PNG|jpg|JPG|jpeg|JPEG)"
+            }
+          ]
+        },
+        {
+          "pathElement": "[a-zA-Z0-9\\-\\_\\.\\/]{1,64}\\.(png|PNG|jpg|JPG|jpeg|JPEG)"
+        }
+      ]
+    },
+    {
+      "pathElement": "isps",
+      "children": [
+        {
+          "pathElement": "isps\\.(json|JSON)"
+        },
+        {
+          "pathElement": "^([A-z0-9-_+\\.\\/]+\\/)*([A-z0-9-_+\\.]+\\.(?i)[A-z]+)$"
+        }
+      ]
+    }
+  ]
+}

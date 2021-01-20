@@ -5,23 +5,24 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { Map } from 'immutable';
 import * as fs from 'fs';
-import { AbstractCommand, CommandContext } from '../../runtime';
+import { AbstractCommand, CommandContext, Utils } from '../../runtime';
 import { getSampleTemplates, ISampleTemplate } from 'apl-suggester';
 import {
     EXTENSION_COMMAND_CONFIG,
     APL_DOCUMENT_FILE_PATH,
     DATASOURCES_FILE_PATH,
-    DISPLAY_DIR_ROOT_PATH,
     SAMPLE_TEMPLATE_ID_TO_NAME_MAP,
     RESOURCE_NAME_REGEX,
 } from '../config/configuration';
-import { makeFileSync } from '../utils/fileHelper';
+import { displayDirRootPath, makeFileSync } from '../utils/fileHelper';
 import { PROMPT_MESSAGES, ERROR_MESSAGES, SUCCESS_MESSAGES } from '../constants/messages';
 import { SampleTemplateQuickPickItem } from '../models';
 import { loggableAskError } from '../../exceptions';
 import { AplPreviewWebView } from '../webViews/aplPreviewWebView';
 import { ap } from 'ramda';
 import { Logger } from '../../logger';
+import { DEFAULT_PROFILE } from '../../constants'
+
 
 export class CreateAplDocumentFromSampleCommand extends AbstractCommand<void> {
     private sampleTemplates: Map<string, ISampleTemplate>;
@@ -57,7 +58,8 @@ export class CreateAplDocumentFromSampleCommand extends AbstractCommand<void> {
         }
 
         const workspaceRootPath: string = skillFolderWs.fsPath;
-        const resourceDirPath: string = path.join(workspaceRootPath, DISPLAY_DIR_ROOT_PATH, inputResourceDirName);
+        const profile = Utils.getCachedProfile(context.extensionContext) ?? DEFAULT_PROFILE;
+        const resourceDirPath: string = path.join(workspaceRootPath, displayDirRootPath(workspaceRootPath, profile), inputResourceDirName);
         if (fs.existsSync(resourceDirPath)) {
             throw loggableAskError(ERROR_MESSAGES.CREATE_APL_FROM_SAMPLE_TEMPLATE_NAME_EXISTS, undefined, true);
         }

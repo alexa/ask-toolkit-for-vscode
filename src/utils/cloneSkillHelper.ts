@@ -251,7 +251,7 @@ export async function cloneSkill(
     }
 
     const skillPkgPath = path.join(targetPath, SKILL_FOLDER.SKILL_PACKAGE.NAME);
-    await syncSkillPackage(skillPkgPath, skillInfo, context);
+    await syncSkillPackage(skillPkgPath, skillInfo.data.skillSummary.skillId!, context, "development");
     if (progressBar) {
         progressBar.report({
             increment: incrAmount,
@@ -262,6 +262,6 @@ export async function cloneSkill(
 
 function filesToIgnore(): string[] {
     const nodeModules = `${SKILL_FOLDER.LAMBDA.NAME}/${SKILL_FOLDER.LAMBDA.NODE_MODULES}`;
-    return [SKILL_FOLDER.ASK_RESOURCES_JSON_CONFIG, SKILL_FOLDER.HIDDEN_ASK_FOLDER, SKILL_FOLDER.HIDDEN_VSCODE ,nodeModules];
+    return [SKILL_FOLDER.ASK_RESOURCES_JSON_CONFIG, SKILL_FOLDER.HIDDEN_ASK_FOLDER, SKILL_FOLDER.HIDDEN_VSCODE ,nodeModules, '.DS_Store'];
 }
 

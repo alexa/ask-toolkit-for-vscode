@@ -11,69 +11,58 @@
     <body>
         <div class="header">
             <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
-            <h1>November 2020 update</h1>
+            <h1>January 2021 update</h1>
         </div>
 
         <div class="body">
             <p>
-                Welcome to the updated Alexa Skills Toolkit for November 2020 (version 2.2). This update introduces a number of new features, enhancements, and bug fixes.
+                Welcome to the updated Alexa Skills Toolkit for January 2021 (version 2.3). This update introduces a number of new features and enhancements.
             </p>
             <h2>What's new?</h2>
             <div class="container">
                 <div class="flex-item">
-                    <h2>Dynamic content in welcome screen</h2>
+                    <h2>Support self-hosted skills creation, downloading, and deployment</h2>
                     <p>
-                        We enhanced the <code>Welcome screen</code> on toolkit launch, to include quick info that is helpful to skill developers. 
-                        <h3>Developer blog</h3>
-                        This section provides a quick glance on the latest Alexa developer blog posts.
-                        <h3>Feature updates</h3>
-                        This section provides a quick glance on the recent releases and feature updates in Alexa Skills Kit.
-                        <h3>Documentation tree - What's new</h3>
-                        Since the dynamic content gets updated frequently, and should be available to skill developers on demand, we reorganized the <code>What's new</code> link under <code>Documentation</code> tree to open the Welcome screen as and when needed.
+                        We support self-hosted skills in the <code>Create a skill</code>, <code>Download and edit skill</code> and <code>Deploy skill</code> features on the toolkit launch. 
+                        <h3>Create a skill</h3>
+                        Developers can select "Provision your own", fill out the form and click the "Create" button to create a self-hosted skill.
                         <br/><br/>
-                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/november2020/dynamic_welcome_screen.gif">
+                        <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/create_self_hosted_skill.gif">
+                        <br/><br/>
+
+                        <h3>Download and edit skill</h3>
+                        Developers can download the skill package for a self-hosted skill. ASK Toolkit does not support Lambda code, which developers will have to provision separately.
+                        <br/><br/>
+                        <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/download_self_hosted_skill.gif">
+                        <br/><br/>
+                        
+                        <h3>Deploy skill</h3>
+                        Developers can save changes and deploy a self-hosted skill using the "Deploy & build" button. 
+                        A skill must be synchronized with changes made in the console in order to deploy. The `Skill deploy status overview` displays skill local changes and the skill remote sync status to guide developers how to successfully deploy. For self-hosted skills, it shows the skill package status only. For Alexa hosted skills, it shows both the skill package status and the skill code status.
+                        <br/><br/>
+                        <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/deploy_self_hosted_skill.gif">
+                        <br/><br/>
                     </p>
 
-                    <h2>Region support in local debugging launch configuration</h2>
+                    <h2>SkillPackage Validation</h2>
                     <p>
-                        We recently released an update to local debugging that allows you to configure the endpoint to be used. This toolkit version supports that feature through debug configurations for local debugging. You can find more information regarding this on our official docs <a href="https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-testing-simulator.html">here</a>.
-                        <br/><br/>
-                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/november2020/region_support_debug_config.png">
+                        The ASK Toolkit will retrieve vendor specific skill package schema once the extension is activated and there's only one skill in your workspace. The schema will be stored at YourSkill/.ask/schema, and the extension will use this schema to validate your SkillPackage structure. The validation will be triggered whenever you create / delete files under the skillPackage folder. It will also be triggered when you open the skill deploy page.
+                    <br/><br/>
                     </p>
 
-                    <h2>AWS default region support in create Alexa-hosted skill view</h2>
-                    <p>
-                        Skill developers can select the AWS region to be used as the default skill endpoint, in the create Alexa-hosted skills workflow. More information on Alexa-hosted skills region support can be checked <a href="https://developer.amazon.com/en-US/docs/alexa/hosted-skills/build-a-skill-end-to-end-using-an-alexa-hosted-skill.html#regions">here</a>.
-                        <br/><br/>
-                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/november2020/create_skill_region.png">
-                    </p>
                 </div>
             </div>
 
             <h2>Bug fixes</h2>
             <p>
-                <ul>
-                    <li><a href="https://github.com/alexa/ask-toolkit-for-vscode/issues/42">42</a>: Update <code>apl-suggester</code> version, that updates validations and suggestions for APL documents.</li>
-                    <li><a href="https://github.com/alexa/ask-toolkit-for-vscode/issues/43">43</a>: Fix typo for <code>Portuguese</code> locale in views.</li>
-                    <li><a href="https://github.com/alexa/ask-toolkit-for-vscode/issues/56">56</a>: Fix <code>git</code> working directory for skill clone.</li>
-                    <li><a href="https://github.com/alexa/ask-toolkit-for-vscode/issues/57">57</a>: Fix toolkit to work with VSCode latest release 1.51.1.</li>
-                </ul>
+                <li>Fix AplRenderUtils, to use all parameters in APL document during APL preview (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/68">650d267</a>)</li>
+                <li>Add condition to apl renderer content for invalid parameter names (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/71">8688491</a>)</li>
+                <li>Configure current working directory to skill code folder (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/81">4353639</a>)</li>
             </p>
 
             <h2>Documentation</h2>
             <p>
-                We found some toolkit users had issues with using the skill clone/deploy feature. To help future developers facing similar issues, we added information about the <code>git</code> functionality in the toolkit. You can read about that in our FAQs section <a href="https://github.com/alexa/ask-toolkit-for-vscode#faqs">here</a>.
-            </p>
-
-            <h2>Thank you</h2>
-            <p>
-                A big <b>Thank you</b> to the following people, who contributed to the extension bug fixes and feature updates.
-                <ul>
-                    <li><a href="https://github.com/lovelyHarper">lovelyHarper</a></li>
-                    <li><a href="https://github.com/dadeke">Deividson Damasio</a></li>
-                    <li><a href="https://github.com/coolbigbear">coolbigbear</a></li>
-                    <li><a href="https://github.com/SpellMender">SpellMender</a></li>
-                </ul>
+                For more details about features, see the documents at <a href="https://github.com/alexa/ask-toolkit-for-vscode#features">the ask-toolkit-for-vscode Github</a> and at <a href="https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-ask-skills.html">the Amazon Alexa website</a>. 
             </p>
 
             <h2>Connect with us!</h2>

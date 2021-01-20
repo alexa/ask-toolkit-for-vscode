@@ -1,3 +1,5 @@
+import * as fs from 'fs-extra';
+import * as https from 'https';
 import * as vscode from 'vscode';
 import { parse } from 'querystring';
 import * as model from 'ask-smapi-model';
@@ -62,4 +64,23 @@ export async function hostedSkillsClone(uri: vscode.Uri, context: vscode.Extensi
         const UNSUPPORTED_URI = `Unsupported extension launch URI: ${uri}`;
         throw loggableAskError(UNSUPPORTED_URI);
     }
+}
+
+export async function downloadToFileFromUrl(filePath: string, url: string, mode: string | number): Promise<void> {
+    Logger.verbose(`Calling method: downloadToFileFromUrl, args: `, filePath, url);
+    const file = fs.createWriteStream(filePath);
+    return new Promise((resolve, reject) => {
+        const request = https.get(url, resp => {
+            resp.pipe(file);
+            file.on('finish', () => {
+                fs.chmodSync(filePath, mode);
+                resolve();
+            });
+        });
+        request.on('error', err => {
+            Logger.error(`Failed to download a file from the url: ${url}.`);
+            reject();
+        });
+        request.end();
+    });
 }

@@ -57,18 +57,21 @@ export class ViewLoader {
             html = html.replace('${javascript}', jsLocation.toString());
         }
 
-        const toolkitCss: Uri|undefined = webview.asWebviewUri(
-            Uri.file(
-                path.join(
-                    this.context.extensionPath, 'media', 'toolkit.css',
-            ),
-        ));
-
-        if (!toolkitCss) {
-            return this.handleError(options.errorMsg);
+        if (options.customCss) {
+            html = html.replace('${toolkitCss}', options.customCss.toString());
+        } else {
+            const toolkitCss: Uri|undefined = webview.asWebviewUri(
+                Uri.file(
+                    path.join(
+                        this.context.extensionPath, 'media', 'toolkit.css',
+                ),
+            ));
+            if (!toolkitCss) {
+                return this.handleError(options.errorMsg);
+            }
+            html = html.replace('${toolkitCss}', toolkitCss.toString());
         }
-
-        html = html.replace('${toolkitCss}', toolkitCss.toString());
+        
 
         if (options.args) {
             html = this.interpolate(html, options.args);
@@ -88,6 +91,7 @@ export interface RenderOptions {
     name: string;
     images?: string[];
     js?: boolean;
+    customCss?: Uri;
     errorMsg?: string;
     args?: {[key: string]: any};
 }

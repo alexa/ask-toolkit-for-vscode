@@ -65,11 +65,6 @@ export const SAMPLE_TEMPLATE_ID_TO_NAME_MAP: Map<string, string> = Map([
  * https://wiki.labcollab.net/confluence/pages/viewpage.action?spaceKey=Doppler&title=Add+APL+Template+Asset+in+Skill+Package+API+Review
  */
 /**
- * The root path for visual assets in skill package
- */
-export const DISPLAY_DIR_ROOT_PATH = path.join('skill-package', 'response', 'display');
-
-/**
  * The root path for visual assets relative to skill-package
  */
 export const DISPLAY_DIR_ROOT_PATH_RELATIVE_TO_SKILL_PACAKGE = path.join('response', 'display');
@@ -111,12 +106,12 @@ export const RESOURCE_NAME_REGEX = new RegExp(
 /**
  * The regex path of APL document
  */
-export const DOCUMENT_PATH_REGEX: RegExp = /skill-package(\\|\/)response(\\|\/)display(\\|\/).+(\\|\/)document.json/;
+export const DOCUMENT_PATH_REGEX: RegExp = /(\\|\/)response(\\|\/)display(\\|\/).+(\\|\/)document.json/;
 
 /**
  * The regex path of datasources
  */
-export const DATA_PATH_REGEX: RegExp = /skill-package(\\|\/)response(\\|\/)display(\\|\/)(.+)(\\|\/)datasources(\\|\/)default.json/;
+export const DATA_PATH_REGEX: RegExp = /(\\|\/)response(\\|\/)display(\\|\/)(.+)(\\|\/)datasources(\\|\/)default.json/;
 
 /**
  * The regex path of document, datasources, sources relative to skill-package

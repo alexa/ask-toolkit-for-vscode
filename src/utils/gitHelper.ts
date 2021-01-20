@@ -96,6 +96,15 @@ export class GitInTerminalHelper {
         }
     }
 
+    clone(cloneUrl: string, branch: string, folderName: string): void {
+        const command = `git clone --branch ${branch} ${cloneUrl} "${folderName}"  --quiet`;
+        const options = {
+            showStdErr: true,
+            showCommand: this.logLevel === LogLevel.verbose,
+        };
+        this._execChildProcessSync(command, options).toString();
+    }
+
     static addFilesToIgnore(targetPath: string, fileNames: string[]): void {
         Logger.verbose(`Calling method: addFilesToIgnore, args: `, targetPath, fileNames);
         const gitignorePath = path.join(targetPath, ".gitignore");

@@ -1,10 +1,10 @@
-
 import * as vscode from 'vscode';
 import { registerCommands as apiRegisterCommands, AbstractWebView, Utils } from './runtime';
 
-import { CloneSkillCommand } from './askContainer/commands/cloneSkill';
+import { CloneSkillCommand } from './askContainer/commands/cloneSkill/cloneSkill';
 import { CloneSkillFromConsoleCommand } from './askContainer/commands/cloneSkillFromConsole';
-import { DeploySkillCommand } from './askContainer/commands/deploySkill';
+import { DeployHostedSkillCommand } from './askContainer/commands/deployHostedSkill';
+import { DeployNonHostedSkillCommand } from './askContainer/commands/deployNonHostedSkill';
 import { SimulateSkillCommand } from './askContainer/commands/simulateSkill';
 import { SimulateReplayCommand } from './askContainer/commands/simulateReplay';
 import { ChangeSimulatorViewportCommand } from './askContainer/commands/changeSimulatorViewport';
@@ -17,6 +17,7 @@ import { ListSkillsCommand } from './askContainer/commands/listSkills';
 import { ViewAllSkillsCommand } from './askContainer/commands/viewAllSkills';
 import { ChangeProfileCommand } from './askContainer/commands/changeProfile';
 import { LoginCommand } from './askContainer/commands/login';
+import { ExportSkillPackageCommand } from './askContainer/commands/exportSkillPackage';
 import { ProfileManagerWebview } from './askContainer/webViews/profileManagerWebview';
 import { WelcomeScreenWebview } from './askContainer/webViews/welcomeScreenWebview';
 import { SkillsConsoleView } from './askContainer/treeViews/skillConsoleView';
@@ -30,13 +31,22 @@ import { HelpView } from './askContainer/treeViews/helpView';
 import { onWorkspaceOpenEventEmitter, onSkillConsoleViewChangeEventEmitter } from './askContainer/events';
 import { createStatusBarItem } from './utils/statusBarHelper';
 import { registerWebviews, disposeWebviews } from './utils/webViews/viewManager';
-import { CreateSkillWebview } from './askContainer/webViews/createSkillWebview';
-import { DeploySkillWebview } from './askContainer/webViews/deploySkillWebview';
-import { SimulateSkillWebview } from './askContainer/webViews/simulateSkillWebview'; 
+import { CreateSkillWebview } from './askContainer/webViews/createSkillWebview/createSkillWebview';
+import { DeployHostedSkillWebview } from './askContainer/webViews/deploySkillWebview/deployHostedSkillWebview';
+import { DeployNonHostedSkillWebview } from './askContainer/webViews/deploySkillWebview/deployNonHostedSkillWebview';
+import { SimulateSkillWebview } from './askContainer/webViews/simulateSkillWebview';
 import { InteractionModelSyncWebview } from './askContainer/webViews/interactionModelSync';
 import { ManifestSyncWebview } from './askContainer/webViews/manifestSync';
-import { EXTENSION_STATE_KEY, EXTENSION_ID, MULTIPLE_SKILLS_MSG, CLI_V1_SKILL_MSG, CLI_V1_GLOB_PATTERN,
-    TELEMETRY_NOTIFICATION_MESSAGE, SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY, DEFAULT_PROFILE } from './constants';
+import {
+    EXTENSION_STATE_KEY,
+    EXTENSION_ID,
+    MULTIPLE_SKILLS_MSG,
+    CLI_V1_SKILL_MSG,
+    CLI_V1_GLOB_PATTERN,
+    TELEMETRY_NOTIFICATION_MESSAGE,
+    SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY,
+    DEFAULT_PROFILE,
+} from './constants';
 import { Logger, LogLevel } from './logger';
 import { AccessTokenCommand } from './askContainer/commands/accessToken';
 import { GetSkillIdFromWorkspaceCommand } from './askContainer/commands/skillIdFromWorkspaceCommand';
@@ -56,24 +66,38 @@ import { ShowToolkitUpdatesCommand } from './askContainer/commands/showToolkitUp
 import { ToolkitUpdateWebview } from './askContainer/webViews/toolkitUpdateWebview';
 import { InitialLoginWebview } from './askContainer/webViews/initialLogin';
 import { WelcomeCommand } from './askContainer/commands/welcome';
+import { SchemaManager } from './utils/schemaHelper';
 
 const DEFAULT_LOG_LEVEL = LogLevel.info;
 
 function registerCommands(context: vscode.ExtensionContext): void {
     Logger.debug('Registering commands in the extension');
-    const profileManager: ProfileManagerWebview = new ProfileManagerWebview('Profile manager', 'profileManager', context);
-    const createSkill: CreateSkillWebview = new CreateSkillWebview('Create new skill', 'createSkill', context);
-    const toolkitUpdate: ToolkitUpdateWebview = new ToolkitUpdateWebview('What\'s New?', 'toolkitUpdate', context);
-    registerWebviews(profileManager, createSkill, toolkitUpdate);
-    ext.askGeneralCommands.push(
-        new ListSkillsCommand(), new OpenWorkspaceCommand(), new OpenUrlCommand(),
-        new InitCommand(profileManager), new GetToolkitInfoCommand(),
-        new ViewAllSkillsCommand(), new CreateSkillCommand(createSkill),
-        new CloneSkillCommand(), new ChangeProfileCommand(), new AccessTokenCommand(),
-        new DebugAdapterPathCommand(), new CloneSkillFromConsoleCommand(),
-        new ShowToolkitUpdatesCommand(toolkitUpdate), new ContactToolkitTeamCommand(),
-        new WelcomeCommand(context)
+    const profileManager: ProfileManagerWebview = new ProfileManagerWebview(
+        'Profile manager',
+        'profileManager',
+        context
     );
+    const createSkill: CreateSkillWebview = new CreateSkillWebview('Create new skill', 'createSkill', context);
+    const toolkitUpdate: ToolkitUpdateWebview = new ToolkitUpdateWebview("What's New?", 'toolkitUpdate', context);
+    registerWebviews(profileManager, createSkill, toolkitUpdate);
+    ext.askGeneralCommands = [
+        new ListSkillsCommand(),
+        new OpenWorkspaceCommand(),
+        new OpenUrlCommand(),
+        new InitCommand(profileManager),
+        new GetToolkitInfoCommand(),
+        new ViewAllSkillsCommand(),
+        new CreateSkillCommand(createSkill),
+        new CloneSkillCommand(),
+        new ChangeProfileCommand(),
+        new AccessTokenCommand(),
+        new DebugAdapterPathCommand(),
+        new CloneSkillFromConsoleCommand(),
+        new ShowToolkitUpdatesCommand(toolkitUpdate),
+        new ContactToolkitTeamCommand(),
+        new WelcomeCommand(context),
+        new ExportSkillPackageCommand(),
+    ];
 
     apiRegisterCommands(context, ext.askGeneralCommands);
 }
@@ -84,28 +108,61 @@ async function registerSkillActionComponents(context: vscode.ExtensionContext): 
     void context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
 
     if (skillFolders.length > 0) {
-        const deploySkill: DeploySkillWebview = new DeploySkillWebview('Deploy skill', 'deploySkill', context);
-        const simulateSkill: SimulateSkillWebview = new SimulateSkillWebview('Simulate skill', 'simulateSkill', context);
-        const syncInteractionModelView = new InteractionModelSyncWebview('Download interaction model', 'syncInteractionModel', context);
+        const deployHostedSkill: DeployHostedSkillWebview = new DeployHostedSkillWebview(
+            'Deploy skill',
+            'deployHostedSkill',
+            context
+        );
+        const deployNonHostedSkill: DeployNonHostedSkillWebview = new DeployNonHostedSkillWebview(
+            'Deploy skill',
+            'deployNonHostedPackage',
+            context
+        );
+        const simulateSkill: SimulateSkillWebview = new SimulateSkillWebview(
+            'Simulate skill',
+            'simulateSkill',
+            context
+        );
+        const syncInteractionModelView = new InteractionModelSyncWebview(
+            'Download interaction model',
+            'syncInteractionModel',
+            context
+        );
         const syncManifestView = new ManifestSyncWebview('Download manifest', 'syncManifest', context);
         const aplPreviewWebView: AplPreviewWebView = new AplPreviewWebView('APL Preview', 'previewApl', context);
 
-
-        registerWebviews(deploySkill, simulateSkill, syncInteractionModelView, aplPreviewWebView, syncManifestView);
-
-        ext.askSkillCommands.push(new DeploySkillCommand(deploySkill), 
-            new SyncInteractionModelCommand(syncInteractionModelView), new GetSkillIdFromWorkspaceCommand(), new SyncManifestCommand(syncManifestView),
-            new CreateAplDocumentFromSampleCommand(aplPreviewWebView), new ChangeViewportProfileCommand(aplPreviewWebView), 
-            new PreviewAplCommand(aplPreviewWebView), new SyncAplResourceCommand(),
-            new RefreshSkillActionsCommand(), new SimulateSkillCommand(simulateSkill),
-            new SimulateReplayCommand(simulateSkill), new ChangeSimulatorViewportCommand(simulateSkill)
+        registerWebviews(
+            deployHostedSkill,
+            deployNonHostedSkill,
+            simulateSkill,
+            syncInteractionModelView,
+            aplPreviewWebView,
+            syncManifestView
         );
-    
+
+        ext.askSkillCommands = [
+            new DeployHostedSkillCommand(deployHostedSkill),
+            new DeployNonHostedSkillCommand(deployNonHostedSkill),
+            new SyncInteractionModelCommand(syncInteractionModelView),
+            new GetSkillIdFromWorkspaceCommand(),
+            new SyncManifestCommand(syncManifestView),
+            new CreateAplDocumentFromSampleCommand(aplPreviewWebView),
+            new ChangeViewportProfileCommand(aplPreviewWebView),
+            new PreviewAplCommand(aplPreviewWebView),
+            new SyncAplResourceCommand(),
+            new RefreshSkillActionsCommand(),
+            new SimulateSkillCommand(simulateSkill),
+            new SimulateReplayCommand(simulateSkill),
+            new ChangeSimulatorViewportCommand(simulateSkill),
+        ];
+
         apiRegisterCommands(context, ext.askSkillCommands);
 
         if (skillFolders.length === 1) {
-            const skillActionView = new SkillActionsView(context);
-            ext.treeViews.push(skillActionView);
+            void SchemaManager.getInstance().updateSchemas();
+
+            // tslint:disable-next-line: no-unused-expression
+            new SkillActionsView(context);
             setSkillContext();
         } else {
             unsetSkillContext();
@@ -140,16 +197,23 @@ function showLoginScreen(context: vscode.ExtensionContext): void {
 async function registerViews(context: vscode.ExtensionContext): Promise<void> {
     Logger.debug('Registering views in the extension');
 
-    if (vscode.workspace.getConfiguration(
-        EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(
-            EXTENSION_STATE_KEY.SHOW_WELCOME_SCREEN) === true) {
-            const welcomeScreen: WelcomeScreenWebview = new WelcomeScreenWebview(
-                'Alexa Skills Kit', 'welcomeScreen', context,
-            );
+    if (
+        vscode.workspace
+            .getConfiguration(EXTENSION_STATE_KEY.CONFIG_SECTION_NAME)
+            .get(EXTENSION_STATE_KEY.SHOW_WELCOME_SCREEN) === true
+    ) {
+        const welcomeScreen: WelcomeScreenWebview = new WelcomeScreenWebview(
+            'Alexa Skills Kit',
+            'welcomeScreen',
+            context
+        );
 
         registerWebviews(welcomeScreen);
-        if (await Utils.isProfileAuth(context) && context.globalState.get(EXTENSION_STATE_KEY.DID_FIRST_TIME_LOGIN) === true) {
-             void vscode.commands.executeCommand('ask.welcome');
+        if (
+            (await Utils.isProfileAuth(context)) &&
+            context.globalState.get(EXTENSION_STATE_KEY.DID_FIRST_TIME_LOGIN) === true
+        ) {
+            void vscode.commands.executeCommand('ask.welcome');
         } else {
             showLoginScreen(context);
         }
@@ -158,12 +222,15 @@ async function registerViews(context: vscode.ExtensionContext): Promise<void> {
 
 function registerEventHandlers(context: vscode.ExtensionContext): void {
     Logger.debug('Registering event handlers in the extension');
-    context.subscriptions.push(vscode.workspace.onDidChangeWorkspaceFolders(
-        async () => {
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeWorkspaceFolders(async () => {
             Logger.info('Workspace folders changed event handler');
             const skillFolders = await findSkillFoldersInWs();
             void context.workspaceState.update(EXTENSION_STATE_KEY.WS_SKILLS, skillFolders);
             if (skillFolders.length === 1) {
+                // update vendor specific schemas upon workspace change.
+                void SchemaManager.getInstance().updateSchemas();
+
                 setSkillContext();
                 const skillActionView = new SkillActionsView(context);
                 ext.treeViews.push(skillActionView);
@@ -172,20 +239,23 @@ function registerEventHandlers(context: vscode.ExtensionContext): void {
             }
             onWorkspaceOpenEventEmitter.fire(undefined);
             disposeWebviews();
-        }
-    ));
-    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(
-        configChangedEvent => {
-            if (configChangedEvent.affectsConfiguration(
-                `${EXTENSION_STATE_KEY.CONFIG_SECTION_NAME}.${EXTENSION_STATE_KEY.LOG_LEVEL}`)) {
-                const newLogLevel = vscode.workspace.getConfiguration(
-                    EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(
-                        EXTENSION_STATE_KEY.LOG_LEVEL, DEFAULT_LOG_LEVEL);
+        })
+    );
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration(configChangedEvent => {
+            if (
+                configChangedEvent.affectsConfiguration(
+                    `${EXTENSION_STATE_KEY.CONFIG_SECTION_NAME}.${EXTENSION_STATE_KEY.LOG_LEVEL}`
+                )
+            ) {
+                const newLogLevel = vscode.workspace
+                    .getConfiguration(EXTENSION_STATE_KEY.CONFIG_SECTION_NAME)
+                    .get(EXTENSION_STATE_KEY.LOG_LEVEL, DEFAULT_LOG_LEVEL);
                 Logger.logLevel = newLogLevel;
                 Logger.info(`log level changed to ${newLogLevel}`);
             }
-        }
-    ));
+        })
+    );
     // register APL diagnostics event handlers
     addAplDiagnostics(context);
 }
@@ -196,23 +266,24 @@ function registerUrlHooks(context: vscode.ExtensionContext): void {
             if (uri.path === '/clone') {
                 const profiles = Utils.listExistingProfileNames();
                 if (!profiles) {
-                    void vscode.window.showInformationMessage("Before you can clone your skill, you'll need"
-                    + " to login to your developer account in the extension.");
+                    void vscode.window.showInformationMessage(
+                        "Before you can clone your skill, you'll need" +
+                            ' to login to your developer account in the extension.'
+                    );
                     void vscode.commands.executeCommand('ask.login', true);
                     await authenticate(context, undefined, DEFAULT_PROFILE);
                 }
                 await hostedSkillsClone(uri, context);
             }
-        }
+        },
     });
 }
 
 function getProfileSBInfo(context: vscode.ExtensionContext): [string, string] {
-    const profileName: string | undefined = context.globalState.get(
-        EXTENSION_STATE_KEY.LWA_PROFILE);
+    const profileName: string | undefined = context.globalState.get(EXTENSION_STATE_KEY.LWA_PROFILE);
     let title: string;
     let tooltip: string;
-    if (profileName === undefined) { 
+    if (profileName === undefined) {
         title = '$(person-filled) ASK Profile : None';
         tooltip = 'No profile selected. Please consider signing in first.';
     } else {
@@ -226,7 +297,7 @@ function updateProfileIcon(context: vscode.ExtensionContext, sbItem: vscode.Stat
     Logger.verbose('Updating profile icon in the extension');
     const onDidChangeTreeData = onSkillConsoleViewChangeEventEmitter.event;
     onDidChangeTreeData(() => {
-        const [ title, tooltip ] = getProfileSBInfo(context);
+        const [title, tooltip] = getProfileSBInfo(context);
         sbItem.text = title;
         sbItem.tooltip = tooltip;
         sbItem.show();
@@ -235,13 +306,11 @@ function updateProfileIcon(context: vscode.ExtensionContext, sbItem: vscode.Stat
 
 function addStatusBarItems(context: vscode.ExtensionContext): void {
     Logger.debug('Registering statusbar in the extension');
-    const [ title, tooltip ] = getProfileSBInfo(context);
-    
-    const currentProfileIcon = createStatusBarItem(
-        2, 'ask.changeProfile', title, tooltip);
-    
-    const profileName = context.globalState.get(
-        EXTENSION_STATE_KEY.LWA_PROFILE); 
+    const [title, tooltip] = getProfileSBInfo(context);
+
+    const currentProfileIcon = createStatusBarItem(2, 'ask.changeProfile', title, tooltip);
+
+    const profileName = context.globalState.get(EXTENSION_STATE_KEY.LWA_PROFILE);
     if (profileName === undefined) {
         // Hide status bar for first time user
         currentProfileIcon.hide();
@@ -276,12 +345,14 @@ function checkIfUpdated(context: vscode.ExtensionContext): void {
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-
     ext.context = context;
     // Initialize the logger
     Logger.configure(
-        context, vscode.workspace.getConfiguration(EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(
-            EXTENSION_STATE_KEY.LOG_LEVEL, DEFAULT_LOG_LEVEL));
+        context,
+        vscode.workspace
+            .getConfiguration(EXTENSION_STATE_KEY.CONFIG_SECTION_NAME)
+            .get(EXTENSION_STATE_KEY.LOG_LEVEL, DEFAULT_LOG_LEVEL)
+    );
     Logger.info('Activating extension');
 
     registerUrlHooks(context);
@@ -310,9 +381,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     if (await Utils.isProfileAuth(context)) {
         await registerSkillActionComponents(context);
     }
-    
+
     const seenNotification = context.globalState.get(SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY);
-    if(seenNotification === undefined) {
+    if (seenNotification === undefined) {
         void vscode.window.showInformationMessage(TELEMETRY_NOTIFICATION_MESSAGE);
         void context.globalState.update(SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY, true);
     }
@@ -321,5 +392,4 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 }
 
 // this method is called when your extension is deactivated
-export function deactivate(): void {
-}
+export function deactivate(): void {}

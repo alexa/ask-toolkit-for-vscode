@@ -1,14 +1,14 @@
-import { AbstractCommand, CommandContext } from '../../runtime';
+import { AbstractCommand, CommandContext, Utils } from '../../runtime';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { EXTENSION_COMMAND_CONFIG, DISPLAY_DIR_ROOT_PATH, APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, SOURCES_FILE_PATH } from '../config/configuration';
+import { EXTENSION_COMMAND_CONFIG, APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, SOURCES_FILE_PATH } from '../config/configuration';
 import { AplPreviewWebView } from '../webViews/aplPreviewWebView';
 import { ERROR_MESSAGES, PROMPT_MESSAGES } from '../constants/messages';
+import { displayDirRootPath } from '../utils/fileHelper';
 import { loggableAskError } from '../../exceptions';
 import { getSkillFolderInWs } from '../../utils/workspaceHelper';
-import { Logger } from '../../logger';
-
+import { DEFAULT_PROFILE } from '../../constants'
 export class PreviewAplCommand extends AbstractCommand<void> {
     private aplPreviewWebView;
 
@@ -20,7 +20,8 @@ export class PreviewAplCommand extends AbstractCommand<void> {
     async execute(context: CommandContext, skillFolderWs: vscode.Uri): Promise<void> {
         const wsFolder = skillFolderWs ? skillFolderWs : getSkillFolderInWs(context.extensionContext) as vscode.Uri;
         if (!wsFolder.fsPath.endsWith('.json')) {
-            const aplResourceRootPath: string = path.join(wsFolder.fsPath, DISPLAY_DIR_ROOT_PATH);
+            const profile = Utils.getCachedProfile(context.extensionContext) ?? DEFAULT_PROFILE;
+            const aplResourceRootPath: string = path.join(wsFolder.fsPath, displayDirRootPath(skillFolderWs.fsPath, profile));
             const aplResourceNames : string[] = await this.getAplResourceNames(aplResourceRootPath);
             const pickAplResource: vscode.QuickPickItem | undefined = await vscode.window.showQuickPick(
                 this.getAplResourceOptions(aplResourceNames)
