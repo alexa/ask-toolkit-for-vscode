@@ -5,7 +5,8 @@ import * as nock from "nock";
 import { CustomSmapiClientBuilder } from "ask-smapi-sdk";
 import * as vscode from "vscode";
 import { PassThrough } from "stream";
-
+import * as path from "path";
+ 
 import { SchemaManager } from "../../src/utils/schemaHelper";
 import * as profileHelper from "../../src/runtime/lib/utils/profileHelper";
 import { SmapiClientFactory } from "../../src/runtime";
@@ -182,13 +183,14 @@ describe("SkillPackageSchema tests", () => {
                 "registerSkillPackageWatcher"
             );
             const mkdirSpy = sandbox.stub(fs, "mkdirSync");
-            const expectedSchemaFolderPath = `/${fakeSkillPath}/.ask/schema`;
+            const expectedPath = path.join('/', fakeSkillPath);
+            const expectedSchemaFolderPath = path.join(expectedPath, '.ask', 'schema');
 
             await SchemaManager.getInstance().updateSchemas();
             
             assert.ok(mkdirSpy.calledOnceWith(expectedSchemaFolderPath));
             assert.ok(updateSkillPackageSchemaSpy.calledOnceWith(expectedSchemaFolderPath));
-            assert.ok(registerSkillPackageWatcherSpy.calledOnceWith(`/${fakeSkillPath}`));
+            assert.ok(registerSkillPackageWatcherSpy.calledOnceWith(expectedPath));
         });
     });
 });

@@ -115,14 +115,18 @@ describe('SkillPackageWatcher', () => {
             watcher.validate();
 
             assert.ok(warningMessageSpy.calledTwice);
+            const firstErrorPath = path.join(validSkillPackagePath, 'interaction');
+            const firstErrorUrl = firstErrorPath.slice(firstErrorPath.indexOf('skill-package'));
+            const secondErrorPath = path.join(validSkillPackagePath, 'alexaSkill.json');
+            const secondErrorUrl = secondErrorPath.slice(secondErrorPath.indexOf('skill-package'));
             assert.ok(
                 warningMessageSpy.calledWith(
-                    `skill-package/interaction is not following the correct format of skill-package structure,\n            thus it won't be consumed at service side. ${SKILL_PACKAGE_FORMAT_GUID}`
+                    `${firstErrorUrl} is not following the correct format of skill-package structure,\n            thus it won't be consumed at service side. ${SKILL_PACKAGE_FORMAT_GUID}`
                 )
             );
             assert.ok(
                 warningMessageSpy.calledWith(
-                    `skill-package/alexaSkill.json is not following the correct format of skill-package structure,\n            thus it won't be consumed at service side. ${SKILL_PACKAGE_FORMAT_GUID}`
+                    `${secondErrorUrl} is not following the correct format of skill-package structure,\n            thus it won't be consumed at service side. ${SKILL_PACKAGE_FORMAT_GUID}`
                 )
             );
         });
