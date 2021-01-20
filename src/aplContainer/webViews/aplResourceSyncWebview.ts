@@ -2,18 +2,20 @@ import * as vscode from 'vscode';
 import * as AdmZip from 'adm-zip';
 import * as fs from 'fs';
 import * as path from 'path';
-import { AbstractWebView } from '../../runtime';
+import { AbstractWebView, Utils } from '../../runtime';
 import { ExtensionContext, WebviewPanelOnDidChangeViewStateEvent } from 'vscode';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
 import { getSkillPkgZipLocation } from '../../utils/skillPackageHelper';
-import { DISPLAY_DIR_ROOT_PATH, APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, SOURCES_FILE_PATH, DOCUMENT_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, DATASOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, SOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE } from '../config/configuration';
-import { updateFileContent, readFileContentFromZip } from '../utils/fileHelper';
+import { APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, SOURCES_FILE_PATH, DOCUMENT_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, DATASOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, SOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE } from '../config/configuration';
+import { displayDirRootPath, updateFileContent, readFileContentFromZip } from '../utils/fileHelper';
 import { AplResource } from '../models';
 import { PROMPT_MESSAGES, SUCCESS_MESSAGES } from '../constants/messages';
 import { loggableAskError } from '../../exceptions';
 import { Logger } from '../../logger';
 import { ERROR_MESSAGES } from '../../../src/aplContainer/constants/messages';
+import { DEFAULT_PROFILE } from '../../constants'
+
 
 export class AplResourceSyncWebview extends AbstractWebView {
     private loader: ViewLoader;
@@ -116,19 +118,20 @@ export class AplResourceSyncWebview extends AbstractWebView {
         Logger.verbose(`Calling method: ${this.viewId}.updateAplResource, args:`, name);
         if (this.aplResourceMap && this.aplResourceMap.has(name)) {
             const sources: string | undefined = this.aplResourceMap.get(name)!.sources;
+            const profile = Utils.getCachedProfile(this.extensionContext) ?? DEFAULT_PROFILE;
             if (sources) {
-                const sourcesPath: string = path.join(this.wsFolder.fsPath, DISPLAY_DIR_ROOT_PATH, name, SOURCES_FILE_PATH);
+                const sourcesPath: string = path.join(this.wsFolder.fsPath, displayDirRootPath(this.wsFolder.fsPath, profile), name, SOURCES_FILE_PATH);
                 await updateFileContent(sourcesPath, sources);
             } 
 
             const datasources: string | undefined = this.aplResourceMap.get(name)!.datasources;
             if (datasources) {
-                const dataSourcePath: string = path.join(this.wsFolder.fsPath, DISPLAY_DIR_ROOT_PATH, name, DATASOURCES_FILE_PATH);
+                const dataSourcePath: string = path.join(this.wsFolder.fsPath, displayDirRootPath(this.wsFolder.fsPath, profile), name, DATASOURCES_FILE_PATH);
                 await updateFileContent(dataSourcePath, datasources);
             }
 
             const document: string = this.aplResourceMap.get(name)!.document;
-            const documentPath: string = path.join(this.wsFolder.fsPath, DISPLAY_DIR_ROOT_PATH, name, APL_DOCUMENT_FILE_PATH);
+            const documentPath: string = path.join(this.wsFolder.fsPath, displayDirRootPath(this.wsFolder.fsPath, profile), name, APL_DOCUMENT_FILE_PATH);
             await updateFileContent(documentPath, document);  
             vscode.window.showInformationMessage(SUCCESS_MESSAGES.SYNC_APL_RESOURCE_SUCCESS);
         }

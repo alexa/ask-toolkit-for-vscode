@@ -66,9 +66,17 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
 
 ### Deploy and build skill
 
+#### Deploy an Alexa hosted skill
 <p align="center">
   <br />
-  <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/deploy_skill.gif" alt="Deploy skill" />
+  <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/deploy_hosted_skill.gif" alt="Deploy Alexa hosted skill" />
+  <br />
+</p>
+
+#### Deploy a self hosted skill
+<p align="center">
+  <br />
+  <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/deploy_self_hosted_skill.gif" alt="Deploy self hosted skill" />
   <br />
 </p>
 
@@ -78,8 +86,7 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
 - **Set up skill project**
     - Quickly set up an Alexa skill project by creating a skill or downloading an existing skill or opening a local skill. Any skill that follows the [ASK CLI v2 skill structure](https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-intro.html#skill-project-structure) is supported. Use the **Skill Management** tab under the extension, to try these out.
     - Once opened, your skill project will appear under the **Skills** pane in the extension sidebar.
-
-> **Note**: Currently, Alexa Skills Toolkit only supports creation and deployment of Alexa-hosted skills.
+    - Alexa Skills Toolkit supports creation of both Alexa-hosted and self-hosted skills. To create a self-hosted skill, you can select **Provision your own** to host your skill's backend resources.
 
 - **Build or Download Interaction Model**
     - Edit the Interaction Model JSON under [`Skill Package`](https://developer.amazon.com/en-US/docs/alexa/smapi/skill-package-api-reference.html#skill-package) folder of your skill project. 
@@ -105,9 +112,12 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
 > **Note**: If you are using any existing profiles, we recommend you to recreate them again from the **Skill Management** tab -> hamburger (`...`) menu -> **Profile Manager** view, so that the profile will contain all LWA scopes needed for local debugging. 
 
 - **Deploy your skill**
-    - Deploy all *committed* changes in your skill, using the **Deploy & Build** option under **Skills** pane -> **YourAwesomeSkill**. 
+    - Deploy all changes in your skill, using the **Deploy skill** option under the **Skills** pane -> **YourAwesomeSkill**. 
+    - A skill must be synchronized with changes made in the console in order to deploy. The **Skill deploy status overview** displays skill local changes and the skill remote sync status to guide you how to successfully deploy. 
+    - Alexa Skills Toolkit supports [deployment of Alexa-hosted skills, using Git](https://developer.amazon.com/en-US/docs/alexa/hosted-skills/alexa-hosted-skills-ask-cli.html#deploy-changes-to-your-alexa-hosted-skill-ask-cli-v2). Commit any changes you wish to deploy to your skill's `master` branch. You can use VS Code built-in [Git support](https://code.visualstudio.com/docs/editor/versioncontrol#_git-support) or any Git client.
+    - Alexa Skills Toolkit also supports the deployment of self-hosted skills. However, only the skill package can be deployed. Depending on how you source control your code, you can download and deploy skill code from and to an existing Lambda function, S3, or a git repository.
 
-> **Note**: Currently, Alexa Skills Toolkit only supports [deployment of Alexa-hosted skills, using Git](https://developer.amazon.com/en-US/docs/alexa/hosted-skills/alexa-hosted-skills-ask-cli.html#deploy-changes-to-your-alexa-hosted-skill-ask-cli-v2). Commit any changes you wish to deploy to your skill's `master` branch. You can use VS Code's built-in [Git support](https://code.visualstudio.com/docs/editor/versioncontrol#_git-support) or any Git client.
+> **Note**: Alexa Skills Toolkit does not support deployment of the skill code for a self-hosted skill, but you can set up your own skill service endpoint in the `skill.json` file. The endpoint will receive POST requests when a user interacts with your Alexa Skills. See `FAQs` for more information.
 
 - **Documentation**
     - Quickly jump to Alexa Skills Kit docs using the links under **Documentation** pane.
@@ -138,6 +148,36 @@ and many more ...
     - The ASK Toolkit extension is able to automatically configure the credential helper for the hosted skills, and fetch the credentials whenever executing git operations. However, we observed that some specific versions(2.26.x and 2.25.x) of git cannot configure the credential helper properly, leading to the Git credentials prompt. 
     - Therefore, we suggest checking your git version using `git version`. If it is versions 2.25.x or 2.26.x, you need to update to Git >= 2.27.x. This should prevent being asked for Git credentials again. 
     - Otherwise, we suggest you create an issue report.
+
+- **How do I set up my own skill service endpoint for a self-hosted skill?**
+    - You can specify your skill's service endpoint by updating the `apis` filed in the `skill.json`. The endpoint will receive POST requests when a user interacts with your Alexa Skills. The JSON snippet below shows how to set up your Lambda endpoint. The code below will set up your endpoint in the `Default Region`.
+    ```
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-west-2:123456789012:function:my-function"
+        }
+      }
+    }
+    ```
+    - Skill endpoints can also be set up in a specific region. For each AWS region, there is an  corresponding optimal ASK region code (`NA`, `EU`, `FE`). See [the best practices in choosing Lambda regions](https://developer.amazon.com/en-US/docs/alexa/custom-skills/host-a-custom-skill-as-an-aws-lambda-function.html#select-the-optimal-region-for-your-aws-lambda-function) for the AWS region codes and corresponding optimal ASK region codes. Using the corresponding optimal codes is recommended and can reduce the overall latency of your skill.
+    The JSON snippet below shows how to specify other regions. In this example, the AWS region code is (us-east-1) and the optimal ASK region code is (NA). 
+    ```
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-west-2:123456789012:function:my-function"
+        }
+        "regions": {
+          "NA": {
+            "endpoint": {
+              "uri":"arn:aws:lambda:us-east-1:123456789012:function:my-function"
+            }
+          },
+        }
+      }
+    }
+    ```
 ----
 
 ## Got Feedback?

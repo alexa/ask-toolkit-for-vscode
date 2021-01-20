@@ -17,18 +17,14 @@ import { Repository, GitErrorCodes } from '../@types/git';
 import { loggableAskError, AskError } from '../exceptions';
 import { getSkillDetailsFromWorkspace } from './skillHelper';
 import { getOrInstantiateGitApi } from './gitHelper';
-import { DEFAULT_PROFILE } from '../constants';
+import { BRANCH_TO_STAGE, DEFAULT_PROFILE } from '../constants';
 import { Logger } from '../logger';
 import { SKILL } from '../constants';
 
-const branchToStage: { [key: string]: string} = {
-    prod: 'live',
-    master: 'development'
-};
 
 function checkValidBranch(branchName: string): void { 
     Logger.verbose(`Calling method: checkValidBranch, args:`, branchName);
-    if (!(branchName in branchToStage)) {
+    if (!(branchName in BRANCH_TO_STAGE)) {
         throw loggableAskError(`Hosted skills cannot be deployed through ${branchName} branch. Please merge your branch into remote master branch`);
     }
 }
@@ -36,7 +32,7 @@ function checkValidBranch(branchName: string): void {
 async function checkValidStage(branchName: string, skillId: string,
     smapiClient: model.services.skillManagement.SkillManagementServiceClient): Promise<void> {
     Logger.verbose(`Calling method: callValidStage, args:`, branchName, skillId);
-    const skillStage: string = branchToStage[branchName];
+    const skillStage: string = BRANCH_TO_STAGE[branchName];
     if (!skillStage) {
         throw loggableAskError(`No skill stage available for ${branchName} branch`);
     }

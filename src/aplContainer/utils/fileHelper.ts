@@ -5,6 +5,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import AdmZip = require('adm-zip');
+import { DISPLAY_DIR_ROOT_PATH_RELATIVE_TO_SKILL_PACAKGE } from '../config/configuration';
+import { getSkillMetadataSrc } from '../../utils/skillHelper';
 
 /**
  * Helper function to make directory with a directory name
@@ -63,4 +65,14 @@ export async function updateFileContent(path: string, content: string): Promise<
 export function readFileContentFromZip(zip: AdmZip, filePathInZip: string): string | null {
     const content: Buffer | null = zip.readFile(filePathInZip);
     return content !== null ? content.toString() : null;
+}
+
+/**
+ * The root path for visual assets in skill package
+ * @param folderPath 
+ * @param profile 
+ */
+export function displayDirRootPath(folderPath, profile) {
+    const { skillPackageSrc } = getSkillMetadataSrc(folderPath, profile)
+    return path.join(skillPackageSrc, DISPLAY_DIR_ROOT_PATH_RELATIVE_TO_SKILL_PACAKGE);
 }

@@ -60,7 +60,7 @@ export const TREE_VIEW_IDS = {
 };
 
 export const SKILLS_CONSOLE_ITEMS = {
-    CREATE_NEW_SKILL: 'Create Alexa-hosted skill',
+    CREATE_NEW_SKILL: 'Create a skill',
     DOWNLOAD_SKILL: 'Download and edit skill',
     OPEN_LOCAL_SKILL: 'Open local skill',
     PROFILE_MGR: 'Profile manager',
@@ -217,7 +217,9 @@ export const SKILL = {
     },
     S3_SCRIPTS_AUTH_INFO: {
         URL: "https://ask-tools-core-content.s3-us-west-2.amazonaws.com/auth_info"
-    }
+    },
+    MIN_SKILL_NAME_LENGTH: 2,
+    MAX_SKILL_NAME_LENGTH: 50,
 };
 
 export const SKILL_FOLDER = {
@@ -228,7 +230,8 @@ export const SKILL_FOLDER = {
         NAME: 'skill-package',
         CUSTOM_MODELS: path.join('interactionModels', 'custom'),
         ISPS: 'isps',
-        MANIFEST: 'skill.json'
+        MANIFEST: 'skill.json',
+        ASSETS: 'assets',
     },
     LAMBDA: {
         NAME: 'lambda',
@@ -244,17 +247,43 @@ export const SKILL_FOLDER = {
             NAME: 'hooks',
             PRE_PUSH: 'pre-push'
         }
-    }
+    },
+    BACK_UP: '.skill-package-backup'
 };
 
 export const SYSTEM_ASK_FOLDER = {
     HIDDEN_ASK_FOLDER: '.ask',
     AUTH_INFO: 'auth_info',
+    SCHEMA_FOLDER: {
+        NAME: 'schema',
+        SKILL_PACKAGE: 'skillPackageSchema.json'
+    },
     SCRIPTS_FOLDER: {
         NAME: 'scripts',
         ASK_PRE_PUSH: 'ask-pre-push',
         GIT_CREDENTIAL_HELPER: 'git-credential-helper',
     }
+};
+
+export const TEMPLATES = {
+    TEMPLATE_ASK_CLI_BRANCH: 'ask-cli-x',
+    TEMPLATE_ASK_TOOLS_BRANCH: 'ask-tools',
+    TEMPLATES_BY_CODE_LANGUAGE: {
+        NodeJS: "https://github.com/alexa/skill-sample-nodejs-hello-world.git",
+        Python: "https://github.com/alexa/skill-sample-python-helloworld-classes.git",
+        Java: "https://github.com/alexa/skill-sample-java-premium-hello-world.git" 
+    }
+}
+
+export const MASTER_BRANCH_SKILL_MODELS_URL =
+    'https://raw.githubusercontent.com/alexa/skill-sample-nodejs-hello-world/master/models';
+export const MASTER_BRANCH_SKILL_MANIFEST_URL =
+    'https://raw.githubusercontent.com/alexa/skill-sample-nodejs-hello-world/master/skill.json';
+
+
+export const SCHEMA = {
+    SKILL_PACKAGE: 'skillPackageStructure',
+    MANIFEST: 'manifest',
 };
 
 export const BASE_RESOURCES_CONFIG = {
@@ -265,6 +294,94 @@ export const BASE_RESOURCES_CONFIG = {
 export const BASE_STATES_CONFIG = {
     askToolkitStatesVersion: '2020-04-15',
     profiles: {}
+};
+
+export const ASK_RESOURCES_JSON = {
+    PROFILES: 'profiles',
+    SKILL_ID: 'skillId',
+    SKILL_METADATA: {
+        NAME: 'skillMetadata',
+        SRC: 'src',
+    },
+    CODE: {
+        NAME: 'code',
+        SRC: 'src',
+    },
+    SKILL_INFRASTRUCTURE: {
+        NAME: 'skillInfrastructure',
+        TYPE: 'type',
+        USER_CONFIG: {
+            NAME: 'userConfig',
+            RUNTIME: 'runtime',
+            HANDLER: 'handler'
+        }
+    }
+}
+
+export const ASK_STATES_JSON = {
+    PROFILES: 'profiles',
+    SKILL_ID: 'skillId',
+    SKILL_METADATA: {
+        NAME: 'skillMetadata',
+        ETAG: 'eTag',
+        LAST_DEPLOY_HASH: 'lastDeployHash'
+    }
+}
+
+export const MANIFEST_JSON = {
+    NAME: 'manifest',
+    PUBLISHING_INFORMATION: {
+        NAME: 'publishingInformation',
+        LOCALES: {
+            NAME: 'locales',
+            SKILL_NAME: 'name'
+        }
+    },
+    APIS: {
+        NAME: 'apis',
+        CUSTOM: {
+            NAME: 'custom'
+        }
+    }
+}
+
+export const SKILL_STATUS_MODEL = {
+    MANIFEST: {
+        NAME: 'manifest',
+        LAST_UPDATE_REQUEST: {
+            NAME: 'lastUpdateRequest',
+            STATUS: 'status',
+            ERRORS: {
+                NAME: 'errors',
+            }
+        }
+    },
+    INTERACTION_MODEL: {
+        NAME: 'interactionModel',
+        LAST_UPDATE_REQUEST: {
+            NAME: 'lastUpdateRequest',
+            STATUS: 'status',
+            ERRORS: 'errors',
+            BUILD_DETAILS: {
+                NAME: 'buildDetails',
+            }
+        }
+    },
+    HOSTED_SKILL_PROVISIONING: {
+        NAME: 'hostedSkillProvisioning',
+        LAST_UPDATE_REQUEST: {
+            NAME: 'lastUpdateRequest',
+            STATUS: 'status',
+            ERRORS: {
+                NAME: 'errors',
+            }
+        }
+    }
+}
+
+export const BRANCH_TO_STAGE: { [key: string]: string} = {
+    prod: 'live',
+    master: 'development'
 };
 
 export const ALEXA_RESPONSE_TYPES = {
@@ -291,6 +408,15 @@ export const SIMULATOR_MESSAGE_TYPE = {
     VIEWPORT: 'viewport',
     EXCEPTION: 'exception'
 };
+
+export const TELEMETRY_EVENTS = {
+    CREATE_HOSTED_SKILL_TELEMETRY_EVENT: 'ask.new.createAlexaHosted',
+    CREATE_SELF_HOSTED_SKILL_TELEMETRY_EVENT: 'ask.new.createSelfHosted',
+    DEPLOY_HOSTED_SKILL_TELEMETRY_EVENT: 'askContainer.skillsConsole.deployHostedSkill.buildClick',
+    DEPLOY_SELF_HOSTED_SKILL_TELEMETRY_EVENT: 'askContainer.skillsConsole.deploySelfHostedSkill.buildClick',
+    CLONE_HOSTED_SKILL_TELEMETRY_EVENT: 'askContainer.skillsConsole.cloneAlexaHostedSkill',
+    CLONE_SELF_HOSTED_SKILL_TELEMETRY_EVENT: 'askContainer.skillsConsole.cloneSelfHostedSkill',
+}
 
 export const SIMULATION_IN_PROGRESS = 'Simulation in progress';
 
@@ -358,3 +484,5 @@ export const TELEMETRY_NOTIFICATION_MESSAGE =
 'To maintain and improve the Alexa Skills Kit extension, we collect anonymous ' + 
 'metrics related to usage and performance. To change this setting, go to the ' + 
 '"Alexa Skills Kit Configuration" section in your user settings.';
+
+export const SKILL_PACKAGE_FORMAT_GUID = 'Please follow [this guide](https://developer.amazon.com/en-US/docs/alexa/smapi/skill-package-api-reference.html#skill-package-format) to upgrade your skill-package folder structure. For more detailed skill-package format, please check .ask/schema/skillPackageSchema.json.';

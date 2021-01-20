@@ -184,3 +184,11 @@ body.vscode-light td {
     border: 1px solid black;
     text-align: center;
 }
+
+.hidden{
+    display: none; 
+}
+ 
+.shown{
+    display: inline; 
+}

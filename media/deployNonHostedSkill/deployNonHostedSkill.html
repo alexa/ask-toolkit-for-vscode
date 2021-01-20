@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource: 'unsafe-inline';"
+        />
+        <title>Deploy skill</title>
+        <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+        <link rel="stylesheet" type="text/css" href="${skillDeployCss}">
+        <script src="${javascript}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
+            <h1>Skill deploy and build</h1>
+        </div>
+
+        <div class="body">
+
+            <div class="deploy-status-overview-container">
+                <h2>Skill deploy status overview</h2>
+            </div>
+            <div class="container">
+                <div id="deployContainer"  class="deploy-container">
+                    <div class="flex-item">
+                        <div id="deploySkill">
+                            <label id="skillName">Skill Name: </label><span>${skillName}</span></br></br>
+                            <label id="skillId">Skill ID: </label><span>${skillId}</span>
+                            <br/><br/>
+                            <div id="refresh"></div>
+                            <p class="refresh-icon-text">Refresh to update the status</p>
+                            <br/><br/>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <th rowspan="2">
+                                        <div class="heading-text">
+                                            <div>
+                                                <label class="title">Skill Package</label>
+                                                <a href="https://developer.amazon.com/en-US/docs/alexa/smapi/skill-package-api-reference.html#skill-package-format" title="Learn more about the skill package">
+                                                    <div id="infoIcon"></div>
+                                                </a>
+                                            </div>
+                                            <span id="skillPackagePath" class="subtitle hidden">(${skillName}/skill-package)</span> 
+                                        </div>
+                                    </th>
+                                    <td class="text-td">
+                                        <div id="localChangeLoadingView" class="lds-ellipsis hidden"><div></div><div></div><div></div><div></div></div>
+                                        <div id="localChangeTextTdContent" style="text-align: left;" class="hidden">
+                                            <label id="localChangeTextTdContentTitle" class="text-td-title">Local Changes</label>
+                                            <span><p id="localChangesText" class="text-td-details"></p></span>
+                                        </div>
+                                    </td>
+                                    <td class="icon-td">
+                                        <div id="localChangeIconTdContent">
+                                            <div id="changesCheckIconActive" class="hidden">
+                                                <div id="checkIcon"></div>
+                                            </div>
+                                            <div id="changesCheckIconInactive" class="hidden">
+                                                <div id="exclamationIcon"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-td">
+                                        <div id="skillPackageLoadingView" class="lds-ellipsis hidden"><div></div><div></div><div></div><div></div></div>
+                                        <div id="skillPackageSyncTextTdContent" style="text-align: left;" class="hidden">
+                                                <label id="skillPackageSyncTextTdContentTitle" class="text-td-title">Skill Package Remote Sync Status</label>
+                                                <span><p id="skillPackageSyncRemoteText" class="text-td-details"></p></span>
+                                                <span id="exportSkillPackageText" class="sub-span hidden">To solve the sync issue, you can <a id="exportSkillPackage" href="" >Export skill package</a> to download the remote version, or make local changes and force deploy the skill.</span>
+                                        </div>
+                                    </td>
+                                    <td class="icon-td" >
+                                        <div id="skillPackageSyncIconTdContent">
+                                            <div id="skillPackageSyncCheckIconActive" class="hidden">
+                                                <div id="checkIcon"></div>
+                                            </div>
+                                            <div id="skillPackageSyncCheckIconInactive" class='check-icon-inactive hidden'>
+                                                <div id="exclamationIcon"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br/><br/>
+                    <div class='deploy-button-container'>
+                        <div class="deploy-buttons">
+                            <input id="deployBtn" class="hidden" type="submit" value="Deploy & build">
+                            <input id="forceDeployBtn" class="hidden" type="submit" value="Force deploy">
+                        </div>
+                        <span id="forceDeployText" class="force-deploy-text hidden">Force deploy will force overwrite currently deployed skill package.</span>
+                    </div>
+                    <div id="deployValidationLoadingView" style="float: right; margin: 10px auto;" class="lds-ellipsis hidden"><div></div><div></div><div></div><div></div></div>
+                </div>
+            </div>
+            </br>
+            <div id="detailsContainer">
+                <p>
+                    <details open>
+                        <summary>About Lambda Code</summary>
+                        <p>
+                            For a non-Alexa-hosted skill, ASK Toolkit supports downloading and deploying a <code>skill package</code> but does not support these operations for <code>Lambda code</code>. <br/>
+                            Lambda code can be manually retrieved and deployed.<br/> 
+                            Depending on how you source control your code, you can download and deploy code from and to an existing Lambda function, S3, or a git repository. 
+                        </p>
+                    </details>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

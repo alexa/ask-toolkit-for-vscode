@@ -50,6 +50,7 @@ module.exports = {
         "prefer-const": "error",
         "prefer-object-spread": "error",
         "radix": "error",
+        "max-len": [1, 120, 4],
 
         // -- Rules from @typescript-eslint
         "@typescript-eslint/strict-boolean-expressions": ["error"], // avoids frequent sources of errors: 0, "", Promise<T>, null vs undefined

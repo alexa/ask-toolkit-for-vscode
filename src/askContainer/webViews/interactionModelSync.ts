@@ -5,7 +5,7 @@ import * as path from 'path';
 import { AbstractWebView, SmapiClientFactory, Utils } from '../../runtime';
 import { DEFAULT_PROFILE, SKILL_FOLDER, WEB_VIEW_NAME } from '../../constants';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
-import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
+import { getSkillDetailsFromWorkspace, getSkillMetadataSrc } from '../../utils/skillHelper';
 import { existsSync } from 'fs';
 import { loggableAskError } from '../../exceptions';
 import { Logger } from '../../logger';
@@ -48,20 +48,18 @@ export class InteractionModelSyncWebview extends AbstractWebView {
 
     private async updateInteractionModel(locale: string): Promise<void> {
         Logger.verbose(`Calling method: ${this.viewId}.updateInteractionModel, args: `, locale);
-        const skillId = getSkillDetailsFromWorkspace(this.extensionContext).skillId;
-        let profile = Utils.getCachedProfile(this.extensionContext);
-        profile = profile ?? DEFAULT_PROFILE;
-        const smapiClient = SmapiClientFactory.getInstance(profile, this.extensionContext);
-
         try {
+            const skillId = getSkillDetailsFromWorkspace(this.extensionContext).skillId;
+            let profile = Utils.getCachedProfile(this.extensionContext);
+            profile = profile ?? DEFAULT_PROFILE;
+            const smapiClient = SmapiClientFactory.getInstance(profile, this.extensionContext);
             const interactionModelResponse: model.v1.skill.interactionModel.InteractionModelData = await smapiClient.getInteractionModelV1(
                 skillId, 'development', locale);
             const json = JSON.stringify(interactionModelResponse, null, 2);
 
             if (this.wsFolder) {
-                const iModelPath: string = path.join(
-                    this.wsFolder.fsPath, SKILL_FOLDER.SKILL_PACKAGE.NAME, 
-                    SKILL_FOLDER.SKILL_PACKAGE.CUSTOM_MODELS, `${locale}.json`);
+                const { skillPackageAbsPath } = getSkillMetadataSrc(this.wsFolder.fsPath, profile);
+                const iModelPath: string = path.join(skillPackageAbsPath, SKILL_FOLDER.SKILL_PACKAGE.CUSTOM_MODELS, `${locale}.json`);
                 const scheme: string = existsSync(iModelPath) ? "file:" : "untitled:";
                 const textDoc = await vscode.workspace.openTextDocument(vscode.Uri.parse(scheme + iModelPath));
                 const editor = await vscode.window.showTextDocument(textDoc);
@@ -80,7 +78,7 @@ export class InteractionModelSyncWebview extends AbstractWebView {
             if (err.statusCode === 404) {
                 void vscode.window.showErrorMessage(`There is no interaction model for ${locale}. Select a different locale.`);
             }
-            throw loggableAskError('There was a problem downloading the interaction model. Try the download again.', err);
+            throw loggableAskError('There was a problem downloading the interaction model. Try the download again.', err, true);
         }
     }
 }

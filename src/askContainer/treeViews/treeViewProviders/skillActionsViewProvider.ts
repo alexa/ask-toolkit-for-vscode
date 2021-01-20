@@ -131,21 +131,31 @@ export class SkillActionsViewProvider implements vscode.TreeDataProvider<PluginT
         );
         
         if (Utils.isNonBlankString(skillId)) {
-            if (await getHostedSkillMetadata(skillId, this.treeView.extensionContext)) {
+            const hostedMetadata = await getHostedSkillMetadata(skillId, this.treeView.extensionContext);
+            if (hostedMetadata !== undefined) {
                 treeItemsArray.push(
                     new PluginTreeItem<Resource>(
                         SKILL_ACTION_ITEMS.DEPLOY.LABEL, null,
                         vscode.TreeItemCollapsibleState.None,
                         {
-                            title: 'deploySkill',
-                            command: 'askContainer.skillsConsole.deploySkill'
+                            title: 'deployHostedSkill',
+                            command: 'askContainer.skillsConsole.deployHostedSkill'
                         }, undefined,
                         ContextValueTypes.SKILL,
                     ),
                 );
             } else {
-                Logger.verbose(
-                    `${skillDetails.skillName} is not a hosted skill. Not adding deploy skill action`);
+                treeItemsArray.push(
+                    new PluginTreeItem<Resource>(
+                        SKILL_ACTION_ITEMS.DEPLOY.LABEL, null,
+                        vscode.TreeItemCollapsibleState.None,
+                        {
+                            title: 'deployNonHostedSkill',
+                            command: 'askContainer.skillsConsole.deploySelfHostedSkill'
+                        }, undefined,
+                        ContextValueTypes.SKILL,
+                    ),
+                );
             } 
             
             treeItemsArray.push(

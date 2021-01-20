@@ -6,6 +6,7 @@ import { Logger } from '../../logger';
 import { clearCachedSkills } from '../../utils/skillHelper';
 import { disposeWebviews } from '../../utils/webViews/viewManager';
 import { loggableAskError } from '../../exceptions';
+import { SchemaManager } from '../../utils/schemaHelper';
 
 const VENDOR_ID = 'Vendor ID';
 
@@ -19,7 +20,7 @@ export class ChangeProfileCommand extends AbstractCommand<void> {
         const profiles: string[] | null = Utils.listExistingProfileNames();
 
         if (profiles) {
-            const qpItems: Array<vscode.QuickPickItem> = new Array<vscode.QuickPickItem>();
+            const qpItems: vscode.QuickPickItem[] = new Array<vscode.QuickPickItem>();
             profiles.forEach(profile => {
                 try {
                     const vendorId = Utils.resolveVendorId(profile);
@@ -39,7 +40,7 @@ export class ChangeProfileCommand extends AbstractCommand<void> {
     async execute(context: CommandContext): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}`);
 
-        // Since sometimes quickpick is selecting the first item by default
+        // Since sometimes quickPick is selecting the first item by default
         // creating quick pick and adding items manually
         const profileQp = vscode.window.createQuickPick();
         profileQp.title = 'Select profile to use';
@@ -61,6 +62,9 @@ export class ChangeProfileCommand extends AbstractCommand<void> {
                 // Close open web views upon profile change.
                 disposeWebviews();
                 profileQp.dispose();
+
+                // update vendor specific schemas upon profile change.
+                void SchemaManager.getInstance().updateSchemas();
             }
         });
         profileQp.ignoreFocusOut = true;
