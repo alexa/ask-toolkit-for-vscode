@@ -49,7 +49,7 @@ const EXECUTION_INFO_CODE = 'executionInfoCode';
 const EXECUTION_INFO_TAB = 'executionInfoTab';
 const APL_VIEW_TAB = 'aplViewTab';
 const APL_VIEW_BOX = 'aplViewBox';
-const PREVIEW_APL_BUTTON= 'previewAplButton';
+const PREVIEW_APL_BUTTON = 'previewAplButton';
 const RESIZER = 'resizer';
 const CODE = 'code';
 const ACTIVE = 'active';
@@ -66,7 +66,9 @@ const SIMULATOR_MESSAGE_TYPE = {
     EXPORT: 'export',
     ACTION: 'action',
     VIEWPORT: 'viewport',
-    EXCEPTION: 'exception'
+    EXCEPTION: 'exception',
+    INIT_APL_ENGINE: 'initAplEngine',
+    UPDATE_APL_VIEW: 'updateAplView',
 }
 
 window.onload = function () {
@@ -75,6 +77,7 @@ window.onload = function () {
     const stageDropdown = document.getElementById(STAGE_DROPDOWN);
     const localeDropdown = document.getElementById(LOCALE_DROPDOWN);
 
+    initializeRenderer();
     const previousState = vscode.getState();
     if (previousState) {
         restorePreviousSimulatorState(previousState);
@@ -120,6 +123,16 @@ window.onload = function () {
     window.addEventListener('message', handleMessageFromExtension);
 }
 
+/**
+ * Initialize APL renderer engine when open simulate webview.
+ */
+function initializeRenderer() {
+    AplRenderer.initEngine().then(() => {
+        vscode.postMessage({
+            type: SIMULATOR_MESSAGE_TYPE.INIT_APL_ENGINE
+        });
+    });
+}
 
 /**
  * Post message to extension for downloading the current session.
@@ -150,7 +163,6 @@ function resetChatSession() {
     aplDiv.insertAdjacentHTML('beforeend', newHtml);
 
     showSpecificTab(IO_TAB);
-    AplRenderer.initEngine();
     clearUI();
 }
 
@@ -402,7 +414,7 @@ async function handleMessageFromExtension(event) {
         if (message.newViewport !== undefined && message.documents !== undefined) {
             await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.newViewport));
         }
-        else{
+        else {
             showSelectedButton(PREVIEW_APL_BUTTON);
         }
     }
@@ -410,6 +422,13 @@ async function handleMessageFromExtension(event) {
         removeAlexaTypingIndicator();
         if (stageDropdown.value === DEVELOPMENT) {
             setHTMLElementStatuses(ENABLE);
+        }
+    }
+    else if (message.type === SIMULATOR_MESSAGE_TYPE.UPDATE_APL_VIEW) {
+        const previousState = vscode.getState();
+        const tabToShow = previousState.currentTabGlobal;
+        if (tabToShow === APL_VIEW_TAB && previousState.aplViewport !== undefined && previousState.aplDocument !== undefined && previousState.aplDocument !== '') {
+            await updateAplViewPort(previousState.aplDocument, previousState.aplDatasource, previousState.aplViewport);
         }
     }
 }
@@ -439,6 +458,12 @@ function handleSkillStatusMessage(message) {
  */
 async function updateAplViewPort(document, dataSource, viewport) {
     showSelectedButton(PREVIEW_APL_BUTTON);
+    const state = vscode.getState() || {};
+    state['aplDocument'] = document;
+    state['aplDatasource'] = dataSource;
+    state['aplViewport'] = viewport;
+    vscode.setState(state);
+
     await loadAplDoc(
         renderer,
         document,
@@ -828,7 +853,7 @@ function updateAlexaResponse(text) {
     const messageId = MSG_NUM.concat(numMessages, TYPING);
     const updatedMessageId = MSG_NUM.concat(numMessages);
     const currentAlexaBubble = document.getElementById(messageId);
-    
+
     if (currentAlexaBubble) {
         // remove typing indicator <span> elements
         while (currentAlexaBubble.firstChild) {
@@ -855,7 +880,7 @@ function updateAlexaResponse(text) {
         messageContainer.insertAdjacentHTML('beforeend', newMessageHtml);
         document.getElementById(newMessageId).insertAdjacentText('beforeend', text);
     }
-    
+
     numMessages++;
     messageContainer.scrollTop += messageContainer.clientHeight; // scroll down to newest message
     saveElementState(MESSAGE_CONTAINER);
@@ -937,7 +962,7 @@ function isValidInput(input) {
  * Show up only once
  */
 function showDevConsoleLink() {
-    if(isDevConsoleLinkShowed === false){
+    if (isDevConsoleLinkShowed === false) {
         const currLocale = document.getElementById(LOCALE_DROPDOWN).value;
         vscode.postMessage({
             message: LINK_DEV_CONSOLE,
@@ -945,5 +970,5 @@ function showDevConsoleLink() {
             type: SIMULATOR_MESSAGE_TYPE.ACTION
         });
         isDevConsoleLinkShowed = true;
-    }  
+    }
 }

@@ -58,7 +58,7 @@ async function loadAplDoc(renderer, apl, datasources, deviceConfig, fatherDiv) {
 function createContent(apl, datasources) {
     const doc = apl;
     const content = AplRenderer.Content.create(doc);
-    const data = datasources;
+    const data = datasources || '{}';
     if (data) {
         const jsonDoc = JSON.parse(doc);
         if (
