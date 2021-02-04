@@ -475,10 +475,12 @@ async function handleAlexaResponse(message) {
     }
     else {
         message.alexaResponse.forEach(response => updateAlexaResponse(response));
-        //If message contains datasource and document, will show APL preview
-        if (message.viewport !== undefined && message.documents !== undefined) {
-            await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.viewport));
-        }
+        
+    }
+    // Response can have empty speech, but valid APL response to render
+    // If message contains datasource and document, will show APL preview
+    if (message.viewport !== undefined && message.documents !== undefined) {
+        await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.viewport));
     }
     extractSkillInfoData(message);
 }
