@@ -14,7 +14,7 @@ export class SimulateSkillCommand extends AbstractCommand<void> {
     async execute(context: CommandContext): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}`);
         try {
-            this.simulateSkillWebview.showView();
+            this.simulateSkillWebview.showPersistView();
         } catch (err) {
             throw loggableAskError(`Cannot open test skill view`, err, true);
         }

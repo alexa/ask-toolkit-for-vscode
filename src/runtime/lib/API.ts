@@ -177,6 +177,37 @@ export abstract class AbstractWebView {
         }
     }
 
+    public showPersistView(...args: any[]): void {
+        if (this._panel === undefined || this._isPanelDisposed) {
+            const persistOptions = {
+                enableScripts: true,
+                localResourceRoots: this.options.localResourceRoots,
+                //Add this property to keep the webview persist.
+                retainContextWhenHidden: true
+            };
+
+            this._panel = window.createWebviewPanel(
+                this.viewId, this.viewTitle, this.showOptions, persistOptions
+            );
+            this._panel.onDidDispose(
+                () => {
+                    this._isPanelDisposed = true;
+                },
+                undefined,
+                this.extensionContext.subscriptions
+            );
+            this._panel.iconPath = {
+                dark: Uri.parse('https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png'),
+                light: Uri.parse('https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png')
+            };
+            this.getWebview().html = this.getHtmlForView(...args);
+            this._isPanelDisposed = false;
+            this.setEventListeners();
+        } else {
+            this.reviveView(...args);
+        }
+    }
+    
     public getPanel(): WebviewPanel {
         return this._panel;
     }
