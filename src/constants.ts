@@ -406,9 +406,7 @@ export const SIMULATOR_MESSAGE_TYPE = {
     EXPORT: 'export',
     ACTION: 'action',
     VIEWPORT: 'viewport',
-    EXCEPTION: 'exception',
-    INIT_APL_ENGINE: 'initAplEngine',
-    UPDATE_APL_VIEW: 'updateAplView',
+    EXCEPTION: 'exception'
 };
 
 export const TELEMETRY_EVENTS = {

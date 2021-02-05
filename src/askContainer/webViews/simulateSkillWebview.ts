@@ -88,11 +88,6 @@ export class SimulateSkillWebview extends AbstractWebView {
         else if (message.type === SIMULATOR_MESSAGE_TYPE.ACTION) {
             simulateMessageHelper.handleActionMessageFromWebview(message, skillId);
         }
-        else if (message.type === SIMULATOR_MESSAGE_TYPE.INIT_APL_ENGINE) {
-            await this.getWebview().postMessage({
-                type: SIMULATOR_MESSAGE_TYPE.UPDATE_APL_VIEW
-            });
-        }
         else {
             throw loggableAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
         }

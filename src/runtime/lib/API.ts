@@ -3,9 +3,11 @@
 import * as path from 'path';
 
 import { TelemetryClient } from './telemetry';
-import { Disposable, ExtensionContext, commands, TreeItem, TreeItemCollapsibleState,
+import {
+    Disposable, ExtensionContext, commands, TreeItem, TreeItemCollapsibleState,
     Uri, ThemeIcon, Command, WebviewPanel, Webview, window, ViewColumn,
-    WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent, TreeView, TreeDataProvider } from "vscode";
+    WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent, TreeView, TreeDataProvider
+} from "vscode";
 import { Resource } from '../../runtime';
 
 export interface CommandContext {
@@ -23,7 +25,7 @@ export interface GenericCommand extends Disposable {
 export function registerCommands(context: ExtensionContext, commands: GenericCommand[]): void {
     commands.forEach(command => {
         command.context = context;
-        context.subscriptions.push(command);    
+        context.subscriptions.push(command);
     });
 }
 
@@ -36,13 +38,13 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
 
     private _disposableCommand: Disposable;
     context!: ExtensionContext;
-    abstract execute(context: CommandContext, ...args: any[]): Promise<T>; 
+    abstract execute(context: CommandContext, ...args: any[]): Promise<T>;
 
-    constructor(public commandName: string){
+    constructor(public commandName: string) {
         this.title = this.command = commandName;
 
         this._disposableCommand = commands.registerCommand(
-            commandName, (...args: any[]) => { 
+            commandName, (...args: any[]) => {
                 return this._invoke(commandName, ...args);
             },
             this
@@ -60,8 +62,8 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
         let output: any;
 
         // Create toolkit context to pass on
-        const context: CommandContext = { 
-            command: commandName, 
+        const context: CommandContext = {
+            command: commandName,
             extensionContext: this.context
         };
         try {
@@ -90,8 +92,8 @@ export class PluginTreeItem<Resource> extends TreeItem {
     public readonly data: Resource | null;
 
     constructor(
-        label: string, itemData: Resource | null, collapsibleState: TreeItemCollapsibleState, 
-        command?: Command, 
+        label: string, itemData: Resource | null, collapsibleState: TreeItemCollapsibleState,
+        command?: Command,
         iconPath?: string | Uri | { light: string | Uri; dark: string | Uri } | ThemeIcon,
         contextVal?: ContextValueTypes | string) {
         super(label, collapsibleState);
@@ -112,42 +114,42 @@ export abstract class AbstractWebView {
     showOptions: { viewColumn: ViewColumn, preserveFocus?: boolean };
     protected isGlobal = false;
 
-    constructor(viewTitle: string, viewId: string, 
+    constructor(viewTitle: string, viewId: string,
         context: ExtensionContext,
         viewColumn?: ViewColumn,
         localResourcesUri?: Uri,
-        showOptions?: { viewColumn: ViewColumn, preserveFocus?: boolean }, 
+        showOptions?: { viewColumn: ViewColumn, preserveFocus?: boolean },
         options?: WebviewPanelOptions & WebviewOptions
-        ) {
-            if (viewColumn === undefined && window.activeTextEditor) {
-                viewColumn = window.activeTextEditor.viewColumn;
-            }
-
-            if (showOptions  === undefined) {
-                showOptions =  {
-                    viewColumn: viewColumn ?? ViewColumn.One,
-                    preserveFocus: false
-                };
-            }
-
-            if (localResourcesUri === undefined) {
-                localResourcesUri = Uri.file(path.join(context.extensionPath, 'media'));
-            }
-
-            if (options === undefined) {
-                options = {
-                    enableScripts: true,
-                    localResourceRoots: [localResourcesUri]
-                };
-            }
-
-            this.viewId = viewId;
-            this.viewTitle = viewTitle;
-            this.options = options;
-            this.showOptions = showOptions;
-
-            this.extensionContext = context;
+    ) {
+        if (viewColumn === undefined && window.activeTextEditor) {
+            viewColumn = window.activeTextEditor.viewColumn;
         }
+
+        if (showOptions === undefined) {
+            showOptions = {
+                viewColumn: viewColumn ?? ViewColumn.One,
+                preserveFocus: false
+            };
+        }
+
+        if (localResourcesUri === undefined) {
+            localResourcesUri = Uri.file(path.join(context.extensionPath, 'media'));
+        }
+
+        if (options === undefined) {
+            options = {
+                enableScripts: true,
+                localResourceRoots: [localResourcesUri]
+            };
+        }
+
+        this.viewId = viewId;
+        this.viewTitle = viewTitle;
+        this.options = options;
+        this.showOptions = showOptions;
+
+        this.extensionContext = context;
+    }
 
     public getWebview(): Webview {
         return this.getPanel().webview;
@@ -157,6 +159,37 @@ export abstract class AbstractWebView {
         if (this._panel === undefined || this._isPanelDisposed) {
             this._panel = window.createWebviewPanel(
                 this.viewId, this.viewTitle, this.showOptions, this.options
+            );
+            this._panel.onDidDispose(
+                () => {
+                    this._isPanelDisposed = true;
+                },
+                undefined,
+                this.extensionContext.subscriptions
+            );
+            this._panel.iconPath = {
+                dark: Uri.parse('https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png'),
+                light: Uri.parse('https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png')
+            };
+            this.getWebview().html = this.getHtmlForView(...args);
+            this._isPanelDisposed = false;
+            this.setEventListeners();
+        } else {
+            this.reviveView(...args);
+        }
+    }
+
+    public showPersistView(...args: any[]): void {
+        if (this._panel === undefined || this._isPanelDisposed) {
+            const persistOptions = {
+                enableScripts: true,
+                localResourceRoots: this.options.localResourceRoots,
+                //Add this property to keep the webview persist.
+                retainContextWhenHidden: true
+            };
+
+            this._panel = window.createWebviewPanel(
+                this.viewId, this.viewTitle, this.showOptions, persistOptions
             );
             this._panel.onDidDispose(
                 () => {

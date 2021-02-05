@@ -66,9 +66,7 @@ const SIMULATOR_MESSAGE_TYPE = {
     EXPORT: 'export',
     ACTION: 'action',
     VIEWPORT: 'viewport',
-    EXCEPTION: 'exception',
-    INIT_APL_ENGINE: 'initAplEngine',
-    UPDATE_APL_VIEW: 'updateAplView',
+    EXCEPTION: 'exception'
 }
 
 window.onload = function () {
@@ -77,7 +75,6 @@ window.onload = function () {
     const stageDropdown = document.getElementById(STAGE_DROPDOWN);
     const localeDropdown = document.getElementById(LOCALE_DROPDOWN);
 
-    initializeRenderer();
     const previousState = vscode.getState();
     if (previousState) {
         restorePreviousSimulatorState(previousState);
@@ -123,16 +120,6 @@ window.onload = function () {
     window.addEventListener('message', handleMessageFromExtension);
 }
 
-/**
- * Initialize APL renderer engine when open simulate webview.
- */
-function initializeRenderer() {
-    AplRenderer.initEngine().then(() => {
-        vscode.postMessage({
-            type: SIMULATOR_MESSAGE_TYPE.INIT_APL_ENGINE
-        });
-    });
-}
 
 /**
  * Post message to extension for downloading the current session.
@@ -163,6 +150,7 @@ function resetChatSession() {
     aplDiv.insertAdjacentHTML('beforeend', newHtml);
 
     showSpecificTab(IO_TAB);
+    AplRenderer.initEngine();
     clearUI();
 }
 
@@ -424,17 +412,10 @@ async function handleMessageFromExtension(event) {
             setHTMLElementStatuses(ENABLE);
         }
     }
-    else if (message.type === SIMULATOR_MESSAGE_TYPE.UPDATE_APL_VIEW) {
-        const previousState = vscode.getState();
-        const tabToShow = previousState.currentTabGlobal;
-        if (tabToShow === APL_VIEW_TAB && previousState.aplViewport !== undefined && previousState.aplDocument !== undefined && previousState.aplDocument !== '') {
-            await updateAplViewPort(previousState.aplDocument, previousState.aplDatasource, previousState.aplViewport);
-        }
-    }
 }
 
 /**
- * Handle message returned by extension related to skill 
+ * Handle message returned by extension related to skill
  * @param {string} message, enable skill or disable skill
  */
 function handleSkillStatusMessage(message) {
@@ -458,12 +439,6 @@ function handleSkillStatusMessage(message) {
  */
 async function updateAplViewPort(document, dataSource, viewport) {
     showSelectedButton(PREVIEW_APL_BUTTON);
-    const state = vscode.getState() || {};
-    state['aplDocument'] = document;
-    state['aplDatasource'] = dataSource;
-    state['aplViewport'] = viewport;
-    vscode.setState(state);
-
     await loadAplDoc(
         renderer,
         document,
@@ -500,10 +475,11 @@ async function handleAlexaResponse(message) {
     }
     else {
         message.alexaResponse.forEach(response => updateAlexaResponse(response));
-        //If message contains datasource and document, will show APL preview
-        if (message.viewport !== undefined && message.documents !== undefined) {
-            await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.viewport));
-        }
+    }
+    //If message contains datasource and document, will show APL preview
+    if (message.viewport !== undefined && message.documents !== undefined) {
+        console.log('data', message.dataSources);
+        await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.viewport));
     }
     extractSkillInfoData(message);
 }
