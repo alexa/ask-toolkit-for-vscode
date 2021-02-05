@@ -3,11 +3,9 @@
 import * as path from 'path';
 
 import { TelemetryClient } from './telemetry';
-import {
-    Disposable, ExtensionContext, commands, TreeItem, TreeItemCollapsibleState,
+import { Disposable, ExtensionContext, commands, TreeItem, TreeItemCollapsibleState,
     Uri, ThemeIcon, Command, WebviewPanel, Webview, window, ViewColumn,
-    WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent, TreeView, TreeDataProvider
-} from "vscode";
+    WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent, TreeView, TreeDataProvider } from "vscode";
 import { Resource } from '../../runtime';
 
 export interface CommandContext {
@@ -40,7 +38,7 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
     context!: ExtensionContext;
     abstract execute(context: CommandContext, ...args: any[]): Promise<T>;
 
-    constructor(public commandName: string) {
+    constructor(public commandName: string){
         this.title = this.command = commandName;
 
         this._disposableCommand = commands.registerCommand(
@@ -125,8 +123,8 @@ export abstract class AbstractWebView {
             viewColumn = window.activeTextEditor.viewColumn;
         }
 
-        if (showOptions === undefined) {
-            showOptions = {
+        if (showOptions  === undefined) {
+            showOptions =  {
                 viewColumn: viewColumn ?? ViewColumn.One,
                 preserveFocus: false
             };
