@@ -264,8 +264,8 @@
         "pretest": "npm run compile && npm run copyTestData",
         "test": "node ./out/test/runTest.js",
         "pre-release": "standard-version",
-        "package": "vsce package",
-        "publish": "vsce publish"
+        "package": "vsce package --out $npm_config_out",
+        "publish": "vsce publish --pat $npm_config_pat --packagePath $npm_config_packagePath"
     },
     "devDependencies": {
         "@commitlint/cli": "^11.0.0",
