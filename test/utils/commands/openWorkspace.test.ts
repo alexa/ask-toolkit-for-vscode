@@ -9,8 +9,10 @@ import { stubTelemetryClient } from '../../../test/testUtilities';
 describe("Command ask.container.openWorkspace", () => {
     let command: OpenWorkspaceCommand;
     let sandbox: sinon.SinonSandbox;
+    let commandId: string;
     before(() => {
         command = new OpenWorkspaceCommand();
+        commandId = command.commandName;
     });
     after(() => {
         command.dispose();
@@ -24,8 +26,8 @@ describe("Command ask.container.openWorkspace", () => {
         sandbox.restore();
     });
     it("Constructor should work as expected", () => {
-        assert.strictEqual(command.title, "ask.container.openWorkspace");
-        assert.strictEqual(command.command, "ask.container.openWorkspace");
+        assert.strictEqual(command.title, commandId);
+        assert.strictEqual(command.command, commandId);
     });
 
     it("Should be able to call showOpenDialog with fixed config, and openWorkSpace folder with user provided path", async () => {
@@ -37,7 +39,7 @@ describe("Command ask.container.openWorkspace", () => {
             "canSelectFolders": true,
             "canSelectMany": false
         };
-        await vscode.commands.executeCommand("ask.container.openWorkspace");
+        await vscode.commands.executeCommand(commandId);
         assert.ok(showOpenDialogStub.calledOnceWith(expectedConfig));
         assert.ok(openWorkspaceStub.calledOnceWith(fakePath[0]));
     });
@@ -46,9 +48,9 @@ describe("Command ask.container.openWorkspace", () => {
         sandbox.stub(vscode.window, "showOpenDialog").resolves(undefined);
 
         try {
-            await vscode.commands.executeCommand("ask.container.openWorkspace");
+            await vscode.commands.executeCommand(commandId);
         } catch(e) {
-            assert.strictEqual(e.message, 'Cannot find a workspace to create the skill project.');
+            assert.strictEqual(e.message, `Running the contributed command: '${commandId}' failed.`);
 
             return;
         }

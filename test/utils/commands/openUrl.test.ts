@@ -8,8 +8,10 @@ import { stubTelemetryClient } from '../../../test/testUtilities';
 describe("Command ask.container.openUrl", () => {
     let command: OpenUrlCommand;
     let sandbox: sinon.SinonSandbox;
+    let commandId: string;
     before(() => {
         command = new OpenUrlCommand();
+        commandId = command.commandName;
     });
     after(() => {
         command.dispose();
@@ -23,15 +25,15 @@ describe("Command ask.container.openUrl", () => {
         sandbox.restore();
     });
     it("Constructor should work as expected", () => {
-        assert.strictEqual(command.title, "ask.container.openUrl");
-        assert.strictEqual(command.command, "ask.container.openUrl");
+        assert.strictEqual(command.title, commandId);
+        assert.strictEqual(command.command, commandId);
     });
 
     it("Should check skillProfileAccess by default", async () => {
         const testUrl = "https://test.com";
         const skillAccessStub = sandbox.stub(skillHelper, "checkProfileSkillAccess");
         const openExternalStub = sandbox.stub(vscode.env, "openExternal");
-        await vscode.commands.executeCommand("ask.container.openUrl", testUrl);
+        await vscode.commands.executeCommand(commandId, testUrl);
         assert.ok(skillAccessStub.calledOnce);
         assert.ok(openExternalStub.calledOnceWith(vscode.Uri.parse(testUrl)));
     });
@@ -40,7 +42,7 @@ describe("Command ask.container.openUrl", () => {
         const testUrl = "https://test.com";
         const skillAccessStub = sandbox.stub(skillHelper, "checkProfileSkillAccess");
         const openExternalStub = sandbox.stub(vscode.env, "openExternal");
-        await vscode.commands.executeCommand("ask.container.openUrl", testUrl, true);
+        await vscode.commands.executeCommand(commandId, testUrl, true);
         assert.ok(skillAccessStub.notCalled);
         assert.ok(openExternalStub.calledOnceWith(vscode.Uri.parse(testUrl)));
     });
@@ -50,10 +52,9 @@ describe("Command ask.container.openUrl", () => {
         sandbox.stub(skillHelper, "checkProfileSkillAccess");
         sandbox.stub(vscode.env, "openExternal").throws(new Error("foo"));
         try {
-            await vscode.commands.executeCommand("ask.container.openUrl", testUrl, true);
+            await vscode.commands.executeCommand(commandId, testUrl, true);
         } catch (e) {
-            assert.strictEqual(e.message, `Open URL failed. Reason: foo`);
-
+            assert.strictEqual(e.message, `Running the contributed command: '${commandId}' failed.`);
             return;
         }
         assert.fail("Should throw an error");
