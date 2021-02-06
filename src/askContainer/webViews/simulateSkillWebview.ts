@@ -18,6 +18,7 @@ export class SimulateSkillWebview extends AbstractWebView {
         super(viewTitle, viewId, context);
         this.loader = new ViewLoader(this.extensionContext, WEB_VIEW_NAME.SIMULATE_SKILL, this);
         this.context = context;
+        this.shouldPersist = true;
     }
 
     onViewChangeListener(): void {
