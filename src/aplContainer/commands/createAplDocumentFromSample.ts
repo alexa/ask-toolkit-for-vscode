@@ -142,6 +142,7 @@ export class CreateAplDocumentFromSampleCommand extends AbstractCommand<void> {
                         id: k
                     } as SampleTemplateQuickPickItem)
             )
+            .filter((item) => !!item.label)
             .valueSeq()
             .toArray();
     }
