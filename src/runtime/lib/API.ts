@@ -158,8 +158,7 @@ export abstract class AbstractWebView {
         if (this._panel === undefined || this._isPanelDisposed) {
             if (this.shouldPersist === true) {
                 this.options = {
-                    enableScripts: true,
-                    localResourceRoots: this.options.localResourceRoots,
+                    ...this.options,
                     //Add this property to keep the webview persist.
                     retainContextWhenHidden: true
                 };
