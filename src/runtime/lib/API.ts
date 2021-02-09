@@ -111,6 +111,7 @@ export abstract class AbstractWebView {
     options: WebviewPanelOptions & WebviewOptions;
     showOptions: { viewColumn: ViewColumn, preserveFocus?: boolean };
     protected isGlobal = false;
+    protected shouldPersist = false;
 
     constructor(viewTitle: string, viewId: string, 
         context: ExtensionContext,
@@ -155,6 +156,13 @@ export abstract class AbstractWebView {
 
     public showView(...args: any[]): void {
         if (this._panel === undefined || this._isPanelDisposed) {
+            if (this.shouldPersist === true) {
+                this.options = {
+                    ...this.options,
+                    //Add this property to keep the webview persist.
+                    retainContextWhenHidden: true
+                };
+            }
             this._panel = window.createWebviewPanel(
                 this.viewId, this.viewTitle, this.showOptions, this.options
             );
