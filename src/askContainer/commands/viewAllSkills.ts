@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { SKILL } from '../../constants';
 import { AbstractCommand, CommandContext, SmapiResource } from '../../runtime';
-
 import { SkillInfo } from '../../models/types';
 import {
     getSkillNameFromLocales,
     getCachedSkills,
+    getSkillMetadata,
     setCachedSkills,
     clearCachedSkills,
     getHostedSkillMetadata,
@@ -24,6 +25,10 @@ const ALL_SKILLS_QUICK_PICK_TITLE = 'All skills';
 const SKILL_RETRIEVAL_PLACEHOLDER = 'Getting the list of skills...';
 const SKILL_NOT_FOUND = 'No Alexa custom skills found under profile. Please create one first.';
 const SKILL_RETRIEVAL_FAILED = 'Alexa skills retrieval failed.';
+const VIEW_ALL_SKILLS_LAST_UPDATE_TIME = 'viewAllSkillsLastUpdateTime';
+const NUMBER_OF_INTERVALS = 1;
+const HOUR = 3600000;
+const MINUTE = 60000;
 
 export class ViewAllSkillsCommand extends AbstractCommand<void> {
     private skillInfoMap: Map<string, SmapiResource<SkillInfo>>;
@@ -146,6 +151,45 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         }
     }
 
+    private async checkAndSetQpItems(
+        context: vscode.ExtensionContext,
+        qp: vscode.QuickPick<vscode.QuickPickItem>
+    ): Promise<void> {
+        const pre = context.globalState.get(VIEW_ALL_SKILLS_LAST_UPDATE_TIME) as number;
+        const now = new Date().getTime();
+
+        if (pre === undefined || (pre !== undefined && this.calculateTimeExceedHourly(pre, now, NUMBER_OF_INTERVALS))) {
+            await this.setLastUpdateTimeAndRefreshList(context, now, qp);
+            return;
+        }
+        await this.setQpItems(context, qp);
+    }
+
+    private calculateTimeExceedHourly(pre: number, now: number, limit: number) {
+        return Math.abs(now - pre) / HOUR >= limit;
+    }
+
+    private async setLastUpdateTimeAndRefreshList(context: vscode.ExtensionContext, now: number, qp: vscode.QuickPick<vscode.QuickPickItem>) {
+        void context.globalState.update(VIEW_ALL_SKILLS_LAST_UPDATE_TIME, now);
+        clearCachedSkills(context);
+        await this.setQpItems(context, qp);
+    }
+
+    private async checkSkillExist(context: CommandContext, qp: vscode.QuickPick<vscode.QuickPickItem>): Promise<void> {
+        const skillInfo = this.skillInfoMap.get(qp.activeItems[0].label)!;
+        const skillName = getSkillNameFromLocales(skillInfo.data.skillSummary.nameByLocale!);
+        try {
+            await getSkillMetadata(skillInfo.data.skillSummary.skillId!, SKILL.STAGE.DEVELOPMENT, context.extensionContext);
+        } catch (error) {
+            // reset cached skills to automatically refresh the list next time
+            this.setLastUpdateTimeAndRefreshList(context.extensionContext, new Date().getTime(), qp);
+            if (error.statusCode === 404) {
+                throw loggableAskError(`The skill '${skillName}' was not found. Please check if the skill exists in the Alexa developer console`, undefined, true);
+            }
+            throw loggableAskError(error, undefined, true);
+        }
+    }
+
     private async skillsQuickPick(context: CommandContext): Promise<void> {
         Logger.verbose(`Calling method: ${this.commandName}.skillsQuickPick`);
         const allSkillsQP = vscode.window.createQuickPick();
@@ -157,9 +201,10 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
             allSkillsQP.activeItems = [];
         });
 
-        allSkillsQP.onDidAccept(() => {
+        allSkillsQP.onDidAccept(async() => {
             if (allSkillsQP.activeItems.length !== 0) {
                 allSkillsQP.ignoreFocusOut = false;
+                await this.checkSkillExist(context, allSkillsQP);
                 const executeCommand = 'askContainer.skillsConsole.cloneSkill';
                 void vscode.commands.executeCommand(
                     executeCommand,
@@ -183,7 +228,7 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
             }
         });
         allSkillsQP.show();
-        await this.setQpItems(context.extensionContext, allSkillsQP);
+        await this.checkAndSetQpItems(context.extensionContext, allSkillsQP);
     }
 
     async execute(context: CommandContext): Promise<void> {

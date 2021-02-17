@@ -22,6 +22,7 @@ import { SkillInfo } from "../models/types";
 import { Logger } from "../logger";
 
 import hostedSkillMetadata = model.v1.skill.AlexaHosted.HostedSkillMetadata;
+import SkillManifestEnvelope = model.v1.skill.Manifest.SkillManifestEnvelope;
 
 export function getAskResourceConfig(folderPath: string): any {
     Logger.verbose(`Calling method: getAskResourceConfig`);
@@ -265,6 +266,25 @@ export async function getHostedSkillMetadata(
     } catch (err) {
         Logger.verbose("Unable to get hosted skill metadata", err);
         return;
+    }
+}
+
+export async function getSkillMetadata(
+    skillId: string,
+    stage: string,
+    context: vscode.ExtensionContext
+): Promise<SkillManifestEnvelope | undefined> {
+    Logger.verbose(`Calling method: isSkillHosted, args:`, skillId, stage);
+    const profile = Utils.getCachedProfile(context) ?? DEFAULT_PROFILE;
+    try {
+        const skillMetadata: SkillManifestEnvelope = await SmapiClientFactory.getInstance(
+            profile,
+            context
+        ).getSkillManifestV1(skillId, stage);
+        return skillMetadata;
+    } catch (err) {
+        Logger.verbose("Unable to get skill metadata", err);
+        throw err;
     }
 }
 
