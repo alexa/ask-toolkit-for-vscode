@@ -16,6 +16,8 @@ import {
 
 export let aplDataSource: string | undefined;
 export let aplDocument: string | undefined;
+let aplCommands;
+let currentAplToken;
 
 /**
  * Calls SMAPI Skill Enablement API to enable skill in Development stage
@@ -212,21 +214,27 @@ export function formatAlexaResponse(simulationResult: Record<string, any> | Simu
         }
 
         //get datasource and document
-        let aplDataSourceTmp: string | undefined;
-        let aplDocumentTmp: string | undefined;
+        aplDataSource = undefined;
+        aplDocument = undefined;
+  		aplCommands = undefined;
         for (const responseBody of invocationResponseBodies) {
             const directives = responseBody.response?.directives;
             if (directives != null) {
                 for (const directive of directives) {
                     if (directive.type === 'Alexa.Presentation.APL.RenderDocument') {
-                        aplDataSourceTmp = JSON.stringify(directive.datasources);
-                        aplDocumentTmp = JSON.stringify(directive.document);
+                        aplDataSource = JSON.stringify(directive.datasources);
+                        aplDocument = JSON.stringify(directive.document);
+                        currentAplToken = directive.token;
+                    } else if (directive.type === 'Alexa.Presentation.APL.ExecuteCommands') {
+                        if (directive.token === currentAplToken) {
+                            aplCommands = directive.commands;
+                        } else {
+                            Logger.verbose('Dropping execute commands because of presentationToken mismatch.');
+                        }
                     }
                 }
             }
         }
-        aplDataSource = aplDataSourceTmp;
-        aplDocument = aplDocumentTmp;
 
         return ({
             invocationRequests: invocationRequestBodies,
@@ -237,7 +245,8 @@ export function formatAlexaResponse(simulationResult: Record<string, any> | Simu
             dataSources: aplDataSource,
             viewport: JSON.stringify(aplViewport),
             skillId,
-            type: SIMULATOR_MESSAGE_TYPE.UTTERANCE
+            type: SIMULATOR_MESSAGE_TYPE.UTTERANCE,
+            aplCommands
         });
     }
 }
