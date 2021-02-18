@@ -482,6 +482,9 @@ async function handleAlexaResponse(message) {
     if (message.viewport !== undefined && message.documents !== undefined) {
         await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.viewport));
     }
+    if (message.aplCommands !== undefined && message.aplCommands.length > 0) {
+        renderExecuteCommands(JSON.stringify(message.aplCommands));
+    }
     extractSkillInfoData(message);
 }
 
