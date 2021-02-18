@@ -28,7 +28,6 @@ const SKILL_RETRIEVAL_FAILED = 'Alexa skills retrieval failed.';
 const VIEW_ALL_SKILLS_LAST_UPDATE_TIME = 'viewAllSkillsLastUpdateTime';
 const NUMBER_OF_INTERVALS = 1;
 const HOUR = 3600000;
-const MINUTE = 60000;
 
 export class ViewAllSkillsCommand extends AbstractCommand<void> {
     private skillInfoMap: Map<string, SmapiResource<SkillInfo>>;
@@ -155,27 +154,31 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         context: vscode.ExtensionContext,
         qp: vscode.QuickPick<vscode.QuickPickItem>
     ): Promise<void> {
-        const pre = context.globalState.get(VIEW_ALL_SKILLS_LAST_UPDATE_TIME) as number;
+        Logger.verbose(`Calling method: ${this.commandName}.calculateTimeExceedHourly, args:`, qp);
+        const previous = context.globalState.get(VIEW_ALL_SKILLS_LAST_UPDATE_TIME) as number;
         const now = new Date().getTime();
 
-        if (pre === undefined || (pre !== undefined && this.calculateTimeExceedHourly(pre, now, NUMBER_OF_INTERVALS))) {
+        if (previous === undefined || (previous !== undefined && this.calculateTimeExceedHourly(previous, now, NUMBER_OF_INTERVALS))) {
             await this.setLastUpdateTimeAndRefreshList(context, now, qp);
             return;
         }
         await this.setQpItems(context, qp);
     }
 
-    private calculateTimeExceedHourly(pre: number, now: number, limit: number) {
-        return Math.abs(now - pre) / HOUR >= limit;
+    private calculateTimeExceedHourly(previous: number, now: number, limit: number) {
+        Logger.verbose(`Calling method: ${this.commandName}.calculateTimeExceedHourly, args:`, previous, now, limit);
+        return Math.abs(now - previous) / HOUR >= limit;
     }
 
     private async setLastUpdateTimeAndRefreshList(context: vscode.ExtensionContext, now: number, qp: vscode.QuickPick<vscode.QuickPickItem>) {
+        Logger.verbose(`Calling method: ${this.commandName}.setLastUpdateTimeAndRefreshList, args:`, now, qp);
         void context.globalState.update(VIEW_ALL_SKILLS_LAST_UPDATE_TIME, now);
         clearCachedSkills(context);
         await this.setQpItems(context, qp);
     }
 
     private async checkSkillExist(context: CommandContext, qp: vscode.QuickPick<vscode.QuickPickItem>): Promise<void> {
+        Logger.verbose(`Calling method: ${this.commandName}.checkSkillExist`);
         const skillInfo = this.skillInfoMap.get(qp.activeItems[0].label)!;
         const skillName = getSkillNameFromLocales(skillInfo.data.skillSummary.nameByLocale!);
         try {
@@ -204,12 +207,15 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         allSkillsQP.onDidAccept(async() => {
             if (allSkillsQP.activeItems.length !== 0) {
                 allSkillsQP.ignoreFocusOut = false;
-                await this.checkSkillExist(context, allSkillsQP);
-                const executeCommand = 'askContainer.skillsConsole.cloneSkill';
-                void vscode.commands.executeCommand(
-                    executeCommand,
-                    this.skillInfoMap.get(allSkillsQP.activeItems[0].label)
-                );
+                this.checkSkillExist(context, allSkillsQP)
+                    .then(() => {
+                        const executeCommand = 'askContainer.skillsConsole.cloneSkill';
+                        void vscode.commands.executeCommand(
+                            executeCommand,
+                            this.skillInfoMap.get(allSkillsQP.activeItems[0].label)
+                        );
+                    })
+                    .then(undefined, e => {})
             }
         });
 

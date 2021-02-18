@@ -274,7 +274,7 @@ export async function getSkillMetadata(
     stage: string,
     context: vscode.ExtensionContext
 ): Promise<SkillManifestEnvelope | undefined> {
-    Logger.verbose(`Calling method: isSkillHosted, args:`, skillId, stage);
+    Logger.verbose(`Calling method: getSkillMetadata, args:`, skillId, stage);
     const profile = Utils.getCachedProfile(context) ?? DEFAULT_PROFILE;
     try {
         const skillMetadata: SkillManifestEnvelope = await SmapiClientFactory.getInstance(
