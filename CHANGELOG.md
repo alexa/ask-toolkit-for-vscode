@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.3.0...v2.4.0) (2021-02-19)
+
+
+### Features
+
+* acdl syntax highlighter ([#103](https://github.com/alexa/ask-toolkit-for-vscode/issues/103)) ([2a7f755](https://github.com/alexa/ask-toolkit-for-vscode/commits/2a7f7557bac1e9328bf383e31f4afd1b1e42650c))
+* support APL ExecuteCommands directive in toolkit simulator ([5358146](https://github.com/alexa/ask-toolkit-for-vscode/commits/5358146b88232b0d1ddaf1450e442feaffb0ba5b))
+* upgrade apl-suggester and apl-viewhost-web to version 1.5 ([#87](https://github.com/alexa/ask-toolkit-for-vscode/issues/87)) ([870e0dc](https://github.com/alexa/ask-toolkit-for-vscode/commits/870e0dc1f86e97b1a89bd8cd288f4b84ffe1d5db))
+
+
+### Bug Fixes
+
+* add persistence option for webview ([0a090ee](https://github.com/alexa/ask-toolkit-for-vscode/commits/0a090eeefb5d8a1c2cc36a41043e19961af9b101))
+* bugs of simulate APL preview ([8baceac](https://github.com/alexa/ask-toolkit-for-vscode/commits/8baceac807137cfbe27066859c18f8895873284f))
+* filter unused APL sample templates ([#95](https://github.com/alexa/ask-toolkit-for-vscode/issues/95)) ([1599725](https://github.com/alexa/ask-toolkit-for-vscode/commits/159972567044478efb29af61ea195db346d37fcf))
+* passing command line arguments to npm script in package.json ([#88](https://github.com/alexa/ask-toolkit-for-vscode/issues/88)) ([ef3ab18](https://github.com/alexa/ask-toolkit-for-vscode/commits/ef3ab18130a2aeab149ece8366131b1c45ed7e87))
+* render apl response without speak tag in simulator. fixes [#82](https://github.com/alexa/ask-toolkit-for-vscode/issues/82) ([#92](https://github.com/alexa/ask-toolkit-for-vscode/issues/92)) ([e9190e0](https://github.com/alexa/ask-toolkit-for-vscode/commits/e9190e0fe79080a5e8028886f0ee70306e127b90))
+* unit tests to match ext host error message ([a2470be](https://github.com/alexa/ask-toolkit-for-vscode/commits/a2470be9485090c0697ccd841f46453c91aca81f))
+* update PR template with sections & license ([6ae7b7d](https://github.com/alexa/ask-toolkit-for-vscode/commits/6ae7b7dd651aa33cf1ed2871bdc7b88a9b4e1e82))
+* use spread operator ([274e598](https://github.com/alexa/ask-toolkit-for-vscode/commits/274e598b2d6cf3818200f0e6706de0b8deeb1160))
+
 ## 2.3.0 (2021-01-20)
 
 
