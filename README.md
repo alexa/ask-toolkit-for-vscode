@@ -178,6 +178,12 @@ and many more ...
       }
     }
     ```
+
+- **Why cannot I use the toolkit for deploying ACDL files?**
+    - ASK Toolkit (`v2.4.0` and above) provides syntax highlighting support for <code>Alexa Conversations Descriptive Language (ACDL)</code> files. ACDL is a beta feature and is currently under developer preview. 
+    - Since ACDL files need additional builds before deploying to the service, and since this development is still in beta phase, we do not yet provide support for the same. As ACDL and the development processes evolve, we will prioritize on improving the support in the toolkit.
+    - You will need to install the `ASK CLI` tool, to manage your ACDL skills. Please follow <a href="https://developer.amazon.com/en-US/docs/alexa/conversations/acdl-set-up-ask-cli.html">this documentation</a> for more details.
+
 ----
 
 ## Got Feedback?
