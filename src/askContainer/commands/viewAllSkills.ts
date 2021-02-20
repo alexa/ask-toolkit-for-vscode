@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { AbstractCommand, CommandContext, SmapiResource } from '../../runtime';
+import * as retry from 'async-retry';
+import { AbstractCommand, CommandContext, SmapiClientFactory, SmapiResource, Utils } from '../../runtime';
 
 import { SkillInfo } from '../../models/types';
 import {
@@ -16,7 +17,8 @@ import * as model from 'ask-smapi-model';
 import skillSummary = model.v1.skill.SkillSummary;
 import hostedSkillMetadata = model.v1.skill.AlexaHosted.HostedSkillMetadata;
 import { Logger } from '../../logger';
-import { loggableAskError } from '../../exceptions';
+import { AskError, loggableAskError } from '../../exceptions';
+import { DEFAULT_PROFILE } from '../../constants';
 
 const AlexaHostedProvision = 'Alexa-hosted';
 
@@ -34,25 +36,44 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         this.skillInfoMap = new Map<string, SmapiResource<SkillInfo>>();
     }
 
-    private timeout(ms: number): Promise<void> {
-        Logger.verbose(`Calling method: ${this.commandName}.timeout, args: `, ms);
-
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     private async setHostedSkillInfo(): Promise<void> {
         Logger.verbose(`Calling method: ${this.commandName}.setHostedSkillInfo`);
         await this.setSkillsList();
-        await Promise.all(
+
+        const retryOptions: retry.Options = {
+            retries: 5,
+            minTimeout: 1000,
+            factor: 1.1,
+        };
+
+        let profile = Utils.getCachedProfile(this.context);
+        profile = profile ?? DEFAULT_PROFILE;
+        const smapiClient = SmapiClientFactory.getInstance(profile, this.context);
+
+        await Promise.allSettled(
             this.skillsList.map(async (skill, index) => {
-                // Adding the timeout to not throttle the API
-                await this.timeout(500 * index);
-                const skillMetadata: hostedSkillMetadata | undefined = await getHostedSkillMetadata(
-                    skill.data.skillSummary.skillId ?? '',
-                    this.context
-                );
-                skill.data.isHosted = skillMetadata !== undefined;
-                skill.data.hostedSkillMetadata = skillMetadata;
+                let skillMetadata;
+                try {
+                    // Since the retry function will bail out and throw error
+                    skillMetadata = await retry(
+                        async (bail: (err: Error) => void): Promise<hostedSkillMetadata | undefined> => {
+                            try {
+                                return await smapiClient.getAlexaHostedSkillMetadataV1(
+                                    skill.data.skillSummary.skillId ?? '');
+                            } catch (err) {
+                                if (err.name === 'ServiceError' && err['statusCode'] === 429) {
+                                    throw new AskError(
+                                        `API throttled. Retrying after few seconds`);
+                                }
+                                bail(new AskError(`Skill is not a hosted skill service`))
+                                return undefined;
+                            }
+                        }, retryOptions
+                    );
+                } finally {
+                    skill.data.isHosted = skillMetadata !== undefined;
+                    skill.data.hostedSkillMetadata = skillMetadata;
+                }
             })
         );
     }
