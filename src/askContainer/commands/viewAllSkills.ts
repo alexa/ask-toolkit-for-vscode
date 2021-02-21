@@ -50,6 +50,7 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         profile = profile ?? DEFAULT_PROFILE;
         const smapiClient = SmapiClientFactory.getInstance(profile, this.context);
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         await Promise.allSettled(
             this.skillsList.map(async (skill, index) => {
                 let skillMetadata;
