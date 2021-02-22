@@ -154,7 +154,7 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         context: vscode.ExtensionContext,
         qp: vscode.QuickPick<vscode.QuickPickItem>
     ): Promise<void> {
-        Logger.verbose(`Calling method: ${this.commandName}.calculateTimeExceedHourly, args:`, qp);
+        Logger.verbose(`Calling method: ${this.commandName}.checkAndSetQpItems, args:`, qp);
         const previous = context.globalState.get(VIEW_ALL_SKILLS_LAST_UPDATE_TIME) as number;
         const now = new Date().getTime();
 
@@ -177,19 +177,12 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         await this.setQpItems(context, qp);
     }
 
-    private async checkSkillExist(context: CommandContext, qp: vscode.QuickPick<vscode.QuickPickItem>): Promise<void> {
+    private async checkSkillExist(context: CommandContext, skillInfo: SmapiResource<SkillInfo>): Promise<void> {
         Logger.verbose(`Calling method: ${this.commandName}.checkSkillExist`);
-        const skillInfo = this.skillInfoMap.get(qp.activeItems[0].label)!;
-        const skillName = getSkillNameFromLocales(skillInfo.data.skillSummary.nameByLocale!);
         try {
             await getSkillMetadata(skillInfo.data.skillSummary.skillId!, SKILL.STAGE.DEVELOPMENT, context.extensionContext);
         } catch (error) {
-            // reset cached skills to automatically refresh the list next time
-            this.setLastUpdateTimeAndRefreshList(context.extensionContext, new Date().getTime(), qp);
-            if (error.statusCode === 404) {
-                throw loggableAskError(`The skill '${skillName}' was not found. Please check if the skill exists in the Alexa developer console`, undefined, true);
-            }
-            throw loggableAskError(error, undefined, true);
+            throw error;
         }
     }
 
@@ -206,16 +199,33 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
 
         allSkillsQP.onDidAccept(async() => {
             if (allSkillsQP.activeItems.length !== 0) {
-                allSkillsQP.ignoreFocusOut = false;
-                this.checkSkillExist(context, allSkillsQP)
+                const skillInfo = this.skillInfoMap.get(allSkillsQP.activeItems[0].label)!;
+                this.checkSkillExist(context, skillInfo)
                     .then(() => {
                         const executeCommand = 'askContainer.skillsConsole.cloneSkill';
                         void vscode.commands.executeCommand(
                             executeCommand,
-                            this.skillInfoMap.get(allSkillsQP.activeItems[0].label)
+                            skillInfo
                         );
                     })
-                    .then(undefined, e => {})
+                    .then(undefined, async (error) => {
+                        if (error.statusCode === 404) {
+                            allSkillsQP.ignoreFocusOut = true;
+                            const skillName = getSkillNameFromLocales(skillInfo.data.skillSummary.nameByLocale!);
+                            const errorMessage = `The skill '${skillName}' was not found. Please check if the skill exists in the Alexa developer console (https://developer.amazon.com/alexa/console/ask"). Clicking OK refreshes the skill list.`;
+                            const refreshSelection = await vscode.window.showWarningMessage(errorMessage, { modal : true }, ...["OK"]);
+                            if (refreshSelection === "OK") {
+                                this.setLastUpdateTimeAndRefreshList(context.extensionContext, new Date().getTime(), allSkillsQP)
+                                    .then(() => {
+                                        allSkillsQP.ignoreFocusOut = false;
+                                    });
+                            } else {
+                                allSkillsQP.hide();
+                            }
+                        } else {
+                            throw loggableAskError(error, undefined, true);
+                        }
+                    })
             }
         });
 
