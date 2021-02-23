@@ -210,15 +210,12 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
                     })
                     .then(undefined, async (error) => {
                         if (error.statusCode === 404) {
-                            allSkillsQP.ignoreFocusOut = true;
                             const skillName = getSkillNameFromLocales(skillInfo.data.skillSummary.nameByLocale!);
-                            const errorMessage = `The skill '${skillName}' was not found. Please check if the skill exists in the Alexa developer console (https://developer.amazon.com/alexa/console/ask"). Clicking OK refreshes the skill list.`;
-                            const refreshSelection = await vscode.window.showWarningMessage(errorMessage, { modal : true }, ...["OK"]);
+                            const errorMessage = `The skill '${skillName}' was not found. Please check if the skill exists in [the Alexa developer console](https://developer.amazon.com/alexa/console/ask). Clicking OK refreshes the skill list.`;
+                            const refreshSelection = await vscode.window.showWarningMessage(errorMessage, ...["OK", "Cancel"]);
                             if (refreshSelection === "OK") {
-                                this.setLastUpdateTimeAndRefreshList(context.extensionContext, new Date().getTime(), allSkillsQP)
-                                    .then(() => {
-                                        allSkillsQP.ignoreFocusOut = false;
-                                    });
+                                allSkillsQP.show();
+                                this.setLastUpdateTimeAndRefreshList(context.extensionContext, new Date().getTime(), allSkillsQP);
                             } else {
                                 allSkillsQP.hide();
                             }
