@@ -5,7 +5,8 @@
         "outDir": "out",
         "lib": [
             "es2017",
-            "DOM"
+            "DOM",
+            "ES2020.Promise"
         ],
         "sourceMap": true,
         "rootDir": ".",
