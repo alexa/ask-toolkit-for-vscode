@@ -1,0 +1,371 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "ACDL",
+  "scopeName": "source.acdl",
+  "foldingStartMarker": "\\{\\s*$",
+  "foldingStopMarker": "^\\s*\\}",
+  "patterns": [
+    {
+      "include": "#utterances"
+    },
+    {
+      "include": "#assignment"
+    },
+    {
+      "include": "#conditionals"
+    },
+    {
+      "include": "#actionDeclaration"
+    },
+    {
+      "include": "#imports"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#dialog"
+    },
+    {
+      "include": "#constant"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#storage"
+    },
+    {
+      "include": "#actions"
+    },
+    {
+      "include": "#variablePattern"
+    },
+    {
+      "include": "#comments"
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.acdl",
+          "match": "\\b(optional|default|else)\\b"
+        },
+        {
+          "name": "keyword.operator.comparison.acdl",
+          "match": "(==|!=|<=|>=|>|<)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.acdl",
+          "match": "(\\+|-|%|\\*|\\\\)"
+        },
+        {
+          "name": "keyword.other.acdl",
+          "match": "\\b(dialog|sample|type|action|import|namespace)\\b"
+        }
+      ]
+    },
+    "storage": {
+      "patterns": [
+        {
+          "name": "entity.name.type.primitive.acdl",
+          "match": "(([A-Za-z]+[\\.]{1})*)(Nothing|String|Boolean|Number)"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.acdl",
+      "begin": "\"",
+      "end": "\""
+    },
+    "actions": {
+      "begin": "(([A-Za-z0-9_\\-]+[\\.]{1})*)([A-Za-z0-9_\\-]+)(\\s*)(\\()",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.acdl"
+        },
+        "3": {
+          "name": "entity.name.function.acdl"
+        },
+        "5": {
+          "name": "punctuation.definition.parameters.begin.bracket.round.acdl"
+        }
+      },
+      "end": "(\\s*)(\\))",
+      "endCaptures": {
+        "2": {
+          "name": "punctuation.definition.parameters.end.bracket.round.acdl"
+        }
+      },
+      "patterns": [
+        {
+          "name": "constant.numeric.acdl",
+          "match": "([0-9]+(\\.[0-9]+)?)"
+        },
+        {
+          "include": "#variablePattern"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        {
+          "name": "constant.numeric.acdl",
+          "match": "([0-9]+(\\.[0-9]+)?)"
+        },
+        {
+          "name": "constant.language.acdl",
+          "match": "\\b(true|false)\\b"
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.acdl",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.acdl",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "imports": {
+      "begin": "((import|namespace){1}[\\s+])",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.other.acdl"
+        }
+      },
+      "end": "\\n",
+      "patterns": [
+        {
+          "match": "([A-Za-z_\\-\\.0-9])+",
+          "name": "support.type.acdl"
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    },
+    "conditionals": {
+      "begin": "(if){1}\\s*\\(",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.acdl"
+        }
+      },
+      "end": "\\)",
+      "patterns": [
+        {
+          "include": "#actions"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#constant"
+        },
+        {
+          "include": "#variablePattern"
+        }
+      ]
+    },
+    "actionDeclaration": {
+      "begin": "(action){1}\\s+",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.other.acdl"
+        }
+      },
+      "end": "\\n",
+      "patterns": [
+        {
+          "include": "#actions"
+        },
+        {
+          "match": "<([A-Za-z_0-9\\.\\-]+)>",
+          "name": "entity.name.type.acdl"
+        },
+        {
+          "match": "(([A-Za-z_0-9\\-]+[\\.]{1})*)([A-Za-z_0-9\\-]+)",
+          "name": "entity.name.type.acdl"
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    },
+    "utterances": {
+      "begin": "([A-Za-z0-9_\\-]+)\\s=\\s(utterances){1}\\s*([<]{1}[a-zA-Z_0-9-\\.]+[>]{1}){0,1}\\s*\\(",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.variable.acdl"
+        },
+        "2": {
+          "name": "keyword.other.acdl"
+        },
+        "3": {
+          "name": "entity.name.type.acdl"
+        },
+        "4": {
+          "name": "entity.name.variable.acdl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#variablePattern"
+        },
+        {
+          "include": "#comments"
+        }
+      ],
+      "end": "\\)"
+    },
+    "types": {
+      "begin": "(type){1}\\s+(([A-Za-z_0-9\\-]+[\\.]{1})*)([A-Za-z_0-9\\-]+)\\s*([:]{1}\\s*(([A-Za-z_0-9\\-]+[\\.]{1}))*([A-Za-z_0-9\\-]+))?\\s*({)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.other.acdl"
+        },
+        "2": {
+          "name": "entity.name.type.acdl"
+        },
+        "4": {
+          "name": "entity.name.type.acdl"
+        },
+        "5": {
+          "name": "entity.name.type.acdl"
+        }
+      },
+      "end": "}",
+      "patterns": [
+        {
+          "include": "#keywords"
+        },
+        {
+          "include": "#typeVariablePattern"
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    },
+    "typeVariablePattern": {
+      "begin": "([A-Za-z_0-9<>\\.]+)\\s+",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.type.acdl"
+        }
+      },
+      "end": "\\)|,|\\n",
+      "endCaptures": {
+        "1": {
+          "name": "variable.paramater.acdl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#variablePattern"
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    },
+    "variablePattern": {
+      "patterns": [
+        {
+          "match": "[A-Za-z_\\-0-9\\.]+",
+          "name": "variable.paramater.acdl"
+        }
+      ]
+    },
+    "dialogNamePattern": {
+      "patterns": [
+        {
+          "match": "[A-Za-z_\\-0-9\\.]+",
+          "name": "entity.name.function.acdl"
+        }
+      ]
+    },
+    "dialogArgumentPattern": {
+      "begin": "\\(",
+      "end": "\\)",
+      "patterns": [
+        {
+          "include": "#variablePattern"
+        }
+      ]
+    },
+    "dialog": {
+      "begin": "(\\bdialog\\b){1}(\\s+([A-Za-z_0-9\\-\\.]+)\\s+([A-za-z_\\-0-9\\.=]+))?",
+      "end": "{",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.other.acdl"
+        },
+        "3": {
+          "name": "entity.name.type.acdl"
+        },
+        "4": {
+          "name": "entity.name.function.acdl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#dialogNamePattern"
+        },
+        {
+          "include": "#dialogArgumentPattern"
+        }
+      ]
+    },
+    "assignment": {
+      "begin": "([A-Za-z_\\-0-9]*)?(\\s)*=",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.variable.acdl"
+        }
+      },
+      "end": "\\n",
+      "patterns": [
+        {
+          "name": "constant.numeric.acdl",
+          "match": "([0-9]+(\\.[0-9]+)?)"
+        },
+        {
+          "include": "#actions"
+        },
+        {
+          "match": "([A-Za-z_][\\w$]*)\\s*(\\.)",
+          "name": "entity.name.variable.acdl"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#variablePattern"
+        },
+        {
+          "include": "#comments"
+        }
+      ]
+    }
+  }
+}

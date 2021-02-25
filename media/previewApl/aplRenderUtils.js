@@ -50,6 +50,10 @@ async function loadAplDoc(renderer, apl, datasources, deviceConfig, fatherDiv) {
     await renderer.init();
 }
 
+function renderExecuteCommands(commands) {
+    window.renderer.executeCommands(commands);
+}
+
 /**
  * Create content using AplRenderer
  * @param {string} apl, the document from directive

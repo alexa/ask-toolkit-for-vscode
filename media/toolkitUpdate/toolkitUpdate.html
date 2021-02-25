@@ -11,43 +11,40 @@
     <body>
         <div class="header">
             <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
-            <h1>January 2021 update</h1>
+            <h1>February 2021 update</h1>
         </div>
 
         <div class="body">
             <p>
-                Welcome to the updated Alexa Skills Toolkit for January 2021 (version 2.3). This update introduces a number of new features and enhancements.
+                Welcome to the updated Alexa Skills Toolkit for February 2021 (version 2.4). This update introduces a number of new features and enhancements.
             </p>
             <h2>What's new?</h2>
             <div class="container">
                 <div class="flex-item">
-                    <h2>Support self-hosted skills creation, downloading, and deployment</h2>
+                    <h2>Support for APL 1.5</h2>
                     <p>
-                        We support self-hosted skills in the <code>Create a skill</code>, <code>Download and edit skill</code> and <code>Deploy skill</code> features on the toolkit launch. 
-                        <h3>Create a skill</h3>
-                        Developers can select "Provision your own", fill out the form and click the "Create" button to create a self-hosted skill.
+                        The ASK Toolkit now supports and renders <code>APL 1.5</code> multimodal documents in the APL Previewer and Simulator views. Please check the <a href="https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/apl-latest-version.html">What's New in APL 1.5</a>, to get more details about <code>APL 1.5</code> version.
                         <br/><br/>
-                        <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/create_self_hosted_skill.gif">
-                        <br/><br/>
-
-                        <h3>Download and edit skill</h3>
-                        Developers can download the skill package for a self-hosted skill. ASK Toolkit does not support Lambda code, which developers will have to provision separately.
-                        <br/><br/>
-                        <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/download_self_hosted_skill.gif">
-                        <br/><br/>
-                        
-                        <h3>Deploy skill</h3>
-                        Developers can save changes and deploy a self-hosted skill using the "Deploy & build" button. 
-                        A skill must be synchronized with changes made in the console in order to deploy. The `Skill deploy status overview` displays skill local changes and the skill remote sync status to guide developers how to successfully deploy. For self-hosted skills, it shows the skill package status only. For Alexa hosted skills, it shows both the skill package status and the skill code status.
-                        <br/><br/>
-                        <img src="https://raw.githubusercontent.com/alexa/ask-toolkit-for-vscode/master/media/docs/deploy_self_hosted_skill.gif">
+                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/february2021/feat_apl15_support.png">
                         <br/><br/>
                     </p>
 
-                    <h2>SkillPackage Validation</h2>
+                    <h2>Support for APL ExecuteCommand Directive in Simulator</h2>
                     <p>
-                        The ASK Toolkit will retrieve vendor specific skill package schema once the extension is activated and there's only one skill in your workspace. The schema will be stored at YourSkill/.ask/schema, and the extension will use this schema to validate your SkillPackage structure. The validation will be triggered whenever you create / delete files under the skillPackage folder. It will also be triggered when you open the skill deploy page.
-                    <br/><br/>
+                        The simulator will now support processing <code>APL ExecuteCommand directives</code> in the skill response. For more information about ExecuteCommand directive, check <a href="https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/apl-interface.html#executecommands-directive">here</a>.
+                        <br/><br/>
+                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/february2021/feat_APL_ExecuteCommands_directive.gif"/>
+                        <br/><br/>
+                    </p>
+
+                    <h2>ACDL Syntax Highlighter (Beta)</h2>
+                    <p>
+                        Alexa Conversations Description Language (ACDL) (Beta) is a descriptive language, to write skills using Alexa Conversations. The ASK Toolkit now supports syntax highlighting features for <code>ACDL</code> files. For more details, see our developer documentation about <a href="https://developer.amazon.com/en-US/docs/alexa/conversations/about-acdl.html">Alexa Conversations Description Language (Beta)</a>.
+                        <br/><br/>
+                        The ASK Toolkit has limited support for ACDL files. You will need ASK CLI to manage your ACDL skills. Please check <a href="https://developer.amazon.com/en-US/docs/alexa/conversations/acdl-set-up-ask-cli.html">ASK CLI setup for ACDL</a> for more information.
+                        <br/><br/>
+                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/february2021/feat_ACDL_highlighter.png"/>
+                        <br/><br/>
                     </p>
 
                 </div>
@@ -55,9 +52,9 @@
 
             <h2>Bug fixes</h2>
             <p>
-                <li>Fix AplRenderUtils, to use all parameters in APL document during APL preview (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/68">650d267</a>)</li>
-                <li>Add condition to apl renderer content for invalid parameter names (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/71">8688491</a>)</li>
-                <li>Configure current working directory to skill code folder (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/81">4353639</a>)</li>
+                <li>Simulator webview persists when webview is not in focus (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/94">0a090eeefb5d8a1c2cc36a41043e19961af9b101</a>)</li>
+                <li>Render APL response without speak tags, in Simulator (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/92">e9190e0fe79080a5e8028886f0ee70306e127b90</a>)</li>
+                <li>Render APL response when APL data sources are empty (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/94">8baceac807137cfbe27066859c18f8895873284f</a>)</li>
             </p>
 
             <h2>Documentation</h2>
