@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { SKILL } from '../../constants';
 import * as retry from 'async-retry';
 import { AbstractCommand, CommandContext, SmapiClientFactory, SmapiResource, Utils } from '../../runtime';
-
 import { SkillInfo } from '../../models/types';
 import {
     getSkillNameFromLocales,
     getCachedSkills,
+    getSkillMetadata,
     setCachedSkills,
     clearCachedSkills,
     getHostedSkillMetadata,
@@ -26,6 +27,9 @@ const ALL_SKILLS_QUICK_PICK_TITLE = 'All skills';
 const SKILL_RETRIEVAL_PLACEHOLDER = 'Getting the list of skills...';
 const SKILL_NOT_FOUND = 'No Alexa custom skills found under profile. Please create one first.';
 const SKILL_RETRIEVAL_FAILED = 'Alexa skills retrieval failed.';
+const VIEW_ALL_SKILLS_LAST_UPDATE_TIME = 'viewAllSkillsLastUpdateTime';
+const NUMBER_OF_INTERVALS = 1;
+const HOUR = 3600000;
 
 export class ViewAllSkillsCommand extends AbstractCommand<void> {
     private skillInfoMap: Map<string, SmapiResource<SkillInfo>>;
@@ -168,6 +172,33 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         }
     }
 
+    private async checkAndSetQpItems(
+        context: vscode.ExtensionContext,
+        qp: vscode.QuickPick<vscode.QuickPickItem>
+    ): Promise<void> {
+        Logger.verbose(`Calling method: ${this.commandName}.checkAndSetQpItems, args:`, qp);
+        const previous = context.globalState.get(VIEW_ALL_SKILLS_LAST_UPDATE_TIME) as number;
+        const now = new Date().getTime();
+
+        if (previous === undefined || (previous !== undefined && this.calculateTimeExceedHourly(previous, now, NUMBER_OF_INTERVALS))) {
+            await this.setLastUpdateTimeAndRefreshList(context, now, qp);
+            return;
+        }
+        await this.setQpItems(context, qp);
+    }
+
+    private calculateTimeExceedHourly(previous: number, now: number, limit: number) {
+        Logger.verbose(`Calling method: ${this.commandName}.calculateTimeExceedHourly, args:`, previous, now, limit);
+        return Math.abs(now - previous) / HOUR >= limit;
+    }
+
+    private async setLastUpdateTimeAndRefreshList(context: vscode.ExtensionContext, now: number, qp: vscode.QuickPick<vscode.QuickPickItem>) {
+        Logger.verbose(`Calling method: ${this.commandName}.setLastUpdateTimeAndRefreshList, args:`, now, qp);
+        void context.globalState.update(VIEW_ALL_SKILLS_LAST_UPDATE_TIME, now);
+        clearCachedSkills(context);
+        await this.setQpItems(context, qp);
+    }
+    
     private async skillsQuickPick(context: CommandContext): Promise<void> {
         Logger.verbose(`Calling method: ${this.commandName}.skillsQuickPick`);
         const allSkillsQP = vscode.window.createQuickPick();
@@ -179,14 +210,32 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
             allSkillsQP.activeItems = [];
         });
 
-        allSkillsQP.onDidAccept(() => {
+        allSkillsQP.onDidAccept(async() => {
             if (allSkillsQP.activeItems.length !== 0) {
-                allSkillsQP.ignoreFocusOut = false;
-                const executeCommand = 'askContainer.skillsConsole.cloneSkill';
-                void vscode.commands.executeCommand(
-                    executeCommand,
-                    this.skillInfoMap.get(allSkillsQP.activeItems[0].label)
-                );
+                const skillInfo = this.skillInfoMap.get(allSkillsQP.activeItems[0].label)!;
+                getSkillMetadata(skillInfo.data.skillSummary.skillId!, SKILL.STAGE.DEVELOPMENT, context.extensionContext)
+                    .then(() => {
+                        const executeCommand = 'askContainer.skillsConsole.cloneSkill';
+                        void vscode.commands.executeCommand(
+                            executeCommand,
+                            skillInfo
+                        );
+                    })
+                    .then(undefined, async (error) => {
+                        if (error.statusCode === 404) {
+                            const skillName = getSkillNameFromLocales(skillInfo.data.skillSummary.nameByLocale!);
+                            const errorMessage = `The skill '${skillName}' was not found. Please check if the skill exists in [the Alexa developer console](https://developer.amazon.com/alexa/console/ask). Clicking OK refreshes the skill list.`;
+                            const refreshSelection = await vscode.window.showWarningMessage(errorMessage, ...["OK", "Cancel"]);
+                            if (refreshSelection === "OK") {
+                                allSkillsQP.show();
+                                this.setLastUpdateTimeAndRefreshList(context.extensionContext, new Date().getTime(), allSkillsQP);
+                            } else {
+                                allSkillsQP.hide();
+                            }
+                        } else {
+                            throw loggableAskError(error, undefined, true);
+                        }
+                    })
             }
         });
 
@@ -205,7 +254,7 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
             }
         });
         allSkillsQP.show();
-        await this.setQpItems(context.extensionContext, allSkillsQP);
+        await this.checkAndSetQpItems(context.extensionContext, allSkillsQP);
     }
 
     async execute(context: CommandContext): Promise<void> {
