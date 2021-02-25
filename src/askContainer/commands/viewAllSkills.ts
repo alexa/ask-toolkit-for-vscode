@@ -176,16 +176,7 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         clearCachedSkills(context);
         await this.setQpItems(context, qp);
     }
-
-    private async checkSkillExist(context: CommandContext, skillInfo: SmapiResource<SkillInfo>): Promise<void> {
-        Logger.verbose(`Calling method: ${this.commandName}.checkSkillExist`);
-        try {
-            await getSkillMetadata(skillInfo.data.skillSummary.skillId!, SKILL.STAGE.DEVELOPMENT, context.extensionContext);
-        } catch (error) {
-            throw error;
-        }
-    }
-
+    
     private async skillsQuickPick(context: CommandContext): Promise<void> {
         Logger.verbose(`Calling method: ${this.commandName}.skillsQuickPick`);
         const allSkillsQP = vscode.window.createQuickPick();
@@ -200,7 +191,7 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
         allSkillsQP.onDidAccept(async() => {
             if (allSkillsQP.activeItems.length !== 0) {
                 const skillInfo = this.skillInfoMap.get(allSkillsQP.activeItems[0].label)!;
-                this.checkSkillExist(context, skillInfo)
+                getSkillMetadata(skillInfo.data.skillSummary.skillId!, SKILL.STAGE.DEVELOPMENT, context.extensionContext)
                     .then(() => {
                         const executeCommand = 'askContainer.skillsConsole.cloneSkill';
                         void vscode.commands.executeCommand(
