@@ -58,6 +58,8 @@ export class WelcomeScreenWebview extends AbstractWebView {
             EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(
                 EXTENSION_STATE_KEY.SHOW_WELCOME_SCREEN);
         this.checkGitInstallation();
+        this.getBlogUpdates();
+        this.getFeatureUpdates();
         return this.loader.renderView({
             name: WEB_VIEW_NAME.WELCOME_SCREEN,
             js: false,
