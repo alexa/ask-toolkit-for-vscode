@@ -172,6 +172,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
             vscode.Uri.file(path.join(this.extensionContext.extensionPath, "media", "skillDeploy.css"))
         );
         this.clearUpStateContentsCache();
+        this.refresh();
         return this.loader.renderView({
             name: "deployHostedSkill",
             js: true,
