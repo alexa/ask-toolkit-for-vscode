@@ -13,6 +13,7 @@ import { SkillActionsView } from '../skillActionsView';
 import { Logger } from '../../../logger';
 import { getSkillFolderInWs } from '../../../utils/workspaceHelper';
 import { EXTENSION_COMMAND_CONFIG } from '../../../aplContainer/config/configuration';
+import { ActionType } from '../../../runtime/lib/telemetry';
 
 function getIModelGeneratorLink(skillId: string, locale?: string): string {
     Logger.verbose(`Calling method: ${SkillActionsViewProvider.name}.getIModelGeneratorLink`);
@@ -297,7 +298,7 @@ export class SkillActionsViewProvider implements vscode.TreeDataProvider<PluginT
                 {
                     title: 'openUrl',
                     command: 'ask.container.openUrl',
-                    arguments: [getIModelGeneratorLink(skillId, skillDetails.defaultLocale), {CommandType: 'IM_EDITOR'}],
+                    arguments: [getIModelGeneratorLink(skillId, skillDetails.defaultLocale), {CommandType: ActionType.IM_EDITOR}],
                 }, undefined,
                 ContextValueTypes.SKILL,
             ),

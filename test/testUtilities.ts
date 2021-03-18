@@ -144,6 +144,6 @@ export class FakeWebView implements vscode.Webview {
 }
 
 export function stubTelemetryClient(sandBox: sinon.SinonSandbox) {
-    sandBox.stub(TelemetryClient.prototype, "sendData");
+    sandBox.stub(TelemetryClient.prototype, "store");
     sandBox.stub(TelemetryClient.prototype, 'startAction');
 }

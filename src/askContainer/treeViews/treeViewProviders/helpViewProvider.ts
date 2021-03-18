@@ -8,6 +8,7 @@ import {
 import { HelpView } from '../helpView';
 import { HELP_VIEW_ITEMS, EXTERNAL_LINKS } from '../../../constants';
 import { Logger } from '../../../logger';
+import { ActionType } from '../../../runtime/lib/telemetry';
 
 export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<Resource>> {
     private _onDidChangeTreeData = new vscode.EventEmitter<PluginTreeItem<Resource> | undefined>();
@@ -74,7 +75,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             vscode.TreeItemCollapsibleState.None, {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.CLI, true, {CommandType: 'TOOLS_DOCS_CLI'}],
+                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.CLI, true, {CommandType: ActionType.TOOLS_DOCS_CLI}],
             }, undefined,
             ContextValueTypes.SKILL,
         ));
@@ -84,7 +85,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             vscode.TreeItemCollapsibleState.None, {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.VSCODE, true, {CommandType: 'TOOLS_DOCS_VSCODE'}],
+                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.VSCODE, true, {CommandType: ActionType.TOOLS_DOCS_VSCODE}],
             }, undefined,
             ContextValueTypes.SKILL,
         ));
@@ -102,7 +103,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.ASK_SDK, true, {CommandType: 'TOOLS_DOCS_ASK_SDK'}],
+                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.ASK_SDK, true, {CommandType: ActionType.TOOLS_DOCS_ASK_SDK}],
             }, undefined,
             ContextValueTypes.SKILL,
         ));
@@ -112,7 +113,7 @@ export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<
             vscode.TreeItemCollapsibleState.None, {
                 title: 'openUrl',
                 command: 'ask.container.openUrl',
-                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.SMAPI_SDK, true, {CommandType: 'TOOLS_DOCS_SMAPI_SDK'}],
+                arguments: [EXTERNAL_LINKS.TOOLS_DOCS.SMAPI_SDK, true, {CommandType: ActionType.TOOLS_DOCS_SMAPI_SDK}],
             }, undefined,
             ContextValueTypes.SKILL,
         ));

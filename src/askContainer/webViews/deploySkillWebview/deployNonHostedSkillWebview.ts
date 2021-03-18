@@ -18,7 +18,7 @@ import { AskError, loggableAskError } from "../../../exceptions";
 import { getSkillFolderInWs } from "../../../utils/workspaceHelper";
 import { ext } from "../../../extensionGlobals";
 import { isNonEmptyString } from "../../../runtime/lib/utils";
-import { TelemetryClient } from "../../../runtime/lib/telemetry";
+import { TelemetryClient, ActionType } from "../../../runtime/lib/telemetry";
 
 enum LocalChangesStates {
     noChanges,
@@ -72,10 +72,9 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
             ext.skillPackageWatcher.validate();
             void this.refresh(true);
         } else if (message === "deploySkill" || message === "forceDeploy") {
-            const telemetryClient = new TelemetryClient({});
             const telemetryEventName = TELEMETRY_EVENTS.DEPLOY_SELF_HOSTED_SKILL_TELEMETRY_EVENT;
+            const action = TelemetryClient.getInstance().startAction(telemetryEventName, ActionType.EVENT);
             try {
-                telemetryClient.startAction(telemetryEventName, 'event');
                 let profile = Utils.getCachedProfile(this.extensionContext);
                 profile = profile ?? DEFAULT_PROFILE;
                 await this.validateAllDeployStates(skillFolder, message, profile);
@@ -92,9 +91,9 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
                     currentHash.hash
                 );
                 await deployNonHostedSkillManager.deploySkill(this, message === "forceDeploy", eTag);
-                void telemetryClient.sendData();
+                await TelemetryClient.getInstance().store(action);
             } catch (err) {
-                void telemetryClient.sendData(err);
+                await TelemetryClient.getInstance().store(action, err);
                 this.dispose();
                 throw loggableAskError(`Skill deploy failed`, err, true);
             }

@@ -1,9 +1,12 @@
 import { uuid } from 'uuidv4';
-import { extensions, env , workspace} from 'vscode';
+import * as os from 'os';
+import { extensions, env , workspace, version} from 'vscode';
+import * as child_process from 'child_process';
 import { Logger } from '../../../logger';
-import { EXTENSION_FULL_NAME, EXTENSION_ID } from '../../../constants';
+import { DEFAULT_ENCODING, EXTENSION_FULL_NAME, EXTENSION_ID } from '../../../constants';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { promiseRetry } from '../../../utils/retry';
+import { ext } from '../../../extensionGlobals';
 
 enum MetricActionResult {
     SUCCESS = 'Success',
@@ -16,11 +19,21 @@ enum TelemetryEnabled {
     USE_IDE_SETTINGS = 'Use IDE settings'
 }
 
+export enum ActionType {
+    COMMAND = 'command',
+    EVENT = 'event',
+    TOOLS_DOCS_VSCODE = 'TOOLS_DOCS_VSCODE',
+    TOOLS_DOCS_CLI = 'TOOLS_DOCS_CLI',
+    TOOLS_DOCS_ASK_SDK = 'TOOLS_DOCS_ASK_SDK',
+    TOOLS_DOCS_SMAPI_SDK = 'TOOLS_DOCS_SMAPI_SDK',
+    IM_EDITOR = 'IM_EDITOR'
+}
+
 class MetricAction {
     private result?: MetricActionResult;
     private name: string;
     private startTime: Date;
-    private type: string;
+    private type: ActionType;
     private id?: string;
     private endTime?: Date;
     private failureMessage: string;
@@ -31,7 +44,7 @@ class MetricAction {
      * @param {string} name - The action name.
      * @param {string} type - The action type.
      */
-    constructor(name: string, type: string) {
+    constructor(name: string, type: ActionType) {
         this.failureMessage = '';
         this.name = name;
         this.startTime = new Date();
@@ -77,6 +90,11 @@ export interface TelemetryUploadResult {
     success: boolean;
 }
 
+const TELEMETRY_UPDATE_TIME = 'telemetryUpdateTime';
+const TELEMETRY_DATA = 'telemetryData';
+const MINUTE = 60000;
+const NUMBER_OF_INTERVALS = 15;
+
 export class TelemetryClient {
     private data: {
         version: string;
@@ -85,32 +103,60 @@ export class TelemetryClient {
         newUser: boolean;
         timeUploaded: Date | null;
         clientId: string;
+        operatingSystem: string | null;
+        dependencyVersion: string | null;
+        gitVersion: string | null;
         actions: MetricAction[];
     };
     private postRetries: number;
     private serverUrl: string;
     private enabled: boolean;
     private httpClient: AxiosInstance;
+
+    private static instance: TelemetryClient;
+
     /**
      * @constructor
      * @param {TelemetryClientOptions} options - The options for constructor
      */
-    constructor(options: TelemetryClientOptions) {
-        const { } = options;
+    private constructor(options?: TelemetryClientOptions) {
+        if (options) {
+            const { } = options;
+        }
         this.httpClient = axios.create({ timeout: 3000, headers: { 'Content-Type': 'text/plain' } });
         this.serverUrl = 'https://client-telemetry.amazonalexa.com';
         this.postRetries = 3;
         this.enabled = this.isEnabled();
+        const osType = os.type();
+        const osArch = os.arch();
+        const osRelease = os.release();
+        const gitVersionUint8Array: Uint8Array = child_process.execSync(
+            'git --version');
+        const gitVersion = new TextDecoder(DEFAULT_ENCODING).decode(gitVersionUint8Array);
         this.data = {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             version: extensions.getExtension(EXTENSION_ID)?.packageJSON.version,
             machineId: env.machineId,
             timeStarted: new Date(),
             newUser: false,
             timeUploaded: null,
             clientId: EXTENSION_FULL_NAME,
+            operatingSystem: `${osType} ${osArch} ${osRelease}`,
+            dependencyVersion: version,
+            gitVersion: gitVersion,
             actions: []
         };
+    }
+
+    /**
+     * The static method that controls the access to the TelemetryClient instance
+     * @param options 
+     * @returns 
+     */
+    public static getInstance(options?: TelemetryClientOptions) {
+        if (TelemetryClient.instance == undefined) {
+            TelemetryClient.instance = new TelemetryClient(options);
+        }
+        return TelemetryClient.instance;
     }
 
     /**
@@ -119,28 +165,50 @@ export class TelemetryClient {
      * @param {string} type - The action type
      * @return {MetricAction}
      */
-    public startAction(name: string, type: string): MetricAction{
-        const action = new MetricAction(name, type);
-        this.data.actions.push(action);
-        return action;
+    public startAction(name: string, type: ActionType): MetricAction {
+        return new MetricAction(name, type);
     }
 
     /**
-     * Sends data to the metric server
-     * @param {Error} [error] - Error object indicating an error.
+     * Store an action and send the data
+     * @param action - The MetricAction item
+     * @param error - The error object
+     */
+    public async store(action: MetricAction , error?:Error): Promise<void> {
+        action.end(error);
+        if (ext.context.globalState.get(TELEMETRY_UPDATE_TIME) == undefined) {
+            const now = new Date().getTime();
+            ext.context.globalState.update(TELEMETRY_UPDATE_TIME, now);
+        }
+        if (ext.context.globalState.get(TELEMETRY_DATA) == undefined) {
+            ext.context.globalState.update(TELEMETRY_DATA, [action]);
+            return;
+        }
+        const data = ext.context.globalState.get(TELEMETRY_DATA) as MetricAction[];
+        data.push(action);
+        ext.context.globalState.update(TELEMETRY_DATA, data);
+        await this.sendData();
+    }
+
+    /**
+     * Sends data to the metric server periodically
      * @returns {Promise<{success: boolean}>}
      */
-    public sendData(error?: Error): Promise<TelemetryUploadResult> {
+    private async sendData(): Promise<TelemetryUploadResult> {
         if (!this.enabled) {
-            this.data.actions = [];
+            await this.resetStoredStates();
             Logger.debug('Telemetry is disabled. Not uploading any data.');
             return new Promise(resolve => resolve({ success: true }));
         }
-        this.data.actions.forEach(action => action.end(error));
+
+        if (this.shouldUpdateData() == false) {
+            return new Promise(resolve => resolve({ success: true }));
+        }
+        this.data.actions = ext.context.globalState.get(TELEMETRY_DATA) as MetricAction[];
         
         return this.upload()
-            .then(() => {
-                this.data.actions = [];
+            .then(async () => {
+                await this.resetStoredStates();
                 Logger.debug('Successfully uploaded telemetry data.');
                 return { success: true } as TelemetryUploadResult;
             })
@@ -148,6 +216,35 @@ export class TelemetryClient {
                 Logger.debug('Failed to upload telemetry data.');
                 return { success: false } as TelemetryUploadResult;
             });
+    }
+
+    /**
+     * check data and timestamp for updating telemetry data
+     * @returns 
+     */
+    private shouldUpdateData(): boolean {
+        if (ext.context.globalState.get(TELEMETRY_DATA) == undefined && 
+        (ext.context.globalState.get(TELEMETRY_DATA) as []).length == 0 ) {
+            return false;
+        }
+        if (ext.context.globalState.get(TELEMETRY_UPDATE_TIME) == undefined) {
+            const now = new Date().getTime();
+            ext.context.globalState.update(TELEMETRY_UPDATE_TIME, now);
+            return false;
+        }
+        const now = new Date().getTime();
+        const pre = ext.context.globalState.get(TELEMETRY_UPDATE_TIME) as number;
+        const diff = Math.abs(now - pre) / MINUTE;
+        if (diff < NUMBER_OF_INTERVALS) {
+            return false;
+        }
+        return true;
+    }
+
+    private async resetStoredStates(): Promise<void> {
+        this.data.actions = [];
+        await ext.context.globalState.update(TELEMETRY_DATA, undefined);
+        await ext.context.globalState.update(TELEMETRY_UPDATE_TIME, undefined);
     }
 
     /**
@@ -161,6 +258,9 @@ export class TelemetryClient {
             new_user: this.data.newUser,
             time_uploaded: this.data.timeUploaded,
             client_id: this.data.clientId,
+            operating_system: this.data.operatingSystem,
+            dependency_version: this.data.dependencyVersion,
+            git_version: this.data.gitVersion,
             actions: this.data.actions
         };
     }
