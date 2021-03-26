@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
 import { readToken, StoredToken } from "./utils/oauthWrapper";
 import { resolveVendorId } from "./utils/profileHelper";
 import { AUTH } from "./utils/constants";

@@ -1,6 +1,8 @@
-/*
- * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
 export const PROMPT_MESSAGES = Object.freeze({
     CREATE_SAMPLE_TEMPLATE: 'Choose a template',
     ENTER_NAME_FOR_TEMPLATE: 'Enter a name for the APL document',
