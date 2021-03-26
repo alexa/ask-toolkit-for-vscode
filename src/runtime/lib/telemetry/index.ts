@@ -4,7 +4,6 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import { v4 as uuid } from 'uuid';
-pment
 import { extensions, env , workspace} from 'vscode';
 import { Logger } from '../../../logger';
 import { EXTENSION_FULL_NAME, EXTENSION_ID } from '../../../constants';
