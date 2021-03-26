@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
 import { getProperty, readFile } from './jsonRead';
 import { writeToProperty } from './jsonUtility';
 import { homedir } from 'os';
