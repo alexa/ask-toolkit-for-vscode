@@ -1,4 +1,4 @@
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 import { extensions, env , workspace} from 'vscode';
 import { Logger } from '../../../logger';
 import { EXTENSION_FULL_NAME, EXTENSION_ID } from '../../../constants';

@@ -18,6 +18,7 @@ export class FakeExtensionContext implements vscode.ExtensionContext {
     public workspaceState: vscode.Memento = new FakeMemento();
     public globalState: vscode.Memento & {setKeysForSync(keys: string[]): void;} = new FakeGlobalStorage();
     public storagePath: string | undefined;
+    public secrets;
     public globalStoragePath = '.';
     public logPath = '';
     public extensionMode;
