@@ -7,6 +7,7 @@ import { DEFAULT_ENCODING, EXTENSION_FULL_NAME, EXTENSION_ID } from '../../../co
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { promiseRetry } from '../../../utils/retry';
 import { ext } from '../../../extensionGlobals';
+import { loggableAskError } from '../../../exceptions';
 
 enum MetricActionResult {
     SUCCESS = 'Success',
@@ -90,8 +91,7 @@ export interface TelemetryUploadResult {
     success: boolean;
 }
 
-const TELEMETRY_UPDATE_TIME = 'telemetryUpdateTime';
-const TELEMETRY_DATA = 'telemetryData';
+const TELEMETRY_UPDATE_TIME_DATA_DIC = 'telemetryUpdateTimeDataDic';
 const MINUTE = 60000;
 const NUMBER_OF_INTERVALS = 15;
 
@@ -130,9 +130,14 @@ export class TelemetryClient {
         const osType = os.type();
         const osArch = os.arch();
         const osRelease = os.release();
-        const gitVersionUint8Array: Uint8Array = child_process.execSync(
-            'git --version');
-        const gitVersion = new TextDecoder(DEFAULT_ENCODING).decode(gitVersionUint8Array);
+        let gitVersion = '';
+        try {
+            const gitVersionUint8Array: Uint8Array = child_process.execSync('git --version');
+            gitVersion = new TextDecoder(DEFAULT_ENCODING).decode(gitVersionUint8Array);
+        } catch (error) {
+            loggableAskError('TelemetryClient failed to fetch git version', error);
+        }
+        
         this.data = {
             version: extensions.getExtension(EXTENSION_ID)?.packageJSON.version,
             machineId: env.machineId,
@@ -176,18 +181,22 @@ export class TelemetryClient {
      */
     public async store(action: MetricAction , error?:Error): Promise<void> {
         action.end(error);
-        if (ext.context.globalState.get(TELEMETRY_UPDATE_TIME) == undefined) {
-            const now = new Date().getTime();
-            ext.context.globalState.update(TELEMETRY_UPDATE_TIME, now);
-        }
-        if (ext.context.globalState.get(TELEMETRY_DATA) == undefined) {
-            ext.context.globalState.update(TELEMETRY_DATA, [action]);
+        if (!this.enabled) {
+            await this.resetStoredStates();
+            loggableAskError('Telemetry is disabled. Not uploading any data.');
             return;
         }
-        const data = ext.context.globalState.get(TELEMETRY_DATA) as MetricAction[];
-        data.push(action);
-        ext.context.globalState.update(TELEMETRY_DATA, data);
-        await this.sendData();
+        let dataMap = ext.context.globalState.get(TELEMETRY_UPDATE_TIME_DATA_DIC) as {};
+        if (dataMap == undefined) {
+            const now = new Date().getTime();
+            const dic = {[now]: []}
+            ext.context.globalState.update(TELEMETRY_UPDATE_TIME_DATA_DIC, dic);
+        }
+        dataMap = ext.context.globalState.get(TELEMETRY_UPDATE_TIME_DATA_DIC) as {};
+        const actions = Object.values(dataMap)[0] as MetricAction[];
+        actions.push(action);
+        ext.context.globalState.update(TELEMETRY_UPDATE_TIME_DATA_DIC, dataMap);
+        void this.sendData();
     }
 
     /**
@@ -195,16 +204,17 @@ export class TelemetryClient {
      * @returns {Promise<{success: boolean}>}
      */
     private async sendData(): Promise<TelemetryUploadResult> {
-        if (!this.enabled) {
-            await this.resetStoredStates();
-            Logger.debug('Telemetry is disabled. Not uploading any data.');
-            return new Promise(resolve => resolve({ success: true }));
-        }
-
         if (this.shouldUpdateData() == false) {
             return new Promise(resolve => resolve({ success: true }));
         }
-        this.data.actions = ext.context.globalState.get(TELEMETRY_DATA) as MetricAction[];
+        const dataMap = ext.context.globalState.get(TELEMETRY_UPDATE_TIME_DATA_DIC) as {};
+        const actions = [] as MetricAction[];
+        for (const val of Object.values(dataMap)) {
+            for (const a of val as []) {
+                actions.push(a);
+            }
+        }
+        this.data.actions = actions;
         
         return this.upload()
             .then(async () => {
@@ -223,28 +233,23 @@ export class TelemetryClient {
      * @returns 
      */
     private shouldUpdateData(): boolean {
-        if (ext.context.globalState.get(TELEMETRY_DATA) == undefined && 
-        (ext.context.globalState.get(TELEMETRY_DATA) as []).length == 0 ) {
-            return false;
-        }
-        if (ext.context.globalState.get(TELEMETRY_UPDATE_TIME) == undefined) {
-            const now = new Date().getTime();
-            ext.context.globalState.update(TELEMETRY_UPDATE_TIME, now);
+        const dataMap = ext.context.globalState.get(TELEMETRY_UPDATE_TIME_DATA_DIC) as {};
+        if (dataMap == undefined || (Object.values(dataMap) == undefined || (Object.values(dataMap)[0] as []).length == 0)) {
             return false;
         }
         const now = new Date().getTime();
-        const pre = ext.context.globalState.get(TELEMETRY_UPDATE_TIME) as number;
-        const diff = Math.abs(now - pre) / MINUTE;
-        if (diff < NUMBER_OF_INTERVALS) {
-            return false;
+        for (const pre of Object.keys(dataMap)) {
+            const diff = Math.abs(now - Number(pre)) / MINUTE;
+            if (diff >= NUMBER_OF_INTERVALS) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     private async resetStoredStates(): Promise<void> {
         this.data.actions = [];
-        await ext.context.globalState.update(TELEMETRY_DATA, undefined);
-        await ext.context.globalState.update(TELEMETRY_UPDATE_TIME, undefined);
+        await ext.context.globalState.update(TELEMETRY_UPDATE_TIME_DATA_DIC, undefined);
     }
 
     /**
