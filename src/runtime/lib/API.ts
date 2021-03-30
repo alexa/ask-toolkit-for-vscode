@@ -7,7 +7,7 @@
 
 import * as path from 'path';
 
-import { TelemetryClient } from './telemetry';
+import { ActionType, TelemetryClient } from './telemetry';
 import { Disposable, ExtensionContext, commands, TreeItem, TreeItemCollapsibleState,
     Uri, ThemeIcon, Command, WebviewPanel, Webview, window, ViewColumn,
     WebviewOptions, WebviewPanelOptions, WebviewPanelOnDidChangeViewStateEvent, TreeView, TreeDataProvider } from "vscode";
@@ -60,8 +60,7 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
 
     private async _invoke(commandName: string, ...args: any[]): Promise<T> {
         const typeArg = args.find(arg => arg.CommandType);
-        const commandType = typeArg !== undefined ? typeArg.CommandType : 'command';
-        const telemetryClient = new TelemetryClient({});
+        const commandType = typeArg !== undefined ? typeArg.CommandType : ActionType.COMMAND;
         let output: any;
 
         // Create toolkit context to pass on
@@ -69,13 +68,13 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
             command: commandName, 
             extensionContext: this.context
         };
+        const action = TelemetryClient.getInstance().startAction(commandName, commandType);
         try {
-            telemetryClient.startAction(commandName, commandType);
             output = await this.execute(context, ...args);
-            await telemetryClient.sendData();
+            await TelemetryClient.getInstance().store(action);
             return output as Promise<T>;
         } catch (err) {
-            await telemetryClient.sendData(err);
+            await TelemetryClient.getInstance().store(action, err);
             throw err;
         }
     }

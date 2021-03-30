@@ -16,7 +16,7 @@ import { ViewLoader } from '../../../utils/webViews/viewLoader';
 import { openWorkspaceFolder } from '../../../utils/workspaceHelper';
 import { loggableAskError } from '../../../exceptions';
 import { Logger } from '../../../logger';
-import { TelemetryClient } from '../../../runtime/lib/telemetry';
+import { TelemetryClient, ActionType } from '../../../runtime/lib/telemetry';
 
 export type createSkillWebViewType = {
     locale: string;
@@ -81,26 +81,24 @@ export class CreateSkillWebview extends AbstractWebView {
                 return;
             }
 
-            const telemetryClient = new TelemetryClient({});
+            const telemetryEventName = message.isHostedSkill
+                ? TELEMETRY_EVENTS.CREATE_HOSTED_SKILL_TELEMETRY_EVENT
+                : TELEMETRY_EVENTS.CREATE_SELF_HOSTED_SKILL_TELEMETRY_EVENT;
+            const action = TelemetryClient.getInstance().startAction(telemetryEventName, ActionType.EVENT);
             try {
                 await this.authenticateNewUser();
                 const filteredProjectName = Utils.filterNonAlphanumeric(message.skillName);
                 const skillFolderUri = this.createSkillFolder(message.skillFolder, filteredProjectName);
                 const profile = Utils.getCachedProfile(this.extensionContext) ?? DEFAULT_PROFILE;
 
-                const telemetryEventName = message.isHostedSkill
-                    ? TELEMETRY_EVENTS.CREATE_HOSTED_SKILL_TELEMETRY_EVENT
-                    : TELEMETRY_EVENTS.CREATE_SELF_HOSTED_SKILL_TELEMETRY_EVENT;
-                telemetryClient.startAction(telemetryEventName, 'event');
-
                 await this.createSkillFlow(profile, message, skillFolderUri, message.isHostedSkill);
-                void telemetryClient.sendData();
+                await TelemetryClient.getInstance().store(action);
 
                 const skillCreateMsg = `${message.skillName} was successfully created.`;
                 Logger.info(skillCreateMsg);
                 await vscode.window.showInformationMessage(skillCreateMsg);
             } catch (err) {
-                void telemetryClient.sendData(err);
+                await TelemetryClient.getInstance().store(action, err);
                 throw loggableAskError(`Skill creation failed`, err, true);
             }
         }

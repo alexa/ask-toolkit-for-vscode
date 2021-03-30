@@ -17,7 +17,7 @@ import { openWorkspaceFolder } from '../../../utils/workspaceHelper';
 import { CloneHostedSkillManager } from './cloneHostedSkillManager';
 import { CloneNonHostedSkillManager } from './cloneNonHostedSkillManager';
 import { loggableAskError } from '../../../exceptions';
-import { TelemetryClient } from '../../../runtime/lib/telemetry';
+import { TelemetryClient, ActionType } from '../../../runtime/lib/telemetry';
 
 export class CloneSkillCommand extends AbstractCommand<void> {
     constructor(commandName?: string) {
@@ -26,18 +26,16 @@ export class CloneSkillCommand extends AbstractCommand<void> {
 
     async execute(context: CommandContext, skillInfo: SmapiResource<SkillInfo>): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}, args: `, skillInfo);
-        const telemetryClient = new TelemetryClient({});
+        const telemetryEventName =
+        skillInfo.data.isHosted === true
+            ? TELEMETRY_EVENTS.CLONE_HOSTED_SKILL_TELEMETRY_EVENT
+            : TELEMETRY_EVENTS.CLONE_SELF_HOSTED_SKILL_TELEMETRY_EVENT;
+        const action = TelemetryClient.getInstance().startAction(telemetryEventName, ActionType.EVENT);
         try {
             const skillFolderUri = await this.createSkillFolder(skillInfo);
             if (skillFolderUri === undefined) {
                 return;
             }
-            const telemetryEventName =
-                skillInfo.data.isHosted === true
-                    ? TELEMETRY_EVENTS.CLONE_HOSTED_SKILL_TELEMETRY_EVENT
-                    : TELEMETRY_EVENTS.CLONE_SELF_HOSTED_SKILL_TELEMETRY_EVENT;
-            //TODO: make the telemetry type be an enum 
-            telemetryClient.startAction(telemetryEventName, 'event');
             const cloneSkillManager =
                 skillInfo.data.isHosted === true
                     ? new CloneHostedSkillManager(context.extensionContext, skillInfo, skillFolderUri.fsPath)
@@ -63,10 +61,10 @@ export class CloneSkillCommand extends AbstractCommand<void> {
 
             Logger.info(cloneSkillMsg);
             void vscode.window.showInformationMessage(cloneSkillMsg);
-            void telemetryClient.sendData();
+            await TelemetryClient.getInstance().store(action);
             await openWorkspaceFolder(skillFolderUri);
         } catch (error) {
-            void telemetryClient.sendData(error);
+            await TelemetryClient.getInstance().store(action, error);
             throw loggableAskError(`Skill clone failed`, error, true);
         }
     }
