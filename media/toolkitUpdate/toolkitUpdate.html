@@ -16,53 +16,69 @@
     <body>
         <div class="header">
             <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
-            <h1>February 2021 update</h1>
+        <h1>March 2021 update</h1>
+    </div>
+
+    <div class="body">
+        <p>
+            Welcome to the updated Alexa Skills Toolkit for March 2021 (version 2.5). This update introduces a number of
+            new features and enhancements.
+        </p>
+        <h2>What's new?</h2>
+        <div class="container">
+            <div class="flex-item">
+                <h2>Support for virtual device registration (Beta)</h2>
+                <p>
+                    The ASK Toolkit now supports <code>device registration</code>. Device registration is to set up a
+                    virtual Alexa device and register the device with your Amazon account. This feature is a
+                    prerequisite to access the enhanced Simulator, which
+                    supports <code>APL user events</code> and <code>audio output</code>. For details, see the <a
+                        href="https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-testing-simulator.html#register-device">Register
+                        device</a> instructions to register/delete a device in ASK toolkit.
+                    <br/><br/>
+                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/march2021/feat-device-registration.gif">
+                    <br/><br/>
+                </p>
+
+                <h2>Support for APL user events in Simulator (Beta)</h2>
+                <p>
+                    The ASK Toolkit now supports <code>APL user events</code> in the Simulator views. Please check the
+                    <a href="https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/apl-standard-commands.html#sendevent-command">SendEvent
+                        command</a> to learn more about <code>APL user events</code>. This feature is supported on
+                    MacOS and Windows platforms only.
+                    <br/><br/>
+                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/march2021/feat-apl-touch-event.gif">
+                    <br/><br/>
+                </p>
+
+                <h2>Support for audio output in Simulator (Beta)</h2>
+                <p>
+                    The simulator now supports <code>audio output</code> for the skill response. This feature is
+                    supported on MacOS and Windows platforms only.
+                    <br/><br/>
+                </p>
+
+                <h2>Expose invocation name in Simulator</h2>
+                <p>
+                    The simulator now exposes <code>invocation name</code> in the chat input, which helps developers to
+                    invoke skill.
+                    <br/><br/>
+                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/march2021/feat-invoke-skill.png" />
+                    <br/><br/>
+                </p>
+
+            </div>
         </div>
 
-        <div class="body">
-            <p>
-                Welcome to the updated Alexa Skills Toolkit for February 2021 (version 2.4). This update introduces a number of new features and enhancements.
-            </p>
-            <h2>What's new?</h2>
-            <div class="container">
-                <div class="flex-item">
-                    <h2>Support for APL 1.5</h2>
-                    <p>
-                        The ASK Toolkit now supports and renders <code>APL 1.5</code> multimodal documents in the APL Previewer and Simulator views. Please check the <a href="https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/apl-latest-version.html">What's New in APL 1.5</a>, to get more details about <code>APL 1.5</code> version.
-                        <br/><br/>
-                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/february2021/feat_apl15_support.png">
-                        <br/><br/>
-                    </p>
+        <h2>Bug fixes</h2>
+        <p>
+            <li>List all custom skills under 'download skills' quick pick (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/104">a18a073f76207c1332cdc443aaf8879363b23478</a>)</li>
+            <li>Refresh deploy and welcome webview to reveal in 1.53.2v (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/105">73c89e619d4c2b6adf9e07b13dfdc14d0062e135</a>)</li>
+            <li>Update the skill list in realtime for cloning a skill (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/101">692896855ef962d2d66ea048a098e90e5df130e1</a>)</li>
+            <li>Add metrics fields in telemetryClient (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/109">9428158d079368cf7f322022f2e7d6bf07b9ae64</a>)</li>
+        </p>
 
-                    <h2>Support for APL ExecuteCommand Directive in Simulator</h2>
-                    <p>
-                        The simulator will now support processing <code>APL ExecuteCommand directives</code> in the skill response. For more information about ExecuteCommand directive, check <a href="https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/apl-interface.html#executecommands-directive">here</a>.
-                        <br/><br/>
-                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/february2021/feat_APL_ExecuteCommands_directive.gif"/>
-                        <br/><br/>
-                    </p>
-
-                    <h2>ACDL Syntax Highlighter (Beta)</h2>
-                    <p>
-                        Alexa Conversations Description Language (ACDL) (Beta) is a descriptive language, to write skills using Alexa Conversations. The ASK Toolkit now supports syntax highlighting features for <code>ACDL</code> files. For more details, see our developer documentation about <a href="https://developer.amazon.com/en-US/docs/alexa/conversations/about-acdl.html">Alexa Conversations Description Language (Beta)</a>.
-                        <br/><br/>
-                        The ASK Toolkit has limited support for ACDL files. You will need ASK CLI to manage your ACDL skills. Please check <a href="https://developer.amazon.com/en-US/docs/alexa/conversations/acdl-set-up-ask-cli.html">ASK CLI setup for ACDL</a> for more information.
-                        <br/><br/>
-                        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/february2021/feat_ACDL_highlighter.png"/>
-                        <br/><br/>
-                    </p>
-
-                </div>
-            </div>
-
-            <h2>Bug fixes</h2>
-            <p>
-                <li>Simulator webview persists when webview is not in focus (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/94">0a090eeefb5d8a1c2cc36a41043e19961af9b101</a>)</li>
-                <li>Render APL response without speak tags, in Simulator (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/92">e9190e0fe79080a5e8028886f0ee70306e127b90</a>)</li>
-                <li>Render APL response when APL data sources are empty (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/94">8baceac807137cfbe27066859c18f8895873284f</a>)</li>
-            </p>
-
-            <h2>Documentation</h2>
+        <h2>Documentation</h2>
             <p>
                 For more details about features, see the documents at <a href="https://github.com/alexa/ask-toolkit-for-vscode#features">the ask-toolkit-for-vscode Github</a> and at <a href="https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-ask-skills.html">the Amazon Alexa website</a>. 
             </p>

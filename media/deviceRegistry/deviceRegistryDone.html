@@ -1,0 +1,65 @@
+<!-- *-------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *---------------------------------------------------------------------------------------------->
+<html>
+<head>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;" />
+    <title>>Device registration is done</title>
+    <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+    <script src="${javascript}"></script>
+</head>
+
+<body>
+    <div class="header">
+        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png" />
+        <h1 style="float:left;">Device registry</h1>
+        <div class="progressBar">
+            <div class="progressBarContent">
+                <div class="numberIcon numberOneIcon"></div>
+                <p id="firstPage" class="number-icon-text number-icon-text-active number-icon-text-active-withhover">
+                    Create device</p>
+            </div>
+            <div class="progressBarContent">
+                <div class="numberIcon numberTwoIcon"></div>
+                <p class="number-icon-text number-icon-text-active">Register device</p>
+            </div>
+            <div class="progressBarContent">
+                <div class="numberIcon numberThreeIcon"></div>
+                <p class="number-icon-text number-icon-text-active">Confirm device</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="container">
+            <div class="flex-item">
+                <h2>Device confirmed</h2>
+                <span>
+                    <p>Success!</p>
+                    <p>To apply the setting to use your registered device for testing by default, click Apply.
+                        This step restarts the simulator to apply the new setting.</p>
+                    <p>To cancel device registration, click Cancel.</p>
+                </span>
+                <br /><br />
+                <div class="expiryTimeDropdown">
+                    <input type="checkbox" id="rememberDevice" name="rememberDevice">
+                    <label for="expiryTime">Keep me signed in </label>
+                    <p>Choosing "Keep me signed in" reduces the number of times you're asked to sign-in on this device.
+                    </p>
+                    <p id="checkedText" class="hidden">To keep your account secure, use this option only on your personal devices.</p>
+                    <p id="notCheckedText">If 'Keep me signed in' is not checked, re-login is required after one week. </p>
+                </div>
+                <div>
+                    <input type="submitYes" class="toolkit-input" id="yesBtn" value="Apply" />
+                    <input type="submitCancel" class="toolkit-input" id="cancelBtn" value="Cancel" />
+                </div>
+                <p>When you click on 'Apply', you agree that the virtual device <span id="productId"></span> will be used as the default simulator testing device.</p>                
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

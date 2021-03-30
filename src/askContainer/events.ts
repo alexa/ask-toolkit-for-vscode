@@ -3,13 +3,18 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import { EventEmitter } from "vscode";
 import { PluginTreeItem, Resource } from "../runtime";
 
 export const onSkillConsoleViewChangeEventEmitter: EventEmitter<
-    PluginTreeItem<Resource> | undefined
-> = new EventEmitter<PluginTreeItem<Resource> | undefined>();
+    PluginTreeItem<Resource> | undefined> = new EventEmitter<PluginTreeItem<Resource> | undefined>();
 
 export const onWorkspaceOpenEventEmitter: EventEmitter<PluginTreeItem<Resource> | undefined> = new EventEmitter<
-    PluginTreeItem<Resource> | undefined
->();
+    PluginTreeItem<Resource> | undefined>();
+
+export const onDeviceRegistrationEventEmitter: EventEmitter<string | undefined> = new EventEmitter<
+    string | undefined>();
+
+export const onDeviceDeletionEventEmitter: EventEmitter<string | undefined> = new EventEmitter<
+    string | undefined>();

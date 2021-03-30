@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import { getDefaultViewport, IViewport, ViewportShape } from 'apl-suggester';
 
 /**
@@ -39,3 +40,4 @@ export function getViewportCharacteristicsFromViewPort(activeViewport: IViewport
 }
 
 export const DEFAULT_VIEWPORT_CHARACTERISTICS = getViewportCharacteristicsFromViewPort(getDefaultViewport());
+export const DEFAULT_VIEWPORT_NAME = 'Echo Show 1';

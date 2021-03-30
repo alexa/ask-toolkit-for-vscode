@@ -11,7 +11,8 @@ let currentTabGlobal;
 let isDragging = false;
 let isNewSession = false;
 let isReplayMode = false;
-let isDevConsoleLinkShowed = false;
+let isAVSMode = false;
+let isAplPreviewClicked = false;
 let replayInputList = [];
 let replayIndex = 0;
 let renderer;
@@ -54,25 +55,27 @@ const EXECUTION_INFO_CODE = 'executionInfoCode';
 const EXECUTION_INFO_TAB = 'executionInfoTab';
 const APL_VIEW_TAB = 'aplViewTab';
 const APL_VIEW_BOX = 'aplViewBox';
-const PREVIEW_APL_BUTTON= 'previewAplButton';
+const PREVIEW_APL_BUTTON = 'previewAplButton';
 const RESIZER = 'resizer';
 const CODE = 'code';
 const ACTIVE = 'active';
+const MODE = 'mode';
 const TAB_BUTTON_TYPE = {
     'skillIOButton': 'ioTab',
     'executionInfoButton': 'executionInfoTab',
     'previewAplButton': 'aplViewTab'
-}
+};
 const SIMULATOR_MESSAGE_TYPE = {
     SKILL_STATUS: 'skill_status',
     LOCALE: 'locale',
     UTTERANCE: 'utterance',
     REPLAY: 'replay',
     EXPORT: 'export',
-    ACTION: 'action',
+    DEVICE_WEBVIEW: 'deviceWebview',
     VIEWPORT: 'viewport',
-    EXCEPTION: 'exception'
-}
+    EXCEPTION: 'exception',
+    USEREVENT: 'userEvent',
+};
 
 window.onload = function () {
     const chatArea = document.getElementById(CHAT_AREA);
@@ -87,9 +90,9 @@ window.onload = function () {
     else {
         resetChatSession();
     }
+
     checkSkillStatus();
     checkAvailableLocales();
-
     saveFullState();
 
     // Resize JSON boxes when user drags resizer bar
@@ -118,13 +121,16 @@ window.onload = function () {
     exportBtn.onclick = exportReplayFile;
     //Reset session
     resetBtn.onclick = resetChatSession;
-    //Show link to developer console
-    aplViewBox.onclick = showDevConsoleLink;
+    //Show device registry webview
+    aplViewBox.onclick = showDeviceRegistryWebview;
 
+    const mode = document.getElementById(MODE).innerHTML;
+    isAVSMode = (mode === 'true') ? true : false;
     // Handle message received from extension
-    window.addEventListener('message', handleMessageFromExtension);
+    window.addEventListener('message', async (event) => {
+        await handleMessageFromExtension(event);
+    });
 }
-
 
 /**
  * Post message to extension for downloading the current session.
@@ -383,7 +389,12 @@ async function handleMessageFromExtension(event) {
     }
 
     else if (message.type === SIMULATOR_MESSAGE_TYPE.LOCALE) {
-        displayLocales(message);
+        if (message.locale !== undefined) {
+            displayLocales(message);
+        }
+        if (message.invocationName !== undefined) {
+            document.getElementById('chatboxInput').placeholder = message.invocationName;
+        }
     }
 
     else if (message.type === SIMULATOR_MESSAGE_TYPE.UTTERANCE) {
@@ -392,7 +403,7 @@ async function handleMessageFromExtension(event) {
                 handleErrorMessage(message.error);
             }
             else if ('alexaResponse' in message) {
-                handleAlexaResponse(message);
+                void handleAlexaResponse(message);
             }
             checkReplayList();
             if (isReplayMode === false) {
@@ -404,10 +415,12 @@ async function handleMessageFromExtension(event) {
         handleReplayResponse(message);
     }
     else if (message.type === SIMULATOR_MESSAGE_TYPE.VIEWPORT) {
-        if (message.newViewport !== undefined && message.documents !== undefined) {
+        if (message.newViewport !== undefined && message.documents !== undefined && message.documents !== '') {
+            const viewportName = ' (' + message.viewportName.replace(/['"]+/g, '') + ')';
+            document.getElementById('viewportName').innerText = viewportName;
             await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.newViewport));
         }
-        else{
+        else {
             showSelectedButton(PREVIEW_APL_BUTTON);
         }
     }
@@ -424,12 +437,12 @@ async function handleMessageFromExtension(event) {
  * @param {string} message, enable skill or disable skill
  */
 function handleSkillStatusMessage(message) {
-    if (message.message === ENABLED_SKILL) {
+    if (message.status === ENABLED_SKILL) {
         stageDropdown.value = DEVELOPMENT;
         setHTMLElementStatuses(ENABLE);
         setDisplayColorScheme(ENABLE);
     }
-    else if (message.message === DISABLED_SKILL) {
+    else if (message.status === DISABLED_SKILL) {
         setHTMLElementStatuses(DISABLE);
         setDisplayColorScheme(DISABLE);
         removeAlexaTypingIndicator();
@@ -444,12 +457,23 @@ function handleSkillStatusMessage(message) {
  */
 async function updateAplViewPort(document, dataSource, viewport) {
     showSelectedButton(PREVIEW_APL_BUTTON);
+    //Get the callback of the userEvent then post message.
+    const sendCommandEvent = (commandEvent) => {
+        if (isAVSMode) {
+            sendUserEventPlaceholder();
+            vscode.postMessage({
+                userEvent: commandEvent,
+                type: SIMULATOR_MESSAGE_TYPE.USEREVENT,
+            });
+        }
+    };
     await loadAplDoc(
         renderer,
         document,
         dataSource,
         viewport,
-        APL_VIEW_BOX
+        APL_VIEW_BOX,
+        sendCommandEvent,
     );
     saveElementState(INFO_BOX);
 }
@@ -474,21 +498,20 @@ function handleErrorMessage(errorMessage) {
  */
 async function handleAlexaResponse(message) {
     const chatboxInput = document.getElementById(CHATBOX_INPUT);
-
     if (message.alexaResponse.length === 0) {
         removeAlexaTypingIndicator();
     }
     else {
         message.alexaResponse.forEach(response => updateAlexaResponse(response));
-        
-    }
-    // Response can have empty speech, but valid APL response to render
-    // If message contains datasource and document, will show APL preview
-    if (message.viewport !== undefined && message.documents !== undefined) {
-        await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.viewport));
-    }
-    if (message.aplCommands !== undefined && message.aplCommands.length > 0) {
-        renderExecuteCommands(JSON.stringify(message.aplCommands));
+        //If message contains datasource and document, will show APL preview
+        if (message.viewport !== undefined && message.documents !== undefined && message.documents !== '') {
+            const viewportName = ' (' + message.viewportName.replace(/['"]+/g, '') + ')';
+            document.getElementById('viewportName').innerText = viewportName;
+            await updateAplViewPort(message.documents, message.dataSources, JSON.parse(message.viewport));
+        }
+        if (message.aplCommands !== undefined && message.aplCommands.length > 0) {
+            renderExecuteCommands(JSON.stringify(message.aplCommands));
+        }
     }
     extractSkillInfoData(message);
 }
@@ -597,6 +620,15 @@ function sendUtteranceRequest(text) {
 }
 
 /**
+ * Send a userEvent placeholder to the dialog.
+ */
+function sendUserEventPlaceholder() {
+    appendUserMessage(`<User Touch Event>`);
+    setHTMLElementStatuses(DISABLE);
+    appendAlexaTypingIndicator();
+}
+
+/**
  * Upon up & down arrow key presses, auto-fill input box with 
  * previous messages (up to last 10 messages are available for auto-fill)
  */
@@ -688,16 +720,23 @@ function extractSkillInfoData(message) {
     // format JSON data with indents of 2 spaces
     let invocationRequestJson = '';
     let invocationResponseJson = '';
+    let executionInfoJson = '';
+    if (message.invocationRequests !== '' && message.invocationRequests.length > 0) {
+        message.invocationRequests.forEach(request => {
+            invocationRequestJson += JSON.stringify(request, null, 2);
+        });
+    }
 
-    message.invocationRequests.forEach(request => {
-        invocationRequestJson += JSON.stringify(request, null, 2);
-    });
-
-    message.invocationResponses.forEach(response => {
-        invocationResponseJson += JSON.stringify(response, null, 2);
-    });
-
-    const executionInfoJson = JSON.stringify(message.alexaExecutionInfo, null, 2);
+    if (message.invocationResponses !== '' && message.invocationResponses.length > 0) {
+        message.invocationResponses.forEach(response => {
+            invocationResponseJson += JSON.stringify(response, null, 2);
+        });
+    }
+    if (message.alexaExecutionInfo !== '' && message.alexaExecutionInfo.length > 0) {
+        message.alexaExecutionInfo.forEach(response => {
+            executionInfoJson += JSON.stringify(response, null, 2);
+        });
+    }
 
     document.getElementById(JSON_INPUT_CODE).textContent = invocationRequestJson;
     document.getElementById(JSON_OUTPUT_CODE).textContent = invocationResponseJson;
@@ -838,7 +877,7 @@ function updateAlexaResponse(text) {
     const messageId = MSG_NUM.concat(numMessages, TYPING);
     const updatedMessageId = MSG_NUM.concat(numMessages);
     const currentAlexaBubble = document.getElementById(messageId);
-    
+
     if (currentAlexaBubble) {
         // remove typing indicator <span> elements
         while (currentAlexaBubble.firstChild) {
@@ -865,7 +904,7 @@ function updateAlexaResponse(text) {
         messageContainer.insertAdjacentHTML('beforeend', newMessageHtml);
         document.getElementById(newMessageId).insertAdjacentText('beforeend', text);
     }
-    
+
     numMessages++;
     messageContainer.scrollTop += messageContainer.clientHeight; // scroll down to newest message
     saveElementState(MESSAGE_CONTAINER);
@@ -946,14 +985,14 @@ function isValidInput(input) {
  * Show up a message that the device preview doesn't support interactions now
  * Show up only once
  */
-function showDevConsoleLink() {
-    if(isDevConsoleLinkShowed === false){
+function showDeviceRegistryWebview() {
+    if (!isAVSMode && !isAplPreviewClicked) {
         const currLocale = document.getElementById(LOCALE_DROPDOWN).value;
         vscode.postMessage({
             message: LINK_DEV_CONSOLE,
             locale: currLocale,
-            type: SIMULATOR_MESSAGE_TYPE.ACTION
+            type: SIMULATOR_MESSAGE_TYPE.DEVICE_WEBVIEW
         });
-        isDevConsoleLinkShowed = true;
-    }  
+        isAplPreviewClicked = true;
+    }
 }

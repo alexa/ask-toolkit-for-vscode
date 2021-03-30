@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import * as vscode from 'vscode';
 import { registerCommands as apiRegisterCommands, AbstractWebView, Utils } from './runtime';
 
@@ -33,7 +34,9 @@ import { ContactToolkitTeamCommand } from './utils/commands/contactToolkitTeam';
 import { GetToolkitInfoCommand } from './utils/commands/getToolkitInfo';
 import { findSkillFoldersInWs, setSkillContext, unsetSkillContext } from './utils/workspaceHelper';
 import { HelpView } from './askContainer/treeViews/helpView';
-import { onWorkspaceOpenEventEmitter, onSkillConsoleViewChangeEventEmitter } from './askContainer/events';
+import { 
+    onWorkspaceOpenEventEmitter, onSkillConsoleViewChangeEventEmitter,
+    onDeviceRegistrationEventEmitter, onDeviceDeletionEventEmitter } from './askContainer/events';
 import { createStatusBarItem } from './utils/statusBarHelper';
 import { registerWebviews, disposeWebviews } from './utils/webViews/viewManager';
 import { CreateSkillWebview } from './askContainer/webViews/createSkillWebview/createSkillWebview';
@@ -72,6 +75,9 @@ import { ToolkitUpdateWebview } from './askContainer/webViews/toolkitUpdateWebvi
 import { InitialLoginWebview } from './askContainer/webViews/initialLogin';
 import { WelcomeCommand } from './askContainer/commands/welcome';
 import { SchemaManager } from './utils/schemaHelper';
+import { DeviceRegistryWebview } from './askContainer/webViews/deviceRegistryWebview';
+import { DeviceRegistryCommand } from './askContainer/commands/deviceRegistryCommand';
+import { DeviceDeletionCommand } from './askContainer/commands/deviceDeletionCommand';
 
 const DEFAULT_LOG_LEVEL = LogLevel.info;
 
@@ -84,7 +90,8 @@ function registerCommands(context: vscode.ExtensionContext): void {
     );
     const createSkill: CreateSkillWebview = new CreateSkillWebview('Create new skill', 'createSkill', context);
     const toolkitUpdate: ToolkitUpdateWebview = new ToolkitUpdateWebview("What's New?", 'toolkitUpdate', context);
-    registerWebviews(profileManager, createSkill, toolkitUpdate);
+    const deviceRegistry: DeviceRegistryWebview = new DeviceRegistryWebview('Device registry', 'deviceRegistry', context);
+    registerWebviews(profileManager, createSkill, toolkitUpdate, deviceRegistry);
     ext.askGeneralCommands = [
         new ListSkillsCommand(),
         new OpenWorkspaceCommand(),
@@ -102,6 +109,8 @@ function registerCommands(context: vscode.ExtensionContext): void {
         new ContactToolkitTeamCommand(),
         new WelcomeCommand(context),
         new ExportSkillPackageCommand(),
+        new DeviceRegistryCommand(deviceRegistry),
+        new DeviceDeletionCommand(),
     ];
 
     apiRegisterCommands(context, ext.askGeneralCommands);
@@ -273,7 +282,7 @@ function registerUrlHooks(context: vscode.ExtensionContext): void {
                 if (!profiles) {
                     void vscode.window.showInformationMessage(
                         "Before you can clone your skill, you'll need" +
-                            ' to login to your developer account in the extension.'
+                        ' to login to your developer account in the extension.'
                     );
                     void vscode.commands.executeCommand('ask.login', true);
                     await authenticate(context, undefined, DEFAULT_PROFILE);
@@ -309,11 +318,42 @@ function updateProfileIcon(context: vscode.ExtensionContext, sbItem: vscode.Stat
     });
 }
 
-function addStatusBarItems(context: vscode.ExtensionContext): void {
-    Logger.debug('Registering statusbar in the extension');
-    const [title, tooltip] = getProfileSBInfo(context);
+async function getDeviceInfo(context: vscode.ExtensionContext): Promise<[string | undefined, string]> {
+    const productId: string | undefined = await context.secrets.get(
+        EXTENSION_STATE_KEY.REGISTERED_DEVICE.PRODUCT_ID);
+    const isValid: string | undefined = await context.secrets.get(
+        EXTENSION_STATE_KEY.REGISTERED_DEVICE.VALID_DEVICE);
+    let title: string | undefined;
+    let tooltip = '';
+    if (productId === undefined || isValid !== 'true') {
+        title = undefined;
+    } else {
+        title = `$(circuit-board) Device: ${productId}`;
+        tooltip = `The device in use.`;
+    }
+    return [title, tooltip];
+}
 
-    const currentProfileIcon = createStatusBarItem(2, 'ask.changeProfile', title, tooltip);
+function updateDeviceInfo(context: vscode.ExtensionContext, sbItem: vscode.StatusBarItem): void {
+    onDeviceRegistrationEventEmitter.event(async ()=> {
+        Logger.verbose('Device registered. Updating device information in status bar');
+        const [deviceTitle, deviceTooltip] = await getDeviceInfo(context);
+        sbItem.text = deviceTitle!;
+        sbItem.tooltip = deviceTooltip;
+        sbItem.show();
+    });
+
+    onDeviceDeletionEventEmitter.event(() => {
+        Logger.verbose('Device deleted. Updating device information in status bar');
+        sbItem.hide();
+    });
+}
+
+async function addStatusBarItems(context: vscode.ExtensionContext): Promise<void> {
+    Logger.debug('Registering statusbar in the extension');
+    const [profileTitle, profileTooltip] = getProfileSBInfo(context);
+
+    const currentProfileIcon = createStatusBarItem(2, 'ask.changeProfile', profileTitle, profileTooltip);
 
     const profileName = context.globalState.get(EXTENSION_STATE_KEY.LWA_PROFILE);
     if (profileName === undefined) {
@@ -330,8 +370,18 @@ function addStatusBarItems(context: vscode.ExtensionContext): void {
         'Contact Alexa Team for any extension questions'
     );
 
+    //add device info in status bar
+    const [deviceTitle, DeviceTooltip] = await getDeviceInfo(context);
+    const deviceIcon = createStatusBarItem(1, undefined, deviceTitle!, DeviceTooltip);
+    if (deviceTitle === undefined) {
+        deviceIcon.hide();
+    }
+
+    updateDeviceInfo(context, deviceIcon);
+
     context.subscriptions.push(currentProfileIcon);
     context.subscriptions.push(contactAlexaIcon);
+    context.subscriptions.push(deviceIcon);
 }
 
 function checkIfUpdated(context: vscode.ExtensionContext): void {
@@ -378,7 +428,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     await registerViews(context);
     registerEventHandlers(context);
 
-    addStatusBarItems(context);
+    void addStatusBarItems(context);
     registerTreeViews(context);
 
     checkAllSkillS3Scripts(context);
@@ -397,4 +447,4 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 }
 
 // this method is called when your extension is deactivated
-export function deactivate(): void {}
+export function deactivate(): void { }

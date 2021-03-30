@@ -3,19 +3,22 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import * as vscode from 'vscode';
 import { Logger } from '../logger';
 import { loggableAskError } from '../exceptions';
 import { ERRORS, SIMULATOR_MESSAGE_TYPE } from '../constants';
 import { IViewport } from "apl-suggester";
-import { DEFAULT_VIEWPORT_CHARACTERISTICS } from "../aplContainer/utils/viewportProfileHelper";
+import { DEFAULT_VIEWPORT_CHARACTERISTICS, DEFAULT_VIEWPORT_NAME } from "../aplContainer/utils/viewportProfileHelper";
 import { getCurrentDate } from './dateHelper';
 import { getSkillFolderInWs } from './workspaceHelper';
 import { read, write } from '../runtime/lib/utils/jsonUtility';
-import {isSkillEnabled, currentLocale} from './simulateMessageHelper';
-import {aplDocument, aplDataSource} from './simulateSkillHelper';
+import { isSkillEnabled, currentLocale } from './simulateMessageHelper';
+import { aplDocument, aplDataSource } from './simulateSkillHelper';
+import { aplDocumentAvsMode, aplDatasourceAvsMode } from './avs/avsClient'
 
 export let aplViewport = DEFAULT_VIEWPORT_CHARACTERISTICS;
+export let viewportName = DEFAULT_VIEWPORT_NAME;
 
 /**
  * Choose replay file then replay conversation automatically.
@@ -108,16 +111,18 @@ export async function exportFileForReplay(message: Record<string, any>, skillId:
 
 /**
  * Renew the aplViewport and send to webview.
- * @param new viewport
- * @returns object containing viewport type and document.
  */
-export function getNewViewPortMessage(viewport: IViewport): Record<string, any> {
+export function getNewViewPortMessage(viewport: IViewport, pickedViewportName: string, isAVSMode: boolean): Record<string, any> {
     Logger.verbose(`Calling method: simulateReplayHelper.getNewViewPortMessage`);
     aplViewport = viewport;
+    viewportName = pickedViewportName;
+    const documents = isAVSMode ? aplDocumentAvsMode : aplDocument;
+    const dataSources = isAVSMode ? aplDatasourceAvsMode : aplDataSource;
     return {
         newViewport: JSON.stringify(aplViewport),
-        documents: aplDocument,
-        dataSources: aplDataSource,
+        viewportName,
+        documents,
+        dataSources,
         type: SIMULATOR_MESSAGE_TYPE.VIEWPORT
     }
 }

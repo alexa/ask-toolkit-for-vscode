@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import * as path from 'path';
 
 import { EXTENSION_TREE_VIEW_CONFIG } from "./aplContainer/config/configuration";
@@ -16,16 +17,16 @@ export const EXTERNAL_LINKS = {
     DEV_PORTAL: 'https://developer.amazon.com/alexa/console/ask',
     HELP_DOC: 'https://developer.amazon.com/docs/ask-toolkit/get-started-with-the-ask-toolkit-for-visual-studio-code.html',
     ASK_CLI_INSTALL_DOC: 'https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html',
-    INIT_COMMAND_DOC : 'https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#init-command',
-    GETTING_STARTED : 'https://developer.amazon.com/en-US/alexa/alexa-skills-kit',
-    TOOLS_DOCS : {
-        ASK_SDK : 'https://developer.amazon.com/en-US/docs/alexa/sdk/alexa-skills-kit-sdks.html',
+    INIT_COMMAND_DOC: 'https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#init-command',
+    GETTING_STARTED: 'https://developer.amazon.com/en-US/alexa/alexa-skills-kit',
+    TOOLS_DOCS: {
+        ASK_SDK: 'https://developer.amazon.com/en-US/docs/alexa/sdk/alexa-skills-kit-sdks.html',
         SMAPI_SDK: 'https://developer.amazon.com/en-US/docs/alexa/smapi/smapi-overview.html#smapi-sdk',
-        CLI : 'https://developer.amazon.com/en-US/docs/alexa/smapi/quick-start-alexa-skills-kit-command-line-interface.html',
-        VSCODE : 'https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/get-started-with-the-ask-toolkit-for-visual-studio-code.html'
+        CLI: 'https://developer.amazon.com/en-US/docs/alexa/smapi/quick-start-alexa-skills-kit-command-line-interface.html',
+        VSCODE: 'https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/get-started-with-the-ask-toolkit-for-visual-studio-code.html'
     },
-    ALEXA_FEATURES : 'https://developer.amazon.com/en-US/docs/alexa/quick-reference/custom-skill-quick-reference.html#',
-    RELEASE_UPDATES : 'https://developer.amazon.com/en-US/alexa/alexa-skills-kit/resources#whats-new-with-the-alexa-skills-kit',
+    ALEXA_FEATURES: 'https://developer.amazon.com/en-US/docs/alexa/quick-reference/custom-skill-quick-reference.html#',
+    RELEASE_UPDATES: 'https://developer.amazon.com/en-US/alexa/alexa-skills-kit/resources#whats-new-with-the-alexa-skills-kit',
     CONTACT_ALEXA_TEAM: {
         LEAVE_REVIEW: {
             TITLE: 'Leave a review',
@@ -125,7 +126,22 @@ export const EXTENSION_STATE_KEY = {
     LOG_LEVEL: 'logLevel',
     CONFIG_SECTION_NAME: 'askToolkit',
     SHOW_WELCOME_SCREEN: 'showWelcomeScreen',
-    DID_FIRST_TIME_LOGIN: 'didFirstTimeLogin'
+    DID_FIRST_TIME_LOGIN: 'didFirstTimeLogin',
+    REGISTERED_DEVICE: {
+        PRODUCT_ID: "productID",
+        CLIENT_ID: "clientID",
+        CLIENT_SECRET: "clientSecret",
+        REGION: 'NA',
+        TOKEN: {
+            ACCESS_TOKEN: "accessToken",
+            REFRESH_TOKEN: "refreshToken",
+            TOKEN_TYPE: "tokenType",
+            EXPIRES_IN: "expiresIn",
+            EXPIRES_AT: "expiresAt",
+        },
+        VALID_DEVICE: "validDevice",
+        DEVICE_EXPIRY_TIME: "deviceExpiryTime",
+    },
 };
 
 export const AUTH = {
@@ -215,7 +231,7 @@ export const SKILL = {
             URL: 'https://ask-tools-core-content.s3-us-west-2.amazonaws.com/git-hooks-templates/pre-push/ask-pre-push',
             CHMOD: '777'
         }
-    },    
+    },
     GIT_CREDENTIAL_SCRIPT: {
         URL: "https://ask-tools-core-content.s3-us-west-2.amazonaws.com/helpers/prod/git-credential-helper",
         CHMOD: "777"
@@ -253,7 +269,8 @@ export const SKILL_FOLDER = {
             PRE_PUSH: 'pre-push'
         }
     },
-    BACK_UP: '.skill-package-backup'
+    BACK_UP: '.skill-package-backup',
+    SIMULATION_INPUTS: 'simulation_inputs',
 };
 
 export const SYSTEM_ASK_FOLDER = {
@@ -276,7 +293,7 @@ export const TEMPLATES = {
     TEMPLATES_BY_CODE_LANGUAGE: {
         NodeJS: "https://github.com/alexa/skill-sample-nodejs-hello-world.git",
         Python: "https://github.com/alexa/skill-sample-python-helloworld-classes.git",
-        Java: "https://github.com/alexa/skill-sample-java-premium-hello-world.git" 
+        Java: "https://github.com/alexa/skill-sample-java-premium-hello-world.git"
     }
 }
 
@@ -384,7 +401,7 @@ export const SKILL_STATUS_MODEL = {
     }
 }
 
-export const BRANCH_TO_STAGE: { [key: string]: string} = {
+export const BRANCH_TO_STAGE: { [key: string]: string } = {
     prod: 'live',
     master: 'development'
 };
@@ -409,9 +426,10 @@ export const SIMULATOR_MESSAGE_TYPE = {
     UTTERANCE: 'utterance',
     REPLAY: 'replay',
     EXPORT: 'export',
-    ACTION: 'action',
+    DEVICE_WEBVIEW: 'deviceWebview',
     VIEWPORT: 'viewport',
-    EXCEPTION: 'exception'
+    EXCEPTION: 'exception',
+    USEREVENT: 'userEvent',
 };
 
 export const TELEMETRY_EVENTS = {
@@ -444,19 +462,24 @@ export const ERRORS = {
     SKILL_DISABLEMENT_FAIL: 'We failed to disable the skill simulator. Try again.',
     SIMULATION_REQUEST_FAIL: 'The simulator did not respond to your request. Try again.',
     SKILL_MANIFEST_REQUEST_FAIL: 'Could not access skill manifest information.',
-    UNRECOGNIZED_ALEXA_RESPONSE_TYPE: (responseType: string|undefined): string => `The simulator returned an unrecognized Alexa response of type '${responseType}.'`,
+    UNRECOGNIZED_ALEXA_RESPONSE_TYPE: (responseType: string | undefined): string => `The simulator returned an unrecognized Alexa response of type '${responseType}.'`,
     UNDEFINED_SIMULATION_ID: 'Error: The simulator ID was invalid. Try again.',
     UNRECOGNIZED_SIMULATION_RETURN_MESSAGE: 'Error: Unrecognized simulation return message. Message must contain either \'error\' or \'alexaResponse\'.',
     UNRECOGNIZED_MESSAGE_FROM_WEBVIEW: 'Error: Unrecognized message sent from Webview.',
     MISSING_INFO_LOCAL_DEBUG: (cause: string): string => `Missing info: '${cause}'. Please configure manually.`,
-    OPEN_REPLAY_FILE_FAIL: (filePath: string|undefined): string => `Open replay file failed. File path: '${filePath}'. Please check the json file.`,
+    OPEN_REPLAY_FILE_FAIL: (filePath: string | undefined): string => `Open replay file failed. File path: '${filePath}'. Please check the json file.`,
     REPLAY_FAILED: 'Import replay file failed: This file is empty. Select another JSON file to replay.',
     REPLAY_FAILED_ID: 'Import replay file failed: Skill id does not match. Select another JSON file to replay.',
     REPLAY_FAILED_LOCALE: 'Failed to import replay file because the skill locale does not match the currently open skill.',
     REPLAY_FAILED_ENABLE: 'Failed to import replay file because the Simulator is off. Turn the Skill stage to "development" before importing a replay file.',
     EXPORT_FAILED: 'There is no utterance to export, please input some utterances.',
-    EXPORT_FILE_FAIL:  (filePath: string|undefined): string => `The file '${filePath}' could not be saved. Please make sure you have access to write to this path.`,
-    PROFILE_ERROR: (profile: string|undefined): string =>`This skill cannot be accessed by the current profile: ${profile}. To access this skill, switch to a different profile.`
+    EXPORT_FILE_FAIL: (filePath: string | undefined): string => `The file '${filePath}' could not be saved. Please make sure you have access to write to this path.`,
+    PROFILE_ERROR: (profile: string | undefined): string => `This skill cannot be accessed by the current profile: ${profile}. To access this skill, switch to a different profile.`,
+    TOKEN_ERROR: 'Failed to generate device token, please try again.',
+    DEVICE_DELETION_WARNING: (deviceId: string): string => `Do you want to delete the registered device ${deviceId} ? 
+    Select Yes if you want to delete the device and refresh the simulator.`,
+    NO_DEVICES_REGISTERED: `No devices are registered in the toolkit.`,
+    CREDENTIAL_EXPIRED: (deviceId: string): string => `The device credentials for ${deviceId} is expired. Do you want to reauthorize the device?`,
 };
 
 export const GIT_MESSAGES = {
@@ -485,9 +508,9 @@ export const MULTIPLE_SKILLS_PRESENT_MSG = 'The workspace already contains one o
 export const CLI_V1_GLOB_PATTERN = '**/.ask/config';
 export const CLI_V1_SKILL_MSG = 'This skill contains unsupported skill folder structure. Some Alexa Toolkit Extension features will not work. Please follow [this guide](https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-v1-to-v2-migration-guide.html#new-skill-project-structure-required-for-deployment-with-cli-v2) to upgrade your skill folder structure.';
 export const SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY = 'seenTelemetryNotificationMessage';
-export const TELEMETRY_NOTIFICATION_MESSAGE = 
-'To maintain and improve the Alexa Skills Kit extension, we collect anonymous ' + 
-'metrics related to usage and performance. To change this setting, go to the ' + 
-'"Alexa Skills Kit Configuration" section in your user settings.';
+export const TELEMETRY_NOTIFICATION_MESSAGE =
+    'To maintain and improve the Alexa Skills Kit extension, we collect anonymous ' +
+    'metrics related to usage and performance. To change this setting, go to the ' +
+    '"Alexa Skills Kit Configuration" section in your user settings.';
 
 export const SKILL_PACKAGE_FORMAT_GUID = 'Please follow [this guide](https://developer.amazon.com/en-US/docs/alexa/smapi/skill-package-api-reference.html#skill-package-format) to upgrade your skill-package folder structure. For more detailed skill-package format, please check .ask/schema/skillPackageSchema.json.';

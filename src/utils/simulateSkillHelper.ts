@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import * as vscode from 'vscode';
 import * as model from 'ask-smapi-model';
 import SimulationResult = model.v2.skill.simulations.SimulationResult;
@@ -12,7 +13,7 @@ import { SmapiClientFactory, Utils } from '../runtime';
 import { Logger } from '../logger';
 import { loggableAskError } from '../exceptions';
 import * as retry from 'async-retry';
-import {aplViewport} from './simulateReplayHelper';
+import { aplViewport, viewportName } from './simulateReplayHelper';
 import {
     SKILL, DEFAULT_SESSION_MODE, NEW_SESSION_MODE, ALEXA_RESPONSE_TYPES,
     ERRORS, SIMULATION_IN_PROGRESS, SIMULATOR_MESSAGE_TYPE, DEFAULT_PROFILE
@@ -221,7 +222,7 @@ export function formatAlexaResponse(simulationResult: Record<string, any> | Simu
         //get datasource and document
         aplDataSource = undefined;
         aplDocument = undefined;
-  		aplCommands = undefined;
+        aplCommands = undefined;
         for (const responseBody of invocationResponseBodies) {
             const directives = responseBody.response?.directives;
             if (directives != null) {
@@ -240,7 +241,6 @@ export function formatAlexaResponse(simulationResult: Record<string, any> | Simu
                 }
             }
         }
-
         return ({
             invocationRequests: invocationRequestBodies,
             invocationResponses: invocationResponseBodies,
@@ -249,9 +249,10 @@ export function formatAlexaResponse(simulationResult: Record<string, any> | Simu
             documents: aplDocument,
             dataSources: aplDataSource,
             viewport: JSON.stringify(aplViewport),
+            viewportName,
             skillId,
             type: SIMULATOR_MESSAGE_TYPE.UTTERANCE,
-            aplCommands
+            aplCommands,
         });
     }
 }

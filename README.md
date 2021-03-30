@@ -17,6 +17,7 @@ See the [getting started documentation](https://developer.amazon.com/docs/ask-to
 
 1. To create and deploy Alexa-hosted skills, [download Git](https://git-scm.com/downloads) and install it. We recommend the latest version of `git` to have a seamless experience.
 2. Install and configure [VSCode Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python), if you plan to develop skills using python.
+3. ASK Toolkit (`v2.5.0` and above) works with <a href=" https://code.visualstudio.com/">Visual Studio Code IDE</a> (version 1.53.0 or higher), please make sure you have the latest version installed.
 
 > **Note** : [`ASK CLI`](https://developer.amazon.com/en-US/docs/alexa/smapi/quick-start-alexa-skills-kit-command-line-interface.html) is no longer a requirement for the extension and the commands are no longer available in the VSCode Command Palette. Please install and use the `ASK CLI` directly.
 
@@ -184,6 +185,18 @@ and many more ...
     - Since ACDL files need additional builds before deploying to the service, and since this development is still in beta phase, we do not yet provide support for the same. As ACDL and the development processes evolve, we will prioritize on improving the support in the toolkit.
     - You will need to install the `ASK CLI` tool, to manage your ACDL skills. Please follow <a href="https://developer.amazon.com/en-US/docs/alexa/conversations/acdl-set-up-ask-cli.html">this documentation</a> for more details.
 
+- **How can I test APL user events and audio output in simulator?**
+    > **Note**: The APL user events and audio output are available only in MacOS and Windows.
+    - ASK Toolkit simulator supports testing APL user events now. To enable this feature, follow <a href="https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-testing-simulator.html#register-device">Register device</a> instructions to register your device in ASK toolkit.
+
+- **How can I deregister my virtual device?**
+    - To delete the device in ASK toolkit, please follow <a href="https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-testing-simulator.html#delete-device">Delete device</a> instructions.
+    - To deregister the device with your Amazon account, please follow <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=201357520">Deregister a Device</a> instructions.
+
+- **The latest version seems to be not installable on my vscode. What is the minimum compatible vscode version for the toolkit?**
+    - ASK Toolkit (`v2.5.0` and above) works with <a href=" https://code.visualstudio.com/">Visual Studio Code IDE</a> (version 1.53.0 or higher), please make sure you have the latest version installed. 
+
+    
 ----
 
 ## Got Feedback?

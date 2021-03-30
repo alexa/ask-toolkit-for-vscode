@@ -1,0 +1,86 @@
+<!-- *-------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *---------------------------------------------------------------------------------------------->
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;" />
+    <title>Device registration</title>
+    <link rel="stylesheet" type="text/css" href="${toolkitCss}" />
+    <script src="${javascript}"></script>
+</head>
+
+<body>
+    <div class="header">
+        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png" />
+        <h1 style="float: left">Device registry</h1>
+        <div class="progressBar">
+            <div class="progressBarContent">
+                <div class="numberIcon numberOneIcon"></div>
+                <p class="number-icon-text number-icon-text-active">Create device</p>
+            </div>
+            <div class="progressBarContent">
+                <div class="numberIcon numberTwoInactiveIcon"></div>
+                <p class="number-icon-text number-icon-text-inactive">Register device</p>
+            </div>
+            <div class="progressBarContent">
+                <div class="numberIcon numberThreeInactiveIcon"></div>
+                <p class="number-icon-text number-icon-text-inactive">Confirm device</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="container">
+            <div class="flex-item">
+                <form id="productForm">
+                    <h2>Create your device</h2>
+                    <span>This step is to create a product in AVS dashboard. Open <a
+                            href="https://developer.amazon.com/alexa/console/avs/home">AVS dashboard</a> to
+                        check if you already have a product. If not, please create a new product.
+                        <br />
+                        For details about how to create a new product, see
+                        <a
+                            href="https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/register-a-product.html#create-a-product">Create
+                            a product</a>. To
+                        learn more about the device registration, see <a
+                            href="https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-testing-simulator.html#register-device">Register
+                            device</a>.
+                    </span>
+                    <br /><br />
+                    <span>This is a one-time setting, and takes around 10 minutes to set up the device.</span>
+                    <br /><br />
+                    <h2>Provide device details</h2>
+                    <span>Product ID</span>
+                    <input type="text" id="productId" name="productId" placeholder="Enter product ID">
+                    <br /><br />
+                    <span>Client ID</span>
+                    <input type="text" id="clientId" name="clientId" placeholder="Enter client ID">
+                    <br /><br />
+                    <span>Client secret</span>
+                    <input type="password" id="clientSecret" name="clientSecret" placeholder="Enter client secret">
+                    <br /><br />
+                    <span>The Region of your Amazon account</span>
+                    <select id="region" name="region">
+                        <option value="NA">NA (Canada, Mexico, United States)</option>
+                        <option value="EU">
+                            EU (Austria, France, Germany, India, Italy, Spain, United Kingdom)
+                        </option>
+                        <option value="FE">FE (Australia, Japan, New Zealand)</option>
+                    </select>
+                    <br /><br />
+                    <div class="flex-container">
+                        <input id="submitBtn" type="submit" value="Submit" />
+                        <p id="infoCheckText" class="infoCheckText"></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

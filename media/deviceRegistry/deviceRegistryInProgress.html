@@ -1,0 +1,64 @@
+<!-- *-------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *---------------------------------------------------------------------------------------------->
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; img-src https: data:; script-src vscode-resource:; style-src vscode-resource:;" />
+    <title>Device registration: in progress</title>
+    <link rel="stylesheet" type="text/css" href="${toolkitCss}">
+    <script src="${javascript}"></script>
+</head>
+
+<body>
+    <div class="header">
+        <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png" />
+        <h1 style="float:left;">Device registry</h1>
+        <div class="progressBar">
+            <div class="progressBarContent">
+                <div class="numberIcon numberOneIcon"></div>
+                <p id="firstPage" class="number-icon-text number-icon-text-active number-icon-text-active-withhover">
+                    Create device</p>
+            </div>
+            <div class="progressBarContent">
+                <div class="numberIcon numberTwoIcon"></div>
+                <p class="number-icon-text number-icon-text-active">Register device</p>
+            </div>
+            <div class="progressBarContent">
+                <div class="numberIcon numberThreeInactiveIcon"></div>
+                <p class="number-icon-text number-icon-text-inactive">Confirm device</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="container">
+            <div class="flex-item">
+                <h2>Register your device</h2>
+                <span>
+                    To register the device with your Amazon account, open Amazon account linking in your browser.
+                    After you link your account, come back to this page to complete device registration.
+                </span>
+                <br /><br />
+                <span>If an error occurs during the account linking process, return to <a href=""
+                        id="firstPageLink">Create device</a> to verify your product information. </span>
+                <br /><br />
+                <br /><br />
+                <div class="flex-code-item">
+                    <p class="user-code-title-text"> Go to <a href="" id="externalLink">Amazon account linking</a> and
+                        input the code:
+                    </p>
+                    <p id="userCode" class="user-code-text"></p>
+                    <div id="refresh"></div>
+                    <p id="validTime"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

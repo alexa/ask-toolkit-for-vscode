@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { Map } from 'immutable';
@@ -16,7 +17,7 @@ import {
     SAMPLE_TEMPLATE_ID_TO_NAME_MAP,
     RESOURCE_NAME_REGEX,
 } from '../config/configuration';
-import { displayDirRootPath, makeFileSync } from '../utils/fileHelper';
+import { displayDirRootPath, makeFileSync } from '../../utils/fileHelper';
 import { PROMPT_MESSAGES, ERROR_MESSAGES, SUCCESS_MESSAGES } from '../constants/messages';
 import { SampleTemplateQuickPickItem } from '../models';
 import { loggableAskError } from '../../exceptions';

@@ -576,4 +576,8 @@ body.vscode-dark .resetBtn:disabled {
 }
 .resetBtn:focus {
     outline: none;
+} 
+
+.toolkit-text-small {
+    font-size: 10px;
 }

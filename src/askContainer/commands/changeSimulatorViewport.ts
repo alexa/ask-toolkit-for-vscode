@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import * as vscode from 'vscode';
 import { OrderedMap } from 'immutable';
 import { AbstractCommand } from '../../runtime';
@@ -28,7 +29,7 @@ export class ChangeSimulatorViewportCommand extends AbstractCommand<void> {
     public async execute(): Promise<void> {
         Logger.debug(`Calling method: ${this.commandName}`);
         this.viewportProfiles = OrderedMap<string, IViewportProfile>(getViewportProfiles());
-             
+
         const pickedViewportProfile: vscode.QuickPickItem | undefined = await vscode.window.showQuickPick(
             this.getViewportProfileOptions()
         );
@@ -57,10 +58,10 @@ export class ChangeSimulatorViewportCommand extends AbstractCommand<void> {
         return this.viewportProfiles
             .map(
                 v =>
-                    ({
-                        label: v.name,
-                        description: `See ${v.exampleDevices.length} viewport profiles`,
-                    } as vscode.QuickPickItem)
+                ({
+                    label: v.name,
+                    description: `See ${v.exampleDevices.length} viewport profiles`,
+                } as vscode.QuickPickItem)
             )
             .valueSeq()
             .toArray();
@@ -83,10 +84,10 @@ export class ChangeSimulatorViewportCommand extends AbstractCommand<void> {
             return viewportProfile.exampleDevices
                 .map(
                     (viewport: IViewport) =>
-                        ({
-                            label: viewport.name,
-                            description: `Change to ${viewport.name}`,
-                        } as vscode.QuickPickItem)
+                    ({
+                        label: viewport.name,
+                        description: `Change to ${viewport.name}`,
+                    } as vscode.QuickPickItem)
                 )
                 .reduce((prev: vscode.QuickPickItem[], item: vscode.QuickPickItem) => prev.concat(item), []);
         }
@@ -101,7 +102,7 @@ export class ChangeSimulatorViewportCommand extends AbstractCommand<void> {
      *
      * @memberOf ChangeViewportProfile
      */
-    private changeViewport(pickedViewportName: string){
+    private changeViewport(pickedViewportName: string) {
         const viewportProfileToChange = this.viewportProfiles.find((v: IViewportProfile) =>
             this.findToChangeViewport(v, pickedViewportName)
         );
@@ -129,7 +130,7 @@ export class ChangeSimulatorViewportCommand extends AbstractCommand<void> {
                 ...viewportToChange,
                 shape: viewportProfile.shape,
             } as IViewport);
-            this.simulateSkillWebview.changeViewport(viewport);
+            void this.simulateSkillWebview.changeViewport(viewport, pickedViewportName);
             return true;
         }
         return false;
