@@ -491,3 +491,42 @@ export const TELEMETRY_NOTIFICATION_MESSAGE =
 '"Alexa Skills Kit Configuration" section in your user settings.';
 
 export const SKILL_PACKAGE_FORMAT_GUID = 'Please follow [this guide](https://developer.amazon.com/en-US/docs/alexa/smapi/skill-package-api-reference.html#skill-package-format) to upgrade your skill-package folder structure. For more detailed skill-package format, please check .ask/schema/skillPackageSchema.json.';
+
+export const DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT = Object.freeze({
+    OUT_OF_SYNC: "Skill package contents may not be up-to-date with Alexa service. Please ensure you have the latest changes before deploying.",
+    NO_ETAG: "Skill package contents may not be up-to-date with Alexa service. Please ensure you have the latest changes before deploying.",
+    NO_SKILL_PACKAGE: "There is no skill-package found in the workspace. Merge skill-package to this branch to deploy the skill.",
+    SERVICE_ERROR: (error?: string) => error === undefined ? "Service error." : `Service Error: ${error}`,
+    UP_TO_DATE: "Last deployed skill package is up to date with Alexa service."
+});
+
+export const DEPLOY_SELF_HOSTED_LOCAL_CHANGE_STATE_CONTENT = Object.freeze({
+    NO_CHANGE: "There are no changes to deploy. To deploy this skill, make a change to the project.",
+    CHANGES_EXIST: "Changes exist in the skill. Ready to deploy.",
+});
+
+export const DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT = Object.freeze({
+    OUT_OF_SYNC: "Skill package contents may not be up-to-date with Alexa service. Please ensure you have the latest changes before deploying.",
+    NO_ETAG: "Skill package contents may not be up-to-date with Alexa service. Please ensure you have the latest changes before deploying.",
+    LIVE_SKILL: "To update your live skill package, please submit your changes for certification in the Alexa developer console.",
+    NO_SKILL_PACKAGE: "There is no skill-package found in the workspace. Merge skill-package to this branch to deploy the skill.",
+    SERVICE_ERROR: (error?: string) => error === undefined ? "Service error." : `Service Error: ${error}`,
+    UP_TO_DATE: "Last deployed skill package is up to date with Alexa service."
+});
+
+export const DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT = Object.freeze({
+    UNTRACKED: (branch: string) => `Untracked file(s) present in the current branch <code>${branch}</code>. Use <code>git add</code> to track.`,
+    UNSTAGED: (branch: string) => `Changes exist in the current branch <code>${branch}</code>. Use <code>git add</code> and <code>git commit</code> to commit changes.`,
+    NO_CHANGE: (branch: string) => `There are no changes in the current branch <code>${branch}</code> to deploy. To deploy this skill, commit a change to the project.`,
+    INVALID_BRANCH: "The current branch must be either <code>master</code> or <code>prod</code>.</p> Merge changes to these branches to deploy the skill.",
+    COMMITTED: (branch: string) => `Committed changes exist in the current branch <code>${branch}</code>. Ready to deploy.`
+});
+
+export const DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT = Object.freeze({
+    OUT_OF_SYNC: "Current files conflict with deployed version. Use <code>git pull</code> to merge the remote branch into yours.",
+    NO_SKILL_CODE: "There is no AWS Lambda source code found in the workspace.",
+    AHEAD: "Your skill code is ahead of the remote version.",
+    DIVERGED: "Your skill code and the remote version have diverged. Use <code>git status</code> to get more details.",
+    SERVICE_ERROR: (error?: string) => error === undefined ? "Service error." : `Service Error: ${error}`,
+    UP_TO_DATE: "Your skill code is up to date with Alexa service."
+})
