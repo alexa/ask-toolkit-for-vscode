@@ -7,8 +7,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import AdmZip = require('adm-zip');
-import { DISPLAY_DIR_ROOT_PATH_RELATIVE_TO_SKILL_PACAKGE } from '../config/configuration';
-import { getSkillMetadataSrc } from '../../utils/skillHelper';
+import { DISPLAY_DIR_ROOT_PATH_RELATIVE_TO_SKILL_PACAKGE } from '../aplContainer/config/configuration';
+import { getSkillMetadataSrc } from './skillHelper';
 
 /**
  * Helper function to make directory with a directory name

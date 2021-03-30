@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import * as vscode from 'vscode';
 import * as AdmZip from 'adm-zip';
 import * as fs from 'fs';
@@ -13,7 +14,7 @@ import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
 import { getSkillPkgZipLocation } from '../../utils/skillPackageHelper';
 import { APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, SOURCES_FILE_PATH, DOCUMENT_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, DATASOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, SOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE } from '../config/configuration';
-import { displayDirRootPath, updateFileContent, readFileContentFromZip } from '../utils/fileHelper';
+import { displayDirRootPath, updateFileContent, readFileContentFromZip } from '../../utils/fileHelper';
 import { AplResource } from '../models';
 import { PROMPT_MESSAGES, SUCCESS_MESSAGES } from '../constants/messages';
 import { loggableAskError } from '../../exceptions';

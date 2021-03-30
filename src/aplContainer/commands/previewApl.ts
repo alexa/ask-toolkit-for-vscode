@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 import { AbstractCommand, CommandContext, Utils } from '../../runtime';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -10,7 +11,7 @@ import * as vscode from 'vscode';
 import { EXTENSION_COMMAND_CONFIG, APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, SOURCES_FILE_PATH } from '../config/configuration';
 import { AplPreviewWebView } from '../webViews/aplPreviewWebView';
 import { ERROR_MESSAGES, PROMPT_MESSAGES } from '../constants/messages';
-import { displayDirRootPath } from '../utils/fileHelper';
+import { displayDirRootPath } from '../../utils/fileHelper';
 import { loggableAskError } from '../../exceptions';
 import { getSkillFolderInWs } from '../../utils/workspaceHelper';
 import { DEFAULT_PROFILE } from '../../constants'

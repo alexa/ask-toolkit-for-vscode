@@ -5,7 +5,7 @@
     "version": "2.4.0",
     "publisher": "ask-toolkit",
     "engines": {
-        "vscode": "^1.42.0"
+        "vscode": "^1.53.0"
     },
     "author": "ask-dev-exp-tools team",
     "homepage": "https://github.com/alexa/ask-toolkit-for-vscode",
@@ -86,6 +86,16 @@
                     "group": "1_modification"
                 },
                 {
+                    "command": "askContainer.skillsConsole.deviceRegistry",
+                    "when": "view == askContainer.skills-console",
+                    "group": "9_cutcopypaste@1"
+                },
+                {
+                    "command": "askContainer.skillsConsole.deviceDeletion",
+                    "when": "view == askContainer.skills-console",
+                    "group": "9_cutcopypaste@2"
+                },
+                {
                     "command": "askContainer.skill-actions.refresh",
                     "when": "view == askContainer.skill-actions",
                     "group": "navigation"
@@ -108,6 +118,14 @@
             {
                 "command": "ask.init",
                 "title": "Profile manager"
+            },
+            {
+                "command": "askContainer.skillsConsole.deviceRegistry",
+                "title": "Register device"
+            },
+            {
+                "command": "askContainer.skillsConsole.deviceDeletion",
+                "title": "Delete device"
             },
             {
                 "command": "ask.aboutToolkit",
@@ -304,7 +322,7 @@
         "@types/ramda": "^0.25.28",
         "@types/simple-oauth2": "^2.5.2",
         "@types/sinon": "^4.3.0",
-        "@types/vscode": "^1.42.0",
+        "@types/vscode": "^1.53.0",
         "@typescript-eslint/eslint-plugin": "^3.4.0",
         "@typescript-eslint/parser": "^3.4.0",
         "ask-smapi-model": "^1.14.0",
@@ -349,21 +367,26 @@
         "bufferutil": "^4.0.1",
         "folder-hash": "^4.0.0",
         "fs-extra": "9.0.0",
+        "http-message-parser": "0.0.34",
         "https-proxy-agent": "^2.2.2",
         "immutable": ">4.0.0-rc",
         "jsdom": "^16.3.0",
         "json-source-map": "^0.4.0",
         "jsonfile": "^4.0.0",
         "md5-file": "^5.0.0",
+        "node-webvtt": "^1.9.3",
         "open": "^7.0.4",
         "original-fs": "^1.1.0",
         "portscanner": "^2.2.0",
         "ramda": "^0.25.0",
+        "say": "^0.16.0",
         "simple-oauth2": "1.0.3",
+        "sound-play": "^1.1.0",
         "typed-rest-client": "1.7.3",
         "utf-8-validate": "^5.0.2",
         "uuid": "^3.4.0",
-        "vscode-debugadapter": "^1.39.1"
+        "vscode-debugadapter": "^1.39.1",
+        "wavefile": "^11.0.0"
     },
     "prettier": {
         "semi": true,

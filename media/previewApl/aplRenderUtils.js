@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 /**
  * Load documents of APL and do renderer
  * @param {object} renderer
@@ -10,15 +11,17 @@
  * @param {string} datasources, the datasources from directive 
  * @param {string} deviceConfig, the viewport type
  * @param {string} fatherDiv
- */
-async function loadAplDoc(renderer, apl, datasources, deviceConfig, fatherDiv) {
+ * @param {object} onSendEvent
+  */
+
+ async function loadAplDoc(renderer, apl, datasources, deviceConfig, fatherDiv, onSendEvent) {
     if (renderer) {
         renderer.destroy();
         renderer = undefined;
     }
     const content = createContent(apl, datasources);
 
-    const documentBody = (fatherDiv === '')? document.body : document.getElementById(fatherDiv);
+    const documentBody = (fatherDiv === '') ? document.body : document.getElementById(fatherDiv);
     const aplDiv = document.getElementById("aplView");
     if (aplDiv) {
         documentBody.removeChild(aplDiv);
@@ -33,6 +36,7 @@ async function loadAplDoc(renderer, apl, datasources, deviceConfig, fatherDiv) {
     documentBody.appendChild(div);
     const options = {
         content,
+        onSendEvent,
         view: div,
         environment: {
             agentName: "APL Sandbox",

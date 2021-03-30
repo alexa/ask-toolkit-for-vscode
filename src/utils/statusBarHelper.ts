@@ -3,6 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+
 'use strict';
 import * as vscode from 'vscode';
 
@@ -15,7 +16,7 @@ import * as vscode from 'vscode';
  * @return {vscode.StatusBarItem}
  */
 export function createStatusBarItem(
-    priority: number, commandName: string, iconText: string, tooltip: string, 
+    priority: number, commandName: string | undefined, iconText: string, tooltip: string,
     aligment: vscode.StatusBarAlignment = vscode.StatusBarAlignment.Left): vscode.StatusBarItem {
     const item = vscode.window.createStatusBarItem(aligment, priority);
     item.command = commandName;
