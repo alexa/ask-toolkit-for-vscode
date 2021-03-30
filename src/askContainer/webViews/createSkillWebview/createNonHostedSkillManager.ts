@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as model from 'ask-smapi-model';

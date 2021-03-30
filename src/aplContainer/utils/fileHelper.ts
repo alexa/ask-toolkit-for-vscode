@@ -1,6 +1,8 @@
-/*
- * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';

@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
 import { AbstractWebView } from '../../runtime';
 import { ExtensionContext, Webview, Uri } from 'vscode';
 import { readFileSync, existsSync } from 'fs';

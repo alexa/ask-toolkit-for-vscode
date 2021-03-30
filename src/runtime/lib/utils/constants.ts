@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
 export const AUTH = {
     PLACEHOLDER_ENVIRONMENT_VAR_PROFILE_NAME: '__ENVIRONMENT_ASK_PROFILE__',
     DEFAULT_CLIENT_ID: 'amzn1.application-oa2-client.aad322b5faab44b980c8f87f94fbac56',

@@ -1,13 +1,18 @@
-import { uuid } from 'uuidv4';
-import * as os from 'os';
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
+import { v4 as uuid } from 'uuid';
 import { extensions, env , workspace, version} from 'vscode';
-import * as child_process from 'child_process';
 import { Logger } from '../../../logger';
 import { DEFAULT_ENCODING, EXTENSION_FULL_NAME, EXTENSION_ID } from '../../../constants';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { promiseRetry } from '../../../utils/retry';
 import { ext } from '../../../extensionGlobals';
 import { loggableAskError } from '../../../exceptions';
+import * as os from 'os';
+import * as child_process from 'child_process';
 
 enum MetricActionResult {
     SUCCESS = 'Success',
@@ -187,7 +192,7 @@ export class TelemetryClient {
             return;
         }
         let dataMap = ext.context.globalState.get(TELEMETRY_DATA) as {};
-        if (dataMap == undefined) {
+        if (dataMap == undefined || dataMap.constructor !== Object) {
             const now = new Date().getTime();
             ext.context.globalState.update(TELEMETRY_DATA, {[now]: []});
         }

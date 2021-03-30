@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Alexa Skills Toolkit for Visual Studio Code
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  SPDX-License-Identifier: Apache-2.0
+ *--------------------------------------------------------------------------------------------*/
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -18,6 +23,7 @@ export class FakeExtensionContext implements vscode.ExtensionContext {
     public workspaceState: vscode.Memento = new FakeMemento();
     public globalState: vscode.Memento & {setKeysForSync(keys: string[]): void;} = new FakeGlobalStorage();
     public storagePath: string | undefined;
+    public secrets;
     public globalStoragePath = '.';
     public logPath = '';
     public extensionMode;
