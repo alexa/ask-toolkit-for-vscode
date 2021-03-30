@@ -3,27 +3,30 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as fs from "fs-extra";
-import * as path from "path";
-import * as vscode from "vscode";
+import * as fs from 'fs-extra';
+import * as path from 'path';
+import * as vscode from 'vscode';
 
-import { DEFAULT_PROFILE, SKILL, TELEMETRY_EVENTS } from "../../../constants";
-import { AbstractWebView, Utils } from "../../../runtime";
-import { AskStates } from '../../../models/resourcesConfig/askStates';
-import { getHash } from "../../../utils/hashHelper";
-import { ViewLoader } from "../../../utils/webViews/viewLoader";
-import { DeployNonHostedSkillManager } from "./deployNonHostedSkillManager";
 import {
-    getSkillMetadataSrc,
-    getSkillDetailsFromWorkspace,
-} from "../../../utils/skillHelper";
-import { getSkillPackageStatus } from "../../../utils/skillPackageHelper";
-import { Logger } from "../../../logger";
-import { AskError, loggableAskError } from "../../../exceptions";
-import { getSkillFolderInWs } from "../../../utils/workspaceHelper";
-import { ext } from "../../../extensionGlobals";
-import { isNonEmptyString } from "../../../runtime/lib/utils";
-import { TelemetryClient, ActionType } from "../../../runtime/lib/telemetry";
+    DEFAULT_PROFILE,
+    SKILL,
+    TELEMETRY_EVENTS,
+    DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT,
+    DEPLOY_SELF_HOSTED_LOCAL_CHANGE_STATE_CONTENT,
+} from '../../../constants';
+import { AbstractWebView, Utils } from '../../../runtime';
+import { AskStates } from '../../../models/resourcesConfig/askStates';
+import { getHash } from '../../../utils/hashHelper';
+import { ViewLoader } from '../../../utils/webViews/viewLoader';
+import { DeployNonHostedSkillManager } from './deployNonHostedSkillManager';
+import { getSkillMetadataSrc, getSkillDetailsFromWorkspace } from '../../../utils/skillHelper';
+import { getSkillPackageStatus } from '../../../utils/skillPackageHelper';
+import { Logger } from '../../../logger';
+import { AskError, loggableAskError } from '../../../exceptions';
+import { getSkillFolderInWs } from '../../../utils/workspaceHelper';
+import { ext } from '../../../extensionGlobals';
+import { isNonEmptyString } from '../../../runtime/lib/utils';
+import { TelemetryClient, ActionType } from '../../../runtime/lib/telemetry';
 
 enum LocalChangesStates {
     noChanges,
@@ -54,7 +57,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
 
     constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
-        this.loader = new ViewLoader(this.extensionContext, "deployNonHostedSkill", this);
+        this.loader = new ViewLoader(this.extensionContext, 'deployNonHostedSkill', this);
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -70,10 +73,10 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         Logger.debug(`Calling method: ${this.viewId}.onReceiveMessageListener, args: `, message);
         const skillFolder = getSkillFolderInWs(this.extensionContext);
         if (skillFolder === undefined) {
-            throw loggableAskError("No skill folder found in the workspace.", null, true);
+            throw loggableAskError('No skill folder found in the workspace.', null, true);
         }
 
-        if (message === "refresh") {
+        if (message === 'refresh') {
             ext.skillPackageWatcher.validate();
             void this.refresh(true);
         } else if (message === "deploySkill" || message === "forceDeploy") {
@@ -84,8 +87,8 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
                 profile = profile ?? DEFAULT_PROFILE;
                 await this.validateAllDeployStates(skillFolder, message, profile);
                 this.getPanel().webview.html = this.loader.renderView({
-                    name: "deployInProgress",
-                    errorMsg: "Skill deployment in progress...",
+                    name: 'deployInProgress',
+                    errorMsg: 'Skill deployment in progress...',
                 });
                 const { skillPackageAbsPath } = getSkillMetadataSrc(skillFolder.fsPath, profile);
                 const currentHash = await getHash(skillPackageAbsPath);
@@ -102,13 +105,13 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
                 this.dispose();
                 throw loggableAskError(`Skill deploy failed`, err, true);
             }
-        } else if (message === "exportSkillPackage") {
-            const hasDownloaded = await vscode.commands.executeCommand("ask.exportSkillPackage");
+        } else if (message === 'exportSkillPackage') {
+            const hasDownloaded = await vscode.commands.executeCommand('ask.exportSkillPackage');
             if (hasDownloaded === true) {
                 void this.refresh(true);
             }
         } else {
-            throw loggableAskError("Unexpected message received from webview.");
+            throw loggableAskError('Unexpected message received from webview.');
         }
     }
 
@@ -116,7 +119,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
         const skillFolder = getSkillFolderInWs(this.extensionContext);
         if (skillFolder === undefined) {
-            throw new AskError("No skill folder found in the workspace");
+            throw new AskError('No skill folder found in the workspace');
         }
         this.askStates = new AskStates(skillFolder.fsPath);
         const skillDetails = getSkillDetailsFromWorkspace(this.extensionContext);
@@ -124,12 +127,12 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         this.skillName = skillDetails.skillName;
         const webview: vscode.Webview = this.getWebview();
         const skillDeployCss: vscode.Uri = webview.asWebviewUri(
-            vscode.Uri.file(path.join(this.extensionContext.extensionPath, "media", "skillDeploy.css"))
+            vscode.Uri.file(path.join(this.extensionContext.extensionPath, 'media', 'skillDeploy.css'))
         );
         this.clearUpStateContentsCache();
         this.refresh();
         return this.loader.renderView({
-            name: "deployNonHostedSkill",
+            name: 'deployNonHostedSkill',
             js: true,
             args: { skillId, skillName: this.skillName, skillDeployCss },
         });
@@ -137,8 +140,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
 
     private async validateAllDeployStates(skillFolder: vscode.Uri, message: string, profile: string) {
         const changesStateContent = await this.getLocalChangesState(skillFolder);
-        if (changesStateContent.state === LocalChangesStates.noChanges &&
-            message !== "forceDeploy") {
+        if (changesStateContent.state === LocalChangesStates.noChanges && message !== 'forceDeploy') {
             void this.refresh();
             throw new AskError(changesStateContent.text);
         }
@@ -146,8 +148,8 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         const skillPackageStatesContent = await this.getSkillPackageState(skillFolder, skillDetails.skillId, profile);
         if (
             skillPackageStatesContent.state !== SkillPackageStates.upToDate &&
-            !(message === "forceDeploy" && skillPackageStatesContent.state === SkillPackageStates.outOfSync) &&
-            !(message === "forceDeploy" && skillPackageStatesContent.state === SkillPackageStates.noETag)
+            !(message === 'forceDeploy' && skillPackageStatesContent.state === SkillPackageStates.outOfSync) &&
+            !(message === 'forceDeploy' && skillPackageStatesContent.state === SkillPackageStates.noETag)
         ) {
             void this.refresh();
             throw new AskError(skillPackageStatesContent.text);
@@ -167,7 +169,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         try {
             const skillFolder = getSkillFolderInWs(this.extensionContext);
             if (skillFolder === undefined) {
-                throw new AskError("No skill folder found in the workspace");
+                throw new AskError('No skill folder found in the workspace');
             }
             const skillDetails = getSkillDetailsFromWorkspace(this.extensionContext);
             this.skillName = skillDetails.skillName;
@@ -179,7 +181,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
             await this.updateSkillPackageSyncState(skillFolder, skillDetails.skillId, profile);
         } catch (error) {
             this.postMessage(error);
-            throw loggableAskError("Skill deploy and build page refresh failed", error, true);
+            throw loggableAskError('Skill deploy and build page refresh failed', error, true);
         }
     }
 
@@ -210,7 +212,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
             changesStateContent: this.changesStateContent,
             skillPackageStatesContent: this.skillPackageStatesContent,
             states: { LocalChangesStates, SkillPackageStates },
-            error
+            error,
         });
     }
 
@@ -230,7 +232,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
                 ? this.resolveLocalChangeStateContent(LocalChangesStates.changesExist)
                 : this.resolveLocalChangeStateContent(LocalChangesStates.noChanges);
         } catch (error) {
-            throw loggableAskError("Failed to get local changes state", error);
+            throw loggableAskError('Failed to get local changes state', error);
         }
     }
 
@@ -239,13 +241,13 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         if (state === LocalChangesStates.noChanges) {
             return {
                 state,
-                text: "There are no changes to deploy. To deploy this skill, make a change to the project.",
+                text: DEPLOY_SELF_HOSTED_LOCAL_CHANGE_STATE_CONTENT.NO_CHANGE,
                 valid: false,
             };
         } else {
             return {
                 state,
-                text: "Changes exist in the skill. Ready to deploy.",
+                text: DEPLOY_SELF_HOSTED_LOCAL_CHANGE_STATE_CONTENT.CHANGES_EXIST,
                 valid: true,
             };
         }
@@ -262,7 +264,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
             return this.resolveSkillPackageStateContent(SkillPackageStates.noSkillPackage);
         }
         if (!isNonEmptyString(skillId)) {
-            throw new AskError("Failed to get the skill id in .ask/ask-states.json.");
+            throw new AskError('Failed to get the skill id in .ask/ask-states.json.');
         }
         let skillPackageStatus;
         try {
@@ -272,7 +274,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         }
         const remoteETag = skillPackageStatus.skill?.eTag;
         const localETag = this.getLocalETag(skillFolder);
-        if (localETag === undefined || typeof localETag !== "string") {
+        if (localETag === undefined || typeof localETag !== 'string') {
             return this.resolveSkillPackageStateContent(SkillPackageStates.noETag);
         }
         return localETag === remoteETag
@@ -285,33 +287,31 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         if (state === SkillPackageStates.outOfSync) {
             return {
                 state,
-                text: "Skill package contents may not be up-to-date with Alexa service. Please ensure you have the latest changes before deploying.",
+                text: DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT.OUT_OF_SYNC,
                 valid: false,
             };
         } else if (state === SkillPackageStates.noETag) {
             return {
                 state,
-                text:
-                    "Skill package contents may not be up-to-date with Alexa service. Please ensure you have the latest changes before deploying.",
+                text: DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT.NO_ETAG,
                 valid: false,
             };
         } else if (state === SkillPackageStates.noSkillPackage) {
             return {
                 state,
-                text:
-                    "There is no skill-package found in the workspace. Merge skill-package to this branch to deploy the skill.",
+                text: DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT.NO_SKILL_PACKAGE,
                 valid: false,
             };
         } else if (state === SkillPackageStates.serviceError) {
             return {
                 state,
-                text: error === undefined ? "Service error." : `Service Error: ${error}`,
+                text: DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT.SERVICE_ERROR(error),
                 valid: false,
             };
         } else {
             return {
                 state: SkillPackageStates.upToDate,
-                text: "Last deployed skill package is up to date with Alexa service.",
+                text: DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT.UP_TO_DATE,
                 valid: true,
             };
         }
