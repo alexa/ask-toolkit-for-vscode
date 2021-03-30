@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.4.0...v2.5.0) (2021-03-30)
+
+
+### Features
+
+* support apl touch events in simulator ([#115](https://github.com/alexa/ask-toolkit-for-vscode/issues/115)) ([55bb816](https://github.com/alexa/ask-toolkit-for-vscode/commits/55bb8163c6d51f805c72e27e65ea2055d6506a44))
+
+
+### Bug Fixes
+
+* 'resource not found' when cloning a skill ([#101](https://github.com/alexa/ask-toolkit-for-vscode/issues/101)) ([7fd5c4f](https://github.com/alexa/ask-toolkit-for-vscode/commits/7fd5c4f985be844c94ef25eb69ab5b645f45d8e5))
+* add license and copyright in source files ([#113](https://github.com/alexa/ask-toolkit-for-vscode/issues/113)) ([f6daa74](https://github.com/alexa/ask-toolkit-for-vscode/commits/f6daa747dbbfc52085ee9e0aa6c1f3423e2c77f8))
+* change Telemetry data global state key name ([086acfe](https://github.com/alexa/ask-toolkit-for-vscode/commits/086acfeeb4f99a4d909ff24b4f922b2db991d16f))
+* changed globalState data to be dictionary & add retry for git version ([657fa9f](https://github.com/alexa/ask-toolkit-for-vscode/commits/657fa9f24320b09bcd4f4a47a05ccec86cc2d0c5))
+* load webview dynamic content when firing for first time ([#105](https://github.com/alexa/ask-toolkit-for-vscode/issues/105)) ([6b9ff2c](https://github.com/alexa/ask-toolkit-for-vscode/commits/6b9ff2caae5f225bd61436f5d6b7888234cd98c2))
+* make telemetryClient singleton & add metrics fields ([9428158](https://github.com/alexa/ask-toolkit-for-vscode/commits/9428158d079368cf7f322022f2e7d6bf07b9ae64))
+
 ## [2.4.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.3.0...v2.4.0) (2021-02-19)
 
 
