@@ -3,12 +3,21 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as fs from "fs-extra";
-import * as path from "path";
-import * as vscode from "vscode";
-import { AbstractWebView, Utils } from "../../../runtime";
+import * as fs from 'fs-extra';
+import * as path from 'path';
+import * as vscode from 'vscode';
+import { AbstractWebView, Utils } from '../../../runtime';
 
-import { BRANCH_TO_STAGE, DEFAULT_PROFILE, SKILL, SKILL_FOLDER, TELEMETRY_EVENTS } from "../../../constants";
+import {
+    BRANCH_TO_STAGE,
+    DEFAULT_PROFILE,
+    SKILL,
+    SKILL_FOLDER,
+    TELEMETRY_EVENTS,
+    DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT,
+    DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT,
+    DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT
+} from '../../../constants';
 import { AskStates } from '../../../models/resourcesConfig/askStates';
 import { ViewLoader } from "../../../utils/webViews/viewLoader";
 import { DeployHostedSkillManager } from "./deployHostedSkillManager";
@@ -25,7 +34,7 @@ import { TelemetryClient, ActionType } from "../../../runtime/lib/telemetry";
 
 enum DeployType {
     gitPush,
-    deploySkillPackage
+    deploySkillPackage,
 }
 
 enum LocalChangesStates {
@@ -80,10 +89,10 @@ export class DeployHostedSkillWebview extends AbstractWebView {
 
     constructor(viewTitle: string, viewId: string, context: vscode.ExtensionContext) {
         super(viewTitle, viewId, context);
-        this.loader = new ViewLoader(this.extensionContext, "deployHostedSkill", this);
+        this.loader = new ViewLoader(this.extensionContext, 'deployHostedSkill', this);
         void getOrInstantiateGitApi(context).then(value => {
             if (value === undefined) {
-                throw loggableAskError("No git extension found.", null, true);
+                throw loggableAskError('No git extension found.', null, true);
             }
             this.gitApi = value;
         });
@@ -109,7 +118,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
 
     async onReceiveMessageListener(message: string): Promise<void> {
         Logger.debug(`Calling method: ${this.viewId}.onReceiveMessageListener, args: `, message);
-        if (message === "refresh") {
+        if (message === 'refresh') {
             ext.skillPackageWatcher.validate();
             void this.refresh(true);
         } else if (message === "deploySkill" || message === "forceDeploy") {
@@ -118,20 +127,22 @@ export class DeployHostedSkillWebview extends AbstractWebView {
             try {
                 const skillFolder = getSkillFolderInWs(this.extensionContext);
                 if (skillFolder === undefined) {
-                    throw new AskError("No skill folder found in the workspace");
+                    throw new AskError('No skill folder found in the workspace');
                 }
                 this.skillRepo = this.gitApi.getRepository(skillFolder);
                 if (this.skillRepo === null) {
-                    throw new AskError("No skill repository found. Please make sure the skill exists in the Developer Console and download it again.");
+                    throw new AskError(
+                        'No skill repository found. Please make sure the skill exists in the Developer Console and download it again.'
+                    );
                 }
                 await this.updateCurrentRepoState();
                 const branch = this.currentRepoState.branch;
                 if (branch === undefined) {
-                    throw new AskError("Failed to fetch git branch");
+                    throw new AskError('Failed to fetch git branch');
                 }
                 this.getPanel().webview.html = this.loader.renderView({
-                    name: "deployInProgress",
-                    errorMsg: "Skill deployment in progress...",
+                    name: 'deployInProgress',
+                    errorMsg: 'Skill deployment in progress...',
                 });
                 const deployType = await this.validateAndGetDeployType(skillFolder, this.skillRepo, branch, message);
 
@@ -151,13 +162,13 @@ export class DeployHostedSkillWebview extends AbstractWebView {
                 this.dispose();
                 throw loggableAskError(`Skill deploy failed`, err, true);
             }
-        } else if (message === "exportSkillPackage") {
-            const hasDownloaded = await vscode.commands.executeCommand("ask.exportSkillPackage");
+        } else if (message === 'exportSkillPackage') {
+            const hasDownloaded = await vscode.commands.executeCommand('ask.exportSkillPackage');
             if (hasDownloaded === true) {
                 void this.refresh(true);
             }
         } else {
-            throw loggableAskError("Unexpected message received from webview.");
+            throw loggableAskError('Unexpected message received from webview.');
         }
     }
 
@@ -165,47 +176,55 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         Logger.debug(`Calling method: ${this.viewId}.getHtmlForView`);
         const skillFolder = getSkillFolderInWs(this.extensionContext);
         if (skillFolder === undefined) {
-            throw new AskError("No skill folder found in the workspace");
+            throw new AskError('No skill folder found in the workspace');
         }
-        this.askStates = new AskStates(skillFolder.fsPath)
+        this.askStates = new AskStates(skillFolder.fsPath);
         const skillDetails = getSkillDetailsFromWorkspace(this.extensionContext);
         const skillId: string = skillDetails.skillId;
         const skillName: string = skillDetails.skillName;
         const webview: vscode.Webview = this.getWebview();
         const skillDeployCss: vscode.Uri = webview.asWebviewUri(
-            vscode.Uri.file(path.join(this.extensionContext.extensionPath, "media", "skillDeploy.css"))
+            vscode.Uri.file(path.join(this.extensionContext.extensionPath, 'media', 'skillDeploy.css'))
         );
         this.clearUpStateContentsCache();
         this.refresh();
         return this.loader.renderView({
-            name: "deployHostedSkill",
+            name: 'deployHostedSkill',
             js: true,
             args: { skillId, skillName, skillDeployCss },
         });
     }
 
-    private async validateAndGetDeployType(skillFolder: vscode.Uri, skillRepo: Repository, branch: string, message: string): Promise<DeployType> {
+    private async validateAndGetDeployType(
+        skillFolder: vscode.Uri,
+        skillRepo: Repository,
+        branch: string,
+        message: string
+    ): Promise<DeployType> {
         const changesStateContent = this.getLocalChangesState(branch);
-        if (changesStateContent.state !== LocalChangesStates.committed &&
-            !(message === "forceDeploy" && changesStateContent.state !== LocalChangesStates.invalidBranch)) {
+        if (
+            changesStateContent.state !== LocalChangesStates.committed &&
+            !(message === 'forceDeploy' && changesStateContent.state !== LocalChangesStates.invalidBranch)
+        ) {
             void this.refresh();
             throw new AskError(changesStateContent.text);
         }
         const skillPackageStatesContent = await this.getSkillPackageSyncState(skillFolder, branch);
-        if (skillPackageStatesContent.state !== SkillPackageStates.upToDate && 
-            !(message === "forceDeploy" && skillPackageStatesContent.state === SkillPackageStates.outOfSync) &&
-            !(message === "forceDeploy" && skillPackageStatesContent.state === SkillPackageStates.noETag)) {
+        if (
+            skillPackageStatesContent.state !== SkillPackageStates.upToDate &&
+            !(message === 'forceDeploy' && skillPackageStatesContent.state === SkillPackageStates.outOfSync) &&
+            !(message === 'forceDeploy' && skillPackageStatesContent.state === SkillPackageStates.noETag)
+        ) {
             void this.refresh();
             throw new AskError(skillPackageStatesContent.text);
         }
-        
+
         const skillCodeState = await this.getSkillCodeSyncStates(skillFolder, skillRepo, branch);
-        if (skillCodeState.state !== SkillCodeStates.upToDate && 
-            skillCodeState.state !== SkillCodeStates.ahead) {
+        if (skillCodeState.state !== SkillCodeStates.upToDate && skillCodeState.state !== SkillCodeStates.ahead) {
             void this.refresh();
             throw new AskError(skillCodeState.text);
         }
-        if (message === "forceDeploy" && skillCodeState.state === SkillCodeStates.upToDate) {
+        if (message === 'forceDeploy' && skillCodeState.state === SkillCodeStates.upToDate) {
             return DeployType.deploySkillPackage;
         } else {
             return DeployType.gitPush;
@@ -224,11 +243,13 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         try {
             const skillFolder = getSkillFolderInWs(this.extensionContext);
             if (skillFolder === undefined) {
-                throw new AskError("No skill folder found in the workspace");
+                throw new AskError('No skill folder found in the workspace');
             }
             this.skillRepo = this.gitApi.getRepository(skillFolder);
             if (this.skillRepo === null) {
-                throw new AskError("No skill repository found. Please make sure the skill exists in the Developer Console and download it again.");
+                throw new AskError(
+                    'No skill repository found. Please make sure the skill exists in the Developer Console and download it again.'
+                );
             }
             this.skillRepo.state.onDidChange(() => {
                 if (this.isDisposed() === true) {
@@ -239,14 +260,14 @@ export class DeployHostedSkillWebview extends AbstractWebView {
             await this.updateCurrentRepoState();
             const branch = this.currentRepoState.branch;
             if (branch === undefined) {
-                throw new AskError("Failed to fetch git branch");
+                throw new AskError('Failed to fetch git branch');
             }
             await this.updateLocalChangesState(branch);
             await this.updateSkillPackageSyncState(skillFolder, branch);
             await this.updateSkillCodeSyncState(skillFolder, this.skillRepo, branch);
         } catch (error) {
             await this.postMessage(error);
-            throw loggableAskError("Skill deploy and build page refresh failed", error, true);
+            throw loggableAskError('Skill deploy and build page refresh failed', error, true);
         }
     }
 
@@ -299,7 +320,11 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         await this.postMessage();
     }
 
-    private async updateSkillCodeSyncState(skillFolder: vscode.Uri, skillRepo: Repository, branch: string): Promise<void> {
+    private async updateSkillCodeSyncState(
+        skillFolder: vscode.Uri,
+        skillRepo: Repository,
+        branch: string
+    ): Promise<void> {
         this.skillCodeSyncStateContent = await this.getSkillCodeSyncStates(skillFolder, skillRepo, branch);
         await this.postMessage();
     }
@@ -314,7 +339,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
             skillPackageStatesContent: this.skillPackageStatesContent,
             skillCodeSyncStateContent: this.skillCodeSyncStateContent,
             states: { LocalChangesStates, SkillPackageStates, SkillCodeStates },
-            error
+            error,
         });
     }
 
@@ -323,10 +348,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         if (BRANCH_TO_STAGE[branch] === undefined) {
             return this.resolveLocalChangeStateContent(LocalChangesStates.invalidBranch, branch);
         }
-        if (
-            this.currentRepoState.changesWithHead !== undefined &&
-            this.currentRepoState.changesWithHead.length !== 0
-        ) {
+        if (this.currentRepoState.changesWithHead !== undefined && this.currentRepoState.changesWithHead.length !== 0) {
             return this.resolveLocalChangeStateContent(LocalChangesStates.unstaged, branch);
         }
         if (
@@ -349,31 +371,31 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         if (state === LocalChangesStates.untracked) {
             return {
                 state,
-                text: `Untracked file(s) present in the current branch <code>${branch}</code>. Use <code>git add</code> to track.`,
+                text: DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT.UNTRACKED(branch),
                 valid: false,
             };
         } else if (state === LocalChangesStates.unstaged || state === LocalChangesStates.staged) {
             return {
                 state,
-                text: `Changes exist in the current branch <code>${branch}</code>. Use <code>git add</code> and <code>git commit</code> to commit changes.`,
+                text: DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT.UNSTAGED(branch),
                 valid: false,
             };
         } else if (state === LocalChangesStates.noChanges) {
             return {
                 state,
-                text: `There are no changes in the current branch <code>${branch}</code> to deploy. To deploy this skill, commit a change to the project.`,
+                text: DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT.NO_CHANGE(branch),
                 valid: false,
             };
         } else if (state === LocalChangesStates.invalidBranch) {
             return {
                 state,
-                text: `The current branch must be either <code>master</code> or <code>prod</code>.</p> Merge changes to these branches to deploy the skill.`,
+                text: DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT.INVALID_BRANCH,
                 valid: false,
             };
         } else {
             return {
                 state: LocalChangesStates.committed,
-                text: `Committed changes exist in the current branch <code>${branch}</code>. Ready to deploy.`,
+                text: DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT.COMMITTED(branch),
                 valid: true,
             };
         }
@@ -392,7 +414,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         const skillDetails = getSkillDetailsFromWorkspace(this.extensionContext);
         const skillId = skillDetails.skillId;
         if (!isNonEmptyString(skillId)) {
-            throw new AskError("Failed to get the skill id in .ask/ask-states.json.");
+            throw new AskError('Failed to get the skill id in .ask/ask-states.json.');
         }
         let skillPackageStatus;
         try {
@@ -402,7 +424,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         }
         const remoteETag = skillPackageStatus.skill?.eTag;
         const localETag = this.getLocalETag(skillFolder, skillStage);
-        if (localETag === undefined || typeof localETag !== "string") {
+        if (localETag === undefined || typeof localETag !== 'string') {
             return this.resolveSkillPackageStateContent(SkillPackageStates.noETag);
         }
         return localETag === remoteETag
@@ -427,46 +449,47 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         if (state === SkillPackageStates.outOfSync) {
             return {
                 state,
-                text: "Skill package contents may not be up-to-date with Alexa service. Please ensure you have the latest changes before deploying.",
+                text: DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT.OUT_OF_SYNC,
                 valid: false,
             };
         } else if (state === SkillPackageStates.noETag) {
             return {
                 state,
-                text:
-                    "Skill package contents may not be up-to-date with Alexa service. Please ensure you have the latest changes before deploying.",
+                text: DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT.NO_ETAG,
                 valid: false,
             };
         } else if (state === SkillPackageStates.liveSkill) {
             return {
                 state,
-                text:
-                    "To update your live skill package, please submit your changes for certification in the Alexa developer console.",
+                text: DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT.LIVE_SKILL,
                 valid: false,
-            };   
+            };
         } else if (state === SkillPackageStates.noSkillPackage) {
             return {
                 state,
-                text:
-                    "There is no skill-package found in the workspace. Merge skill-package to this branch to deploy the skill",
+                text: DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT.NO_SKILL_PACKAGE,
                 valid: false,
             };
         } else if (state === SkillPackageStates.serviceError) {
             return {
                 state,
-                text: error === undefined ? "Service error." : `Service Error: ${error}`,
+                text: DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT.SERVICE_ERROR(error),
                 valid: false,
             };
         } else {
             return {
                 state: SkillPackageStates.upToDate,
-                text: "Last deployed skill package is up to date with Alexa service.",
+                text: DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT.UP_TO_DATE,
                 valid: true,
             };
         }
     }
 
-    private async getSkillCodeSyncStates(skillFolder: vscode.Uri, skillRepo: Repository, branch: string): Promise<StateContent> {
+    private async getSkillCodeSyncStates(
+        skillFolder: vscode.Uri,
+        skillRepo: Repository,
+        branch: string
+    ): Promise<StateContent> {
         Logger.verbose(`Calling method: ${this.viewId}.syncSkillCodeSyncWithRemote, args:`, skillFolder);
         const skillCodePath = path.join(skillFolder.fsPath, SKILL_FOLDER.LAMBDA.NAME);
         if (!fs.existsSync(skillCodePath)) {
@@ -481,7 +504,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         } catch (error) {
             return this.resolveSkillCodeStateContent(SkillCodeStates.serviceError, error);
         }
-        if ((aheadCommits !== undefined && aheadCommits !== 0) && (behindCommits !== undefined && behindCommits !== 0)) {
+        if (aheadCommits !== undefined && aheadCommits !== 0 && behindCommits !== undefined && behindCommits !== 0) {
             return this.resolveSkillCodeStateContent(SkillCodeStates.diverged);
         }
         if (aheadCommits !== undefined && aheadCommits !== 0) {
@@ -498,38 +521,37 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         if (state === SkillCodeStates.outOfSync) {
             return {
                 state,
-                text:
-                    "Current files conflict with deployed version. Use <code>git pull</code> to merge the remote branch into yours.",
+                text: DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT.OUT_OF_SYNC,
                 valid: false,
             };
         } else if (state === SkillCodeStates.noSkillCode) {
             return {
                 state,
-                text: "There is no AWS Lambda source code found in the workspace.",
+                text: DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT.NO_SKILL_CODE,
                 valid: false,
             };
         } else if (state === SkillCodeStates.ahead) {
             return {
                 state,
-                text: "Your skill code is ahead of the remote version.",
+                text: DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT.AHEAD,
                 valid: true,
             };
         } else if (state === SkillCodeStates.diverged) {
             return {
                 state,
-                text: "Your skill code and the remote version have diverged. Use <code>git status</code> to get more details.",
+                text: DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT.DIVERGED,
                 valid: false,
             };
         } else if (state === SkillCodeStates.serviceError) {
             return {
                 state,
-                text: error === undefined ? "Service error." : `Service Error: ${error}`,
+                text: DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT.SERVICE_ERROR(error),
                 valid: false,
             };
         } else {
             return {
                 state: SkillCodeStates.upToDate,
-                text: `Your skill code is up to date with Alexa service.`,
+                text: DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT.UP_TO_DATE,
                 valid: true,
             };
         }
