@@ -47,7 +47,7 @@ function setupCoverage() {
 const mocha = new Mocha({
     ui: "bdd",
     color: true,
-    timeout: 30 * 1000, // for windows extension activation test
+    timeout: 80 * 1000, // for windows extension activation test
 });
 
 export async function run(): Promise<void> {

@@ -13,6 +13,7 @@ import { homedir } from 'os';
 
 import { SKILL, SKILL_FOLDER, SYSTEM_ASK_FOLDER } from '../constants';
 import { Logger } from '../logger';
+import { DynamicConfig } from './dynamicConfig';
 
 const AUTH_INFO_LAST_UPDATE_TIME = 'authInfoLastUpdateTime';
 const ASK_PRE_PUSH_LAST_UPDATE_TIME = 'askPrePushLastUpdateTime';
@@ -38,32 +39,32 @@ export function checkAllSkillS3Scripts(context: vscode.ExtensionContext): void {
 }
 
 export async function checkAuthInfoScript(context: vscode.ExtensionContext): Promise<void> {
-    const authInfoUrl = SKILL.S3_SCRIPTS_AUTH_INFO.URL;
+    const authInfoUrl = DynamicConfig.s3Scripts.authInfo;
     const authInfoPath = path.join(homedir(), SKILL_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.AUTH_INFO);
     await checkScript(authInfoUrl, authInfoPath, context, AUTH_INFO_LAST_UPDATE_TIME, undefined);
 }
 
 export async function checkAskPrePushScript(context: vscode.ExtensionContext): Promise<void> {
-    const askScriptUrl = SKILL.GIT_HOOKS_SCRIPTS.ASK_PRE_PUSH.URL;
+    const askScriptUrl = DynamicConfig.s3Scripts.askPrePush;
     const scriptFolderPath = path.join(homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME);
     const askFilePath = path.join(
         homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.ASK_PRE_PUSH);
     if (!fs.existsSync(scriptFolderPath)) {
         fs.mkdirSync(scriptFolderPath);
     }
-    const askChmod = SKILL.GIT_HOOKS_SCRIPTS.ASK_PRE_PUSH.CHMOD;
+    const askChmod = SKILL.GIT_HOOKS_SCRIPTS.CHMOD;
     await checkScript(askScriptUrl, askFilePath, context, ASK_PRE_PUSH_LAST_UPDATE_TIME, askChmod);
 }
 
 export async function checkGitCredentialHelperScript(context: vscode.ExtensionContext): Promise<void> {
-    const scriptUrl = SKILL.GIT_CREDENTIAL_SCRIPT.URL;
+    const scriptUrl = DynamicConfig.s3Scripts.gitCredentialHelper;
     const scriptFolderPath = path.join(homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME);
     const filePath = path.join(
         homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.GIT_CREDENTIAL_HELPER);
     if (!fs.existsSync(scriptFolderPath)) {
         fs.mkdirSync(scriptFolderPath);
     }
-    const chmod = SKILL.GIT_CREDENTIAL_SCRIPT.CHMOD;
+    const chmod = SKILL.GIT_HOOKS_SCRIPTS.CHMOD;
     await checkScript(scriptUrl, filePath, context, GIT_CREDENTIAL_HELPER_LAST_UPDATE_TIME, chmod);
 }
 

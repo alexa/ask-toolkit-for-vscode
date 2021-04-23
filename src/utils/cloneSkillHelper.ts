@@ -24,6 +24,7 @@ import { Logger } from '../logger';
 import { loggableAskError, AskError } from '../exceptions';
 import { getSkillNameFromLocales } from '../utils/skillHelper';
 import { openWorkspaceFolder } from '../utils/workspaceHelper';
+import { DynamicConfig } from './dynamicConfig';
 
 export async function executeClone(context: CommandContext, skillInfo: SmapiResource<SkillInfo>) {
     try {
@@ -191,11 +192,11 @@ async function setPrePushHookScript(
     
     await checkAuthInfoScript(context);
     await checkAskPrePushScript(context);
-    const scriptUrl = SKILL.GIT_HOOKS_SCRIPTS.PRE_PUSH.URL;
+    const scriptUrl = DynamicConfig.s3Scripts.prePush;
     const scriptFilePath = path.join(
         projectPath, SKILL_FOLDER.HIDDEN_GIT_FOLDER.NAME, 
         SKILL_FOLDER.HIDDEN_GIT_FOLDER.HOOKS.NAME, SKILL_FOLDER.HIDDEN_GIT_FOLDER.HOOKS.PRE_PUSH);
-    const chmod = SKILL.GIT_HOOKS_SCRIPTS.PRE_PUSH.CHMOD;
+    const chmod = SKILL.GIT_HOOKS_SCRIPTS.CHMOD;
     await downloadScriptFile(scriptUrl, scriptFilePath, chmod);
 }
 

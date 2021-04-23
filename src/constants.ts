@@ -223,21 +223,7 @@ export const SKILL = {
         ROLLBACK_IN_PROGRESS: 'ROLLBACK_IN_PROGRESS'
     },
     GIT_HOOKS_SCRIPTS: {
-        PRE_PUSH: {
-            URL: 'https://ask-tools-core-content.s3-us-west-2.amazonaws.com/git-hooks-templates/pre-push/pre-push',
-            CHMOD: '777'
-        },
-        ASK_PRE_PUSH: {
-            URL: 'https://ask-tools-core-content.s3-us-west-2.amazonaws.com/git-hooks-templates/pre-push/ask-pre-push',
-            CHMOD: '777'
-        }
-    },
-    GIT_CREDENTIAL_SCRIPT: {
-        URL: "https://ask-tools-core-content.s3-us-west-2.amazonaws.com/helpers/prod/git-credential-helper",
-        CHMOD: "777"
-    },
-    S3_SCRIPTS_AUTH_INFO: {
-        URL: "https://ask-tools-core-content.s3-us-west-2.amazonaws.com/auth_info"
+        CHMOD: '777'
     },
     MIN_SKILL_NAME_LENGTH: 2,
     MAX_SKILL_NAME_LENGTH: 50,

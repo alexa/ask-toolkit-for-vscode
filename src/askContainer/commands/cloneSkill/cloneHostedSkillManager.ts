@@ -21,6 +21,7 @@ import { BRANCH_TO_STAGE, SKILL_FOLDER, SKILL, GIT_MESSAGES } from '../../../con
 import { Logger } from '../../../logger';
 import { loggableAskError, AskError } from '../../../exceptions';
 import { Repository } from '../../../@types/git';
+import { DynamicConfig } from '../../../utils/dynamicConfig';
 
 export class CloneHostedSkillManager extends AbstractCloneSkillManager {
     async setupGitFolder(): Promise<Repository> {
@@ -95,14 +96,14 @@ export class CloneHostedSkillManager extends AbstractCloneSkillManager {
 
         await checkAuthInfoScript(context);
         await checkAskPrePushScript(context);
-        const scriptUrl = SKILL.GIT_HOOKS_SCRIPTS.PRE_PUSH.URL;
+        const scriptUrl = DynamicConfig.s3Scripts.prePush;
         const scriptFilePath = path.join(
             projectPath,
             SKILL_FOLDER.HIDDEN_GIT_FOLDER.NAME,
             SKILL_FOLDER.HIDDEN_GIT_FOLDER.HOOKS.NAME,
             SKILL_FOLDER.HIDDEN_GIT_FOLDER.HOOKS.PRE_PUSH
         );
-        const chmod = SKILL.GIT_HOOKS_SCRIPTS.PRE_PUSH.CHMOD;
+        const chmod = SKILL.GIT_HOOKS_SCRIPTS.CHMOD;
         await this.downloadScriptFile(scriptUrl, scriptFilePath, chmod);
     }
 
