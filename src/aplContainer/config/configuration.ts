@@ -63,6 +63,26 @@ export const SAMPLE_TEMPLATE_ID_TO_NAME_MAP: Map<string, string> = Map([
   ['TEXT_FORWARD_LIST_SAMPLE', 'Text Forward List Sample'],
   ['IMAGE_FORWARD_LIST_SAMPLE', 'Image Forward List Sample'],
   ['START_FROM_SCRATCH', 'Start From Scratch'],
+  ['GRID_LIST', 'Grid List'],
+  ['HEADLINE', 'Headline'],
+  ['IMAGE_LIST', 'Image List'],
+  ['PAGINATED_LIST','Paginated List'],
+  ['TEXT_LIST', 'Text List'],
+  ['DETAILS', 'Details'],
+  ['GRID', 'Grid'],
+  ['SHORT_TEXT', 'Short Text'],
+  ['HORIZONTAL_LIST', 'Horizontal List'],
+  ['FULL_SCREEN_LIST', 'Full Screen List'],
+  ['VERTICAL_LIST', 'Vertical List'],
+  ['VIDEO_PLAYER', 'Video Player'],
+  ['IMAGE_DISPLAY', 'Image Display'],
+  ['FULL_TEXT', 'Full Text'],
+  ['CHECK_LIST', 'Check List'],
+  ['ANALOG_CLOCK', 'Analog Clock'],
+  ['DANCING_EQUALIZER_BARS', 'Dancing Equalizer Bars'],
+  ['PARALLAX_EFFECT', 'Parallax Effect'],
+  ['ANIMATED_BACKGROUND', 'Animated Background'],
+  ['ANIMATION', 'Animation']
 ]);
 
 /**
