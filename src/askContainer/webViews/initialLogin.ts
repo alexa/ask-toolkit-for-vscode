@@ -15,7 +15,7 @@ import { Logger } from '../../logger';
 
 
 type SignInType = {
-    profileName: string;
+    profileName?: string;
 };
 
 export class InitialLoginWebview extends AbstractWebView {
