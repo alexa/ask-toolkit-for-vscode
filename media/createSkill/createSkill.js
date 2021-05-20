@@ -57,6 +57,7 @@ window.onload = function(){
             region,
             isHostedSkill
         });
+        return false;
     };
     // Handle the message inside the webview
     window.addEventListener('message', event => {

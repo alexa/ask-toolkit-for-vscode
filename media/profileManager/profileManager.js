@@ -5,30 +5,32 @@
  *--------------------------------------------------------------------------------------------*/
 const vscode = acquireVsCodeApi();
 
-window.onload = function(){
-    document.getElementById("createForm").onsubmit = function createNewProfile() {
-        document.getElementById("createButton").disabled = true;
+window.onload = function () {
+    document.getElementById('createForm').onsubmit = function createNewProfile() {
+        document.getElementById('createButton').disabled = true;
         const profileName = document.getElementById('newProfileName').value;
-        vscode.postMessage({profileName: profileName});
+        vscode.postMessage({ profileName: profileName });
+        return false;
     };
 
-    document.getElementById("deleteForm").onsubmit = function deleteProfile() {
+    document.getElementById('deleteForm').onsubmit = function deleteProfile() {
         if (window.deleteConfirmed) {
             const profileName = document.getElementById('deleteProfiles').value;
-            vscode.postMessage({deleteProfile: profileName});
-            document.getElementById("submitDelete").value = "Delete";
-            document.getElementById("deleteMessage").innerHTML = "";
+            vscode.postMessage({ deleteProfile: profileName });
+            document.getElementById('submitDelete').value = 'Delete';
+            document.getElementById('deleteMessage').innerHTML = '';
             window.deleteConfirmed = false;
         } else {
             window.deleteConfirmed = true;
-            document.getElementById("submitDelete").value = "Confirm delete";
+            document.getElementById('submitDelete').value = 'Confirm delete';
         }
+        return false;
     };
 
-    document.getElementById("deleteProfiles").onchange = function clearDelete() {
+    document.getElementById('deleteProfiles').onchange = function clearDelete() {
         window.deleteConfirmed = false;
-        document.getElementById("submitDelete").value = "Delete";
-        document.getElementById("deleteMessage").innerHTML = "";
+        document.getElementById('submitDelete').value = 'Delete';
+        document.getElementById('deleteMessage').innerHTML = '';
     };
 };
 
@@ -36,31 +38,31 @@ window.addEventListener('message', event => {
     const message = event.data;
 
     if (message.reEnable) {
-        document.getElementById("createButton").disabled = false;
+        document.getElementById('createButton').disabled = false;
         return;
     }
 
-    var submits = document.getElementsByClassName("submit-existing");
-    for (x = 0; x < submits.length; x++){
+    var submits = document.getElementsByClassName('submit-existing');
+    for (x = 0; x < submits.length; x++) {
         submits[x].disabled = true;
     }
-    var selects = document.getElementsByClassName("existing-profiles");
-    for (x = 0; x < selects.length; x++){
+    var selects = document.getElementsByClassName('existing-profiles');
+    for (x = 0; x < selects.length; x++) {
         resetSelect(selects[x]);
     }
     if (message.profiles.length > 0) {
         for (i = 0; i < message.profiles.length; i++) {
-            for (x = 0; x < selects.length; x++){
-                var option = document.createElement("option");
+            for (x = 0; x < selects.length; x++) {
+                var option = document.createElement('option');
                 option.text = message.profiles[i];
-                option.value = message.profiles[i];    
+                option.value = message.profiles[i];
                 selects[x].appendChild(option);
             }
         }
-        for (x = 0; x < selects.length; x++){
+        for (x = 0; x < selects.length; x++) {
             selects[x].disabled = false;
         }
-        for (x = 0; x < submits.length; x++){
+        for (x = 0; x < submits.length; x++) {
             submits[x].disabled = false;
         }
     }
@@ -68,10 +70,10 @@ window.addEventListener('message', event => {
 
 function resetSelect(select) {
     select.disabled = true;
-    select.innerHTML = "";
+    select.innerHTML = '';
 }
 
 function updateProfile() {
     const profileName = document.getElementById('updateProfiles').value;
-    vscode.postMessage({profileName: profileName});
+    vscode.postMessage({ profileName: profileName });
 }

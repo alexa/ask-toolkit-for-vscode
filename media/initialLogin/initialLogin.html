@@ -53,7 +53,8 @@
             const vscode = acquireVsCodeApi();
             window.onload = function(){
                 document.getElementById("signIn").onsubmit = function signIn() {
-                    vscode.postMessage();
+                    vscode.postMessage({});
+                    return false;
                 };
             };
         </script>
