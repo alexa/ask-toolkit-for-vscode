@@ -591,6 +591,8 @@ function updateChatBox() {
     chatboxInput.value = '';
 
     sendUtteranceRequest(text);
+    // do not refresh/redirect the page after form submit
+    return false;
 }
 
 /**

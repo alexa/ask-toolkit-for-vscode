@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 const vscode = acquireVsCodeApi();
 
-window.onload = function() {
+window.onload = function () {
     const deployBtn = document.getElementById('deployBtn');
     const noteDeployBtnActive = document.getElementById('noteBtnActive');
     const noteDeployBtnInactive = document.getElementById('noteBtnInactive');
@@ -30,14 +30,15 @@ window.onload = function() {
         }
     });
 
-    document.getElementById("deploySkill").onsubmit = function deploySkill() {
+    document.getElementById('deploySkill').onsubmit = function deploySkill() {
         const deployBtn = document.getElementById('deployBtn');
         deployBtn.disabled = true;
-    
+
         vscode.postMessage('deploySkill');
+        return false;
     };
 
-    document.getElementById("refresh").onclick = function refresh() {
+    document.getElementById('refresh').onclick = function refresh() {
         vscode.postMessage('refresh');
     };
 };

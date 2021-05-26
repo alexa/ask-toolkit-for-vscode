@@ -7,16 +7,17 @@
 /* eslint-disable no-undef */
 const vscode = acquireVsCodeApi();
 
-window.onload = function(){
-    document.getElementById("cloneSkill").onsubmit = function cloneSkill() {
+window.onload = function () {
+    document.getElementById('cloneSkill').onsubmit = function cloneSkill() {
         vscode.postMessage();
+        return false;
     };
 
     const skillLocaleNameTable = document.getElementById('skillLocaleNames');
     const tableBody = skillLocaleNameTable.tBodies[0];
 
     let localesInfoArray = document.getElementById('localeNameMap').value;
-    localesInfoArray = JSON.parse(localesInfoArray.replace(/'/g,'"'));
+    localesInfoArray = JSON.parse(localesInfoArray.replace(/'/g, '"'));
 
     localesInfoArray.forEach(localeInfo => {
         const row = document.createElement('tr');
