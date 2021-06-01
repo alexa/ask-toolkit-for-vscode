@@ -16,66 +16,28 @@
     <body>
         <div class="header">
             <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png"/>
-        <h1>March 2021 update</h1>
+        <h1>June 2021 update</h1>
     </div>
 
     <div class="body">
         <p>
-            Welcome to the updated Alexa Skills Toolkit for March 2021 (version 2.5). This update introduces a number of
+            Welcome to the updated Alexa Skills Toolkit for June 2021 (version 2.6). This update introduces a number of
             new features and enhancements.
         </p>
         <h2>What's new?</h2>
         <div class="container">
             <div class="flex-item">
-                <h2>Support for virtual device registration (Beta)</h2>
+                <h2>Support for APL 1.6</h2>
                 <p>
-                    The ASK Toolkit now supports <code>device registration</code>. Device registration is to set up a
-                    virtual Alexa device and register the device with your Amazon account. This feature is a
-                    prerequisite to access the enhanced Simulator, which
-                    supports <code>APL user events</code> and <code>audio output</code>. For details, see the <a
-                        href="https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-testing-simulator.html#register-device">Register
-                        device</a> instructions to register/delete a device in ASK toolkit.
-                    <br/><br/>
-                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/march2021/feat-device-registration.gif">
-                    <br/><br/>
+                    The ASK Toolkit now supports <code>Alexa Presentation Language v1.6</code> responses. Additionally, new templates supporting APL 1.6 has been added to the toolkit, and can be found during APL response template creation. More information on APL 1.6 can be found <a href="https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/apl-latest-version.html">here</a>.
                 </p>
-
-                <h2>Support for APL user events in Simulator (Beta)</h2>
-                <p>
-                    The ASK Toolkit now supports <code>APL user events</code> in the Simulator views. Please check the
-                    <a href="https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/apl-standard-commands.html#sendevent-command">SendEvent
-                        command</a> to learn more about <code>APL user events</code>. This feature is supported on
-                    MacOS and Windows platforms only.
-                    <br/><br/>
-                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/march2021/feat-apl-touch-event.gif">
-                    <br/><br/>
-                </p>
-
-                <h2>Support for audio output in Simulator (Beta)</h2>
-                <p>
-                    The simulator now supports <code>audio output</code> for the skill response. This feature is
-                    supported on MacOS and Windows platforms only.
-                    <br/><br/>
-                </p>
-
-                <h2>Expose invocation name in Simulator</h2>
-                <p>
-                    The simulator now exposes <code>invocation name</code> in the chat input, which helps developers to
-                    invoke skill.
-                    <br/><br/>
-                    <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/toolkitUpdate/march2021/feat-invoke-skill.png" />
-                    <br/><br/>
-                </p>
-
             </div>
         </div>
 
         <h2>Bug fixes</h2>
         <p>
-            <li>List all custom skills under 'download skills' quick pick (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/104">a18a073f76207c1332cdc443aaf8879363b23478</a>)</li>
-            <li>Refresh deploy and welcome webview to reveal in 1.53.2v (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/105">73c89e619d4c2b6adf9e07b13dfdc14d0062e135</a>)</li>
-            <li>Update the skill list in realtime for cloning a skill (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/101">692896855ef962d2d66ea048a098e90e5df130e1</a>)</li>
-            <li>Add metrics fields in telemetryClient (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/109">9428158d079368cf7f322022f2e7d6bf07b9ae64</a>)</li>
+            <li>Update toolkit webviews to be actionable in <code>vscode 1.56v</code> (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/127">987eb1add8363a46ab33e47f7c3e508a495342df</a>)</li>
+            <li>Dependency updates to fix security CVEs (<a href="https://github.com/alexa/ask-toolkit-for-vscode/pull/125">3efe8d3e9603ffb97733356fcd640e6f3984bc7d</a>)</li>
         </p>
 
         <h2>Documentation</h2>
