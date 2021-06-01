@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.5.0...v2.6.0) (2021-06-01)
+
+
+### Features
+
+* upgrade APL 1.5 to 1.6 with APL Web Viewhost and APL Suggester. ([#122](https://github.com/alexa/ask-toolkit-for-vscode/issues/122)) ([e350c52](https://github.com/alexa/ask-toolkit-for-vscode/commits/e350c52351eb159af8af50bcb80027a127547653))
+
+
+### Bug Fixes
+
+* consolidate deploy webviews messages in the constants file ([#117](https://github.com/alexa/ask-toolkit-for-vscode/issues/117)) ([4b97b79](https://github.com/alexa/ask-toolkit-for-vscode/commits/4b97b797eb98bf05d974c941d999957047cc4169))
+* update webview forms to not redirect after submission ([#127](https://github.com/alexa/ask-toolkit-for-vscode/issues/127)) ([987eb1a](https://github.com/alexa/ask-toolkit-for-vscode/commits/987eb1add8363a46ab33e47f7c3e508a495342df)), closes [#123](https://github.com/alexa/ask-toolkit-for-vscode/issues/123) [#124](https://github.com/alexa/ask-toolkit-for-vscode/issues/124)
+
 ## [2.5.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.4.0...v2.5.0) (2021-03-30)
 
 
