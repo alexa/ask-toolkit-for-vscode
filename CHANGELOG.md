@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.6.0...v2.7.0) (2021-07-23)
+
+
+### Features
+
+* set node.js 12 as default hosted skill node.js runtime version ([#138](https://github.com/alexa/ask-toolkit-for-vscode/issues/138)) ([cd374c5](https://github.com/alexa/ask-toolkit-for-vscode/commits/cd374c53db447f7c7ba69e3c9ff1d0db07cea1b9))
+
+
+### Bug Fixes
+
+* update package-lock.json to update trim-lines security patch ([#137](https://github.com/alexa/ask-toolkit-for-vscode/issues/137)) ([f31ece4](https://github.com/alexa/ask-toolkit-for-vscode/commits/f31ece49d203bf791208531b5836cc3b6057f04f))
+
 ## [2.6.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.5.0...v2.6.0) (2021-06-01)
 
 
