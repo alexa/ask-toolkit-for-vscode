@@ -359,8 +359,8 @@
     },
     "dependencies": {
         "adm-zip": "0.4.14",
-        "apl-suggester": "^1.6.0",
-        "apl-viewhost-web": "1.6.3",
+        "apl-suggester": "^1.7.0",
+        "apl-viewhost-web": "^1.7.0",
         "ask-smapi-sdk": "^1.2.2",
         "async-retry": "^1.3.1",
         "axios": "^0.21.1",
