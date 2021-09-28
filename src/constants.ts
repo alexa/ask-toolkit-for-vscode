@@ -5,8 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as path from 'path';
-
 import { EXTENSION_TREE_VIEW_CONFIG } from "./aplContainer/config/configuration";
+
 
 export const EXTENSION_DISPLAY_NAME = 'ASK Toolkit';
 export const EXTENSION_PUBLISHER = 'ask-toolkit';
@@ -488,7 +488,7 @@ export const GIT_MESSAGES = {
 
 export const LOCAL_DEBUG = {
     NODE_DEPENDENCIES: {
-        LANG_TYPE: 'node',
+        LANG_TYPE: 'pwa-node',
         DEP_REGEX: '**/node_modules/ask-sdk-local-debug/**/LocalDebuggerInvoker.js',
         DEP_INSTALL_MSG: 'ask-sdk-local-debug package not found. Please install the ask-sdk-local-debug package from npm'
     },

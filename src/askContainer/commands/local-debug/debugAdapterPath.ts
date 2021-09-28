@@ -3,15 +3,15 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
 import * as child_process from 'child_process';
-import * as path from 'path';
 import * as fs from 'fs';
-
-import { AbstractCommand, CommandContext } from '../../../runtime';
+import * as path from 'path';
+import * as vscode from 'vscode';
+import { DEFAULT_ENCODING, LOCAL_DEBUG } from '../../../constants';
 import { loggableAskError } from '../../../exceptions';
-import { LOCAL_DEBUG, DEFAULT_ENCODING } from '../../../constants';
 import { Logger } from '../../../logger';
+import { AbstractCommand, CommandContext } from '../../../runtime';
+
 
 export class DebugAdapterPathCommand extends AbstractCommand<string> {
     async execute(context: CommandContext, debugArgs: any): Promise<string> {

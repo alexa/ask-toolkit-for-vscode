@@ -216,7 +216,7 @@
                         "description": "Debugger configuration for Alexa skills (Node.js)",
                         "body": {
                             "name": "Debug Alexa Skill (Node.js)",
-                            "type": "node",
+                            "type": "pwa-node",
                             "request": "launch",
                             "program": "^\"\\${command:ask.debugAdapterPath}\"",
                             "args": [
