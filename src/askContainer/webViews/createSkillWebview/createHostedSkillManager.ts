@@ -4,7 +4,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as model from 'ask-smapi-model';
-import * as retry from 'async-retry';
+import retry from 'async-retry';
 import { lensPath, view } from 'ramda';
 import { ExtensionContext, Progress } from 'vscode';
 import { SKILL, SKILL_STATUS_MODEL } from '../../../constants';

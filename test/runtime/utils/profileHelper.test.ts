@@ -4,14 +4,13 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as assert from "assert";
-import * as sinon from "sinon";
-import * as fs from "fs";
-import * as os from "os";
-import * as jsonfile from "jsonfile";
+import fs from "fs";
+import jsonfile from "jsonfile";
+import os from "os";
 import * as path from "path";
-
-import { listExistingProfileNames, createConfigFileIfNotExists } from "../../../src/runtime/lib/utils/profileHelper";
+import * as sinon from "sinon";
 import * as jsonUtility from "../../../src/runtime/lib/utils/jsonUtility";
+import { createConfigFileIfNotExists, listExistingProfileNames } from "../../../src/runtime/lib/utils/profileHelper";
 
 describe("ProfileHelper tests", () => {
     let sandbox: sinon.SinonSandbox;

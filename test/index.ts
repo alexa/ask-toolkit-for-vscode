@@ -18,8 +18,8 @@
 "use strict";
 
 import * as glob from "glob";
+import Mocha from "mocha";
 import * as paths from "path";
-import * as Mocha from "mocha";
 
 // The test coverage approach is inspired by https://github.com/microsoft/vscode-js-debug/blob/master/src/test/testRunner.ts
 function setupCoverage() {
@@ -64,7 +64,7 @@ export async function run(): Promise<void> {
         mocha.addFile(paths.resolve(testsRoot, file));
     }
     try {
-        await new Promise((resolve, reject) =>
+        await new Promise<void>((resolve, reject) =>
             mocha.run(failures => (failures ? reject(new Error(`${failures} tests failed`)) : resolve()))
         );
     } finally {

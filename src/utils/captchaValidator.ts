@@ -4,7 +4,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import { IncomingMessage, Server, ServerResponse } from 'http';
-import * as open from 'open';
+import open from 'open';
 import { URLSearchParams } from 'url';
 import { AUTH, LOCALHOST_PORT } from '../constants';
 import { logAskError } from '../exceptions';

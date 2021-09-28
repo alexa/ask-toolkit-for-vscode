@@ -5,8 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { CustomSmapiClientBuilder } from "ask-smapi-sdk";
 import * as assert from "assert";
-import * as fs from "fs";
-import * as nock from "nock";
+import fs from "fs";
+import nock from "nock";
 import * as path from "path";
 import * as sinon from "sinon";
 import { PassThrough } from "stream";

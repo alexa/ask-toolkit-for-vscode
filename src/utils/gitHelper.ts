@@ -3,16 +3,16 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from "vscode";
-import * as fs from "fs";
-import * as path from "path";
-import { homedir } from "os";
 import { execSync, ExecSyncOptions } from "child_process";
-
+import * as fs from "fs";
+import os from 'os';
+import * as path from "path";
+import * as vscode from "vscode";
 import { API as GitApi, GitExtension } from "../@types/git";
-import { Logger, LogLevel } from "../logger";
-import { AskError } from "../exceptions";
 import { SYSTEM_ASK_FOLDER } from "../constants";
+import { AskError } from "../exceptions";
+import { Logger, LogLevel } from "../logger";
+
 
 export class GitInTerminalHelper {
     private folderPath: string;
@@ -35,7 +35,7 @@ export class GitInTerminalHelper {
 
     configureCredentialHelper(repoUrl: string, profile: string, skillId: string): void {
         const credentialHelperPath = path.join(
-            homedir(),
+            os.homedir(),
             SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER,
             SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME,
             SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.GIT_CREDENTIAL_HELPER

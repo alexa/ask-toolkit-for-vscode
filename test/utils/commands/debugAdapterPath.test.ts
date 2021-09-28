@@ -4,8 +4,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as assert from "assert";
-import * as child_process from 'child_process';
-import * as fs from 'fs';
+import child_process from 'child_process';
+import fs from 'fs';
 import * as path from "path";
 import * as sinon from "sinon";
 import * as vscode from "vscode";
