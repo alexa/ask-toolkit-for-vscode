@@ -4,18 +4,18 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
+import { getViewportProfiles, IViewport, IViewportProfile } from 'apl-suggester';
 import { OrderedMap } from 'immutable';
-import { AbstractCommand } from '../../runtime';
-import { getViewportProfiles, IViewportProfile, IViewport } from 'apl-suggester';
+import * as vscode from 'vscode';
+import { ERROR_MESSAGES } from '../../aplContainer/constants/messages';
 import {
     getViewportCharacteristicsFromViewPort
 } from '../../aplContainer/utils/viewportProfileHelper';
-
-import { ERROR_MESSAGES } from '../../aplContainer/constants/messages';
-import { loggableAskError } from '../../exceptions';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
+import { AbstractCommand } from '../../runtime';
 import { SimulateSkillWebview } from '../webViews/simulateSkillWebview';
+
 
 export class ChangeSimulatorViewportCommand extends AbstractCommand<void> {
     private viewportProfiles!: OrderedMap<string, IViewportProfile>;
@@ -107,7 +107,7 @@ export class ChangeSimulatorViewportCommand extends AbstractCommand<void> {
             this.findToChangeViewport(v, pickedViewportName)
         );
         if (!viewportProfileToChange) {
-            throw loggableAskError(ERROR_MESSAGES.CHANGE_VIEWPORT_PROFILE_NO_MATCHED_VIEWPORT, new Error(`No viewport profile found for ${pickedViewportName}`), true);
+            throw logAskError(ERROR_MESSAGES.CHANGE_VIEWPORT_PROFILE_NO_MATCHED_VIEWPORT, new Error(`No viewport profile found for ${pickedViewportName}`), true);
         }
     }
 

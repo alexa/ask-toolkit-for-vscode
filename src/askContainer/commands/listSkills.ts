@@ -3,16 +3,15 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { 
-    SmapiResource, AbstractCommand, CommandContext, Utils, SmapiClientFactory } from '../../runtime';
 import * as model from 'ask-smapi-model';
+import { DEFAULT_PROFILE, EN_US_LOCALE } from '../../constants';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { AbstractCommand, CommandContext, SmapiClientFactory, SmapiResource, Utils } from '../../runtime';
 
-import { EN_US_LOCALE, DEFAULT_PROFILE } from '../../constants';
 
 import skillSummary = model.v1.skill.SkillSummary;
 import skillManagementServiceClient = model.services.skillManagement.SkillManagementServiceClient;
-import { Logger } from '../../logger';
-import { loggableAskError } from '../../exceptions';
 
 export class ListSkillsCommand extends AbstractCommand<Array<SmapiResource<skillSummary>>> {
     constructor() {
@@ -53,7 +52,7 @@ export class ListSkillsCommand extends AbstractCommand<Array<SmapiResource<skill
         try {
             vendorId = Utils.resolveVendorId(profile);
         } catch (err) {
-            throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+            throw logAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
         }
 
         await this.getSkillsList(

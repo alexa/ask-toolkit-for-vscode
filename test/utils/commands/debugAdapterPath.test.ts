@@ -6,13 +6,15 @@
 import * as assert from "assert";
 import * as child_process from 'child_process';
 import * as fs from 'fs';
+import * as path from "path";
 import * as sinon from "sinon";
 import * as vscode from "vscode";
 import { DebugAdapterPathCommand } from "../../../src/askContainer/commands/local-debug/debugAdapterPath";
+import { LOCAL_DEBUG } from "../../../src/constants";
 import { stubTelemetryClient } from '../../../test/testUtilities';
 
 
-describe.only("Command ask.debugAdapterPath", () => {
+describe("Command ask.debugAdapterPath", () => {
     let command: DebugAdapterPathCommand;
     let sandbox: sinon.SinonSandbox;
     let commandId: string;
@@ -44,7 +46,7 @@ describe.only("Command ask.debugAdapterPath", () => {
         }
         const fakePath = [ {'fsPath': "test"}];
         
-        sinon.stub(vscode.workspace, "findFiles").resolves(fakePath);
+        sandbox.stub(vscode.workspace, "findFiles").resolves(fakePath);
         
         const debuggerPath = await vscode.commands.executeCommand(commandId, mockedDebugArgs);
         assert.ok(debuggerPath === fakePath[0].fsPath);
@@ -52,16 +54,16 @@ describe.only("Command ask.debugAdapterPath", () => {
 
     it("Should be able to return python local debugger path from the installed node_modules", async () => {
         const mockPythonPath = 'test/site-packages';
-        const localDebuggerPath = 'test/site-packages/ask_sdk_local_debug/local_debugger_invoker.py'
+        const localDebuggerPath = path.join(mockPythonPath, LOCAL_DEBUG.PYTHON_DEPENDENCIES.DEP_PATH);
         const mockedDebugArgs = {
             'type': 'python',
             'pythonPath': mockPythonPath
         }
         const testSitePkgLocation = "['test/site-packages']";
 
-        sinon.stub(child_process, "execSync")
-        sinon.stub(TextDecoder.prototype, "decode").returns(testSitePkgLocation);
-        sinon.stub(fs, "existsSync").withArgs(localDebuggerPath).returns(true);
+        sandbox.stub(child_process, "execSync")
+        sandbox.stub(TextDecoder.prototype, "decode").returns(testSitePkgLocation);
+        sandbox.stub(fs, "existsSync").withArgs(localDebuggerPath).returns(true);
         
         const debuggerPath = await vscode.commands.executeCommand(commandId, mockedDebugArgs);
         assert.ok(debuggerPath === localDebuggerPath);

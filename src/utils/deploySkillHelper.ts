@@ -3,34 +3,29 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
-import * as fs from 'fs';
 import * as model from 'ask-smapi-model';
-import * as path from 'path';
 import * as retry from 'async-retry';
-import { view, lensPath } from 'ramda';
+import { lensPath, view } from 'ramda';
+import * as vscode from 'vscode';
+import { Repository } from '../@types/git';
+import { BRANCH_TO_STAGE, DEFAULT_PROFILE, SKILL } from '../constants';
+import { AskError, logAskError } from '../exceptions';
+import { Logger } from '../logger';
+import { AbstractWebView, SmapiClientFactory, Utils } from '../runtime';
+import { getOrInstantiateGitApi } from './gitHelper';
+import { getSkillDetailsFromWorkspace } from './skillHelper';
 
-import { 
-    SmapiClientFactory, Utils, AbstractWebView
-} from '../runtime';
 
 import ListCertificationsResponse = model.v1.skill.certification.ListCertificationsResponse;
 import SmapiClient = model.services.skillManagement.SkillManagementServiceClient;
 import StandardizedError = model.v1.skill.StandardizedError;
 
-import { Repository, GitErrorCodes } from '../@types/git';
-import { loggableAskError, AskError } from '../exceptions';
-import { getSkillDetailsFromWorkspace } from './skillHelper';
-import { getOrInstantiateGitApi } from './gitHelper';
-import { BRANCH_TO_STAGE, DEFAULT_PROFILE } from '../constants';
-import { Logger } from '../logger';
-import { SKILL } from '../constants';
 
 
 function checkValidBranch(branchName: string): void { 
     Logger.verbose(`Calling method: checkValidBranch, args:`, branchName);
     if (!(branchName in BRANCH_TO_STAGE)) {
-        throw loggableAskError(`Hosted skills cannot be deployed through ${branchName} branch. Please merge your branch into remote master branch`);
+        throw logAskError(`Hosted skills cannot be deployed through ${branchName} branch. Please merge your branch into remote master branch`);
     }
 }
 
@@ -39,13 +34,13 @@ async function checkValidStage(branchName: string, skillId: string,
     Logger.verbose(`Calling method: callValidStage, args:`, branchName, skillId);
     const skillStage: string = BRANCH_TO_STAGE[branchName];
     if (!skillStage) {
-        throw loggableAskError(`No skill stage available for ${branchName} branch`);
+        throw logAskError(`No skill stage available for ${branchName} branch`);
     }
 
     try { 
         await smapiClient.getSkillManifestV1(skillId, skillStage);
     } catch (err) {
-        throw loggableAskError(`Expected stage ${skillStage} doesn't exist for ${branchName}`);
+        throw logAskError(`Expected stage ${skillStage} doesn't exist for ${branchName}`);
     }
 }
 
@@ -60,12 +55,12 @@ async function checkInProgressCerts(
             // skill never sent for certification
             return;
         }
-        throw loggableAskError(`Couldn't check certification status for skill. ${err}`);
+        throw logAskError(`Couldn't check certification status for skill. ${err}`);
     }
 
     if (certificationListResponse.items?.some(
         (certSummary) => certSummary.status === 'IN_PROGRESS')) {
-        throw loggableAskError(
+        throw logAskError(
             `Your skill is in review. If you want to make any changes to the code, withdraw the skill from certification or publish to live.`);
     } else {
         if (certificationListResponse.isTruncated) {
@@ -235,12 +230,12 @@ export async function deploySkill(
                 Logger.info(skillBuildStatusMsg);
                 vscode.window.showInformationMessage(skillBuildStatusMsg);
             } catch(err) {
-                throw loggableAskError(`Skill build failed`, err, true);
+                throw logAskError(`Skill build failed`, err, true);
             } finally {
                 view.dispose();
             }
         });
     } catch (err) {
-        throw loggableAskError(`Skill deploy failed`, err, true);
+        throw logAskError(`Skill deploy failed`, err, true);
     }
 }

@@ -5,13 +5,13 @@
  *--------------------------------------------------------------------------------------------*/
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-
 import { DeploySkillWebview } from '../../../src/askContainer/webViews/deploySkillWebview';
-import * as workspaceHelper from '../../../src/utils/workspaceHelper';
-import { FakeExtensionContext, FakeWebviewPanelOnDidChangeViewStateEvent } from '../../testUtilities';
 import * as exceptions from '../../../src/exceptions';
 import * as helper from '../../../src/utils/deploySkillHelper';
 import * as skillHelper from '../../../src/utils/skillHelper';
+import * as workspaceHelper from '../../../src/utils/workspaceHelper';
+import { FakeExtensionContext, FakeWebviewPanelOnDidChangeViewStateEvent } from '../../testUtilities';
+
 
 describe('Webview_deploySkill tests', () => {
     let webView: DeploySkillWebview;
@@ -72,7 +72,7 @@ describe('Webview_deploySkill tests', () => {
             const message = 'deploySkill';
             const fakeErrorMessage = 'fakeErrorMessage';
             sandbox.stub(workspaceHelper, 'getSkillFolderInWs').throws(new Error(fakeErrorMessage));
-            const expectedError = exceptions.loggableAskError(`Skill deploy failed`, fakeErrorMessage, true);
+            const expectedError = exceptions.logAskError(`Skill deploy failed`, fakeErrorMessage, true);
 
             try {
                 await webView.onReceiveMessageListener(message);
@@ -106,7 +106,7 @@ describe('Webview_deploySkill tests', () => {
 
         it('When message is unknown, should throw unexpected message error', async () => {
             const message = 'invalidMessage';
-            const expectedError = exceptions.loggableAskError('Unexpected message received from webview.');
+            const expectedError = exceptions.logAskError('Unexpected message received from webview.');
             try {
                 await webView.onReceiveMessageListener(message);
             } catch (e) {

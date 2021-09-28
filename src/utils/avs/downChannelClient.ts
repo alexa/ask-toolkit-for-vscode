@@ -6,12 +6,12 @@
 
 import http2 = require('http2');
 import retry = require('async-retry');
-import { loggableAskError } from '../../exceptions';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
-import { AVS_CONFIG, IDENTIFIER, AVS_CONSTANTS, SIMPLE_AVS_BOUNDARY } from './avsPayload';
+import { getDirectiveIdentifier, parseJsonContent } from './avsClientUtil';
+import { IDirective, ISkillDebuggerContent, ISkillDebuggerPayload } from './avsInterface';
+import { AVS_CONFIG, AVS_CONSTANTS, IDENTIFIER, SIMPLE_AVS_BOUNDARY } from './avsPayload';
 import httpMessageParser = require('http-message-parser');
-import { IDirective, ISkillDebuggerPayload, ISkillDebuggerContent } from './avsInterface';
-import { parseJsonContent, getDirectiveIdentifier } from './avsClientUtil';
 
 //Store the chunks received from downchannel.
 let downchannelBuffer;
@@ -112,7 +112,7 @@ export class DownchannelManager {
             downchannelDirectives = this.processDcDirectives(parsedData);
             if (attempt < 10 && this.isOutOfSkillResponse === false && (downchannelDirectives.request.length < 1
                 || downchannelDirectives.response.length < 1)) {
-                throw loggableAskError(`Failed to get debugging info from downchannel, retrying...`);
+                throw logAskError(`Failed to get debugging info from downchannel, retrying...`);
             }
         }, RETRY_OPTION);
         this.isOutOfSkillResponse = false;

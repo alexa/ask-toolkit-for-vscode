@@ -3,22 +3,22 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+import { CustomSmapiClientBuilder } from "ask-smapi-sdk";
 import * as assert from "assert";
 import * as fs from "fs";
-import * as sinon from "sinon";
 import * as nock from "nock";
-import { CustomSmapiClientBuilder } from "ask-smapi-sdk";
-import * as vscode from "vscode";
-import { PassThrough } from "stream";
 import * as path from "path";
- 
-import { SchemaManager } from "../../src/utils/schemaHelper";
-import * as profileHelper from "../../src/runtime/lib/utils/profileHelper";
-import { SmapiClientFactory } from "../../src/runtime";
-import { Logger } from "../../src/logger";
+import * as sinon from "sinon";
+import { PassThrough } from "stream";
+import * as vscode from "vscode";
 import { SCHEMA } from "../../src/constants";
 import { ext } from "../../src/extensionGlobals";
+import { Logger } from "../../src/logger";
+import { SmapiClientFactory } from "../../src/runtime";
+import * as profileHelper from "../../src/runtime/lib/utils/profileHelper";
+import { SchemaManager } from "../../src/utils/schemaHelper";
 import * as workspaceHelper from "../../src/utils/workspaceHelper";
+ 
 
 describe("SkillPackageSchema tests", () => {
     const FAKE_SKILL_PATH = "fakeSkillPath";

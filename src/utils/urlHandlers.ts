@@ -3,20 +3,20 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+import * as model from 'ask-smapi-model';
 import * as fs from 'fs-extra';
 import * as https from 'https';
-import * as vscode from 'vscode';
 import { parse } from 'querystring';
-import * as model from 'ask-smapi-model';
+import * as vscode from 'vscode';
+import { DEFAULT_PROFILE } from '../constants';
+import { logAskError } from '../exceptions';
+import { Logger } from '../logger';
+import { SkillInfo } from '../models/types';
+import { SmapiClientFactory, SmapiResource, Utils } from '../runtime';
 import SkillSummary = model.v1.skill.SkillSummary;
 import HostedSkillMetadata = model.v1.skill.AlexaHosted.HostedSkillMetadata;
 import ListSkillResponse = model.v1.skill.ListSkillResponse;
 
-import { SkillInfo } from '../models/types';
-import { DEFAULT_PROFILE } from '../constants';
-import { Utils, SmapiResource, SmapiClientFactory } from '../runtime';
-import { Logger } from '../logger';
-import { loggableAskError } from '../exceptions';
 
 export async function hostedSkillsClone(uri: vscode.Uri, context: vscode.ExtensionContext) {
     if (uri.path === '/clone') {
@@ -30,7 +30,7 @@ export async function hostedSkillsClone(uri: vscode.Uri, context: vscode.Extensi
         try {
             vendorId = Utils.resolveVendorId(profile);
         } catch (err) {
-            throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+            throw logAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
         }   
         if (vendorId !== targetVendorId) {
             const VENDOR_ID_MISMATCH = `Unable to clone: vendor ID for requested skill ${targetVendorId} \
@@ -67,7 +67,7 @@ export async function hostedSkillsClone(uri: vscode.Uri, context: vscode.Extensi
         Logger.error(INVALID_SKILL);
     } else {
         const UNSUPPORTED_URI = `Unsupported extension launch URI: ${uri}`;
-        throw loggableAskError(UNSUPPORTED_URI);
+        throw logAskError(UNSUPPORTED_URI);
     }
 }
 

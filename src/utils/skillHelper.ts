@@ -3,28 +3,22 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from "vscode";
+import * as model from "ask-smapi-model";
 import * as fs from "fs";
 import * as path from "path";
 import * as R from "ramda";
-import * as model from "ask-smapi-model";
-
-import { SmapiResource, Utils, SmapiClientFactory } from "../runtime";
-
-import { loggableAskError } from "../exceptions";
-import { getSkillFolderInWs } from "./workspaceHelper";
+import * as vscode from "vscode";
 import {
-    CLI_HOSTED_SKILL_TYPE,
-    EXTENSION_STATE_KEY,
-    EN_US_LOCALE,
-    DEFAULT_ENCODING,
-    DEFAULT_PROFILE,
-    ERRORS,
-    SKILL_FOLDER,
-    SKILL,
+    CLI_HOSTED_SKILL_TYPE, DEFAULT_ENCODING,
+    DEFAULT_PROFILE, EN_US_LOCALE, ERRORS, EXTENSION_STATE_KEY, SKILL, SKILL_FOLDER
 } from "../constants";
-import { SkillInfo } from "../models/types";
+import { logAskError } from "../exceptions";
 import { Logger } from "../logger";
+import { SkillInfo } from "../models/types";
+import { SmapiClientFactory, SmapiResource, Utils } from "../runtime";
+import { getSkillFolderInWs } from "./workspaceHelper";
+
+
 
 import hostedSkillMetadata = model.v1.skill.AlexaHosted.HostedSkillMetadata;
 import SkillManifestEnvelope = model.v1.skill.Manifest.SkillManifestEnvelope;
@@ -32,7 +26,7 @@ import SkillManifestEnvelope = model.v1.skill.Manifest.SkillManifestEnvelope;
 export function getAskResourceConfig(folderPath: string): any {
     Logger.verbose(`Calling method: getAskResourceConfig`);
     if (folderPath === undefined) {
-        throw loggableAskError("Workspace is not a valid skill project");
+        throw logAskError("Workspace is not a valid skill project");
     }
     const askResourcesPath = path.join(folderPath, SKILL_FOLDER.ASK_RESOURCES_JSON_CONFIG);
     if (fs.existsSync(askResourcesPath)) {
@@ -45,7 +39,7 @@ export function getSkillManifestFromWorkspace(skillFolder: vscode.Uri, profile: 
     Logger.verbose(`Calling method: getSkillManifestFromWorkspace`);
     try {
         if (skillFolder === undefined) {
-            throw loggableAskError("Workspace is not a valid skill project");
+            throw logAskError("Workspace is not a valid skill project");
         }
         const { skillPackageAbsPath } = getSkillMetadataSrc(skillFolder.fsPath, profile);
         const skillManifestPath = path.join(skillPackageAbsPath, SKILL_FOLDER.SKILL_PACKAGE.MANIFEST);
@@ -54,7 +48,7 @@ export function getSkillManifestFromWorkspace(skillFolder: vscode.Uri, profile: 
             return JSON.parse(skillConfigHex);
         }
     } catch (error) {
-        throw loggableAskError("Failed to get skill manifest", error);
+        throw logAskError("Failed to get skill manifest", error);
     }
 }
 
@@ -75,13 +69,13 @@ export function getSkillMetadataSrc(
     }
     skillPackageSrc = R.path(["profiles", profile, "skillMetadata", "src"], skillResource);
     if (skillPackageSrc === undefined) {
-        throw loggableAskError(
+        throw logAskError(
             "Failed to get skill package path in ask-resources.json, please specify 'src' field in 'skillMetadata' under your profile name."
         );
     }
     skillPackageAbsPath = path.join(folderPath, skillPackageSrc);
     if (!fs.existsSync(skillPackageAbsPath)) {
-        throw loggableAskError(`The skill package path ${skillPackageSrc} does not exist. \
+        throw logAskError(`The skill package path ${skillPackageSrc} does not exist. \
         Please check the skill package path in the 'src' field in 'skillMetadata' under your profile name.`);
     }
     return { skillPackageAbsPath, skillPackageSrc };
@@ -90,7 +84,7 @@ export function getSkillMetadataSrc(
 export function getAskState(skillFolder: vscode.Uri): any {
     Logger.verbose(`Calling method: getAskState`);
     if (skillFolder === undefined) {
-        throw loggableAskError("Workspace is not a valid skill project");
+        throw logAskError("Workspace is not a valid skill project");
     }
     const askStatePath = path.join(
         skillFolder.fsPath,
@@ -140,7 +134,7 @@ export function getSkillDetailsFromWorkspace(
             defaultLocale,
         };
     }
-    throw loggableAskError("Workspace does not contain a valid skill project");
+    throw logAskError("Workspace does not contain a valid skill project");
 }
 
 interface LocalesInfoType {
@@ -156,7 +150,7 @@ export function getSkillNameFromLocales(localesInfo: LocalesInfoType, locale?: s
     if (locale !== undefined) {
         const skillName = localesInfo[locale];
         if (skillName === undefined) {
-            throw loggableAskError(`Get skill name error for provided locale: ${locale}`);
+            throw logAskError(`Get skill name error for provided locale: ${locale}`);
         }
         return typeof skillName === "string" ? skillName : skillName.name;
     } else {
@@ -167,7 +161,7 @@ export function getSkillNameFromLocales(localesInfo: LocalesInfoType, locale?: s
             skillName = Object.values(localesInfo)[0];
         }
         if (skillName === undefined || (typeof skillName === "string" && skillName.length === 0)) {
-            throw loggableAskError("Get skill name error. Skill name should not be empty");
+            throw logAskError("Get skill name error. Skill name should not be empty");
         }
         return typeof skillName === "string" ? skillName : skillName.name;
     }
@@ -186,7 +180,7 @@ export function checkProfileSkillAccess(context: vscode.ExtensionContext): void 
     const currentProfile = Utils.getCachedProfile(context) ?? "default";
     const skillProfile = getSkillProfile(context);
     if (currentProfile !== skillProfile) {
-        throw loggableAskError(`${ERRORS.SKILL_ACCESS(currentProfile, skillProfile)}`);
+        throw logAskError(`${ERRORS.SKILL_ACCESS(currentProfile, skillProfile)}`);
     }
     return;
 }
@@ -205,7 +199,7 @@ export function getCachedSkills(
     profile = profile ?? Utils.getCachedProfile(context);
 
     if (profile === undefined) {
-        throw loggableAskError("ASK Profile unavailable. Please sign in first!!");
+        throw logAskError("ASK Profile unavailable. Please sign in first!!");
     }
 
     const allSkills: Record<string, Array<SmapiResource<SkillInfo>>> = context.globalState.get(
@@ -224,7 +218,7 @@ export function setCachedSkills(
     profile = profile ?? Utils.getCachedProfile(context);
 
     if (profile === undefined) {
-        throw loggableAskError("ASK Profile unavailable. Please sign in first!!");
+        throw logAskError("ASK Profile unavailable. Please sign in first!!");
     }
 
     const allSkills: Record<string, Array<SmapiResource<SkillInfo>>> = context.globalState.get(
@@ -243,7 +237,7 @@ export function clearCachedSkills(context: vscode.ExtensionContext, profile?: st
     profile = profile ?? Utils.getCachedProfile(context);
 
     if (profile === undefined) {
-        throw loggableAskError("ASK Profile unavailable. Please sign in first!!");
+        throw logAskError("ASK Profile unavailable. Please sign in first!!");
     }
 
     const allSkills: Record<string, Array<SmapiResource<SkillInfo>>> = context.globalState.get(
@@ -317,9 +311,9 @@ export async function getAvailableLocales(
         Logger.error(err);
         if (err.statusCode === 401) {
             const profile = Utils.getCachedProfile(context) ?? DEFAULT_PROFILE;
-            throw loggableAskError(ERRORS.PROFILE_ERROR(profile), true);
+            throw logAskError(ERRORS.PROFILE_ERROR(profile), true);
         } else {
-            throw loggableAskError(err.message, true);
+            throw logAskError(err.message, true);
         }
     }
 }

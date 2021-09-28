@@ -4,25 +4,22 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
+import axios from 'axios';
+import { play } from 'sound-play';
+import { fileSync } from 'tmp';
 import * as vscode from 'vscode';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { convertSpeechFormat, generateRequestSpeech, getDirectiveIdentifier, parseCaptionContent, parseJsonContent } from './avsClientUtil';
+import { IAplDocumentPayload, IDirective, IExecuteCommandsPayload, ISpeakPayload } from './avsInterface';
+import {
+    AVS_CONFIG, AVS_CONSTANTS, AVS_EVENT_TYPE, CAPABILITY_PAYLOAD, createLocaleUpdateEventPayload, createNewSessionEventPayload, createRecognizeEventPayload, createUserEventPayload, IDENTIFIER, SIMPLE_AVS_BOUNDARY
+} from './avsPayload';
+import { DownchannelManager } from './downChannelClient';
 import http2 = require('http2');
 import fs = require('fs');
-import { Logger } from '../../logger';
-import {
-    createUserEventPayload, createRecognizeEventPayload, SIMPLE_AVS_BOUNDARY, IDENTIFIER,
-    createNewSessionEventPayload, createLocaleUpdateEventPayload, CAPABILITY_PAYLOAD,
-    AVS_CONFIG, AVS_EVENT_TYPE, AVS_CONSTANTS
-} from './avsPayload';
-import { loggableAskError } from '../../exceptions';
 import retry = require('async-retry');
-import axios from 'axios';
-import { DownchannelManager } from './downChannelClient';
-import { play } from 'sound-play';
-import { file, fileSync } from 'tmp';
 import httpMessageParser = require('http-message-parser');
-import { IAplDocumentPayload, IDirective, ISpeakPayload, IExecuteCommandsPayload } from './avsInterface';
-import { parseJsonContent, getDirectiveIdentifier, parseCaptionContent, generateRequestSpeech, convertSpeechFormat } from './avsClientUtil';
-import { EXTENSION_STATE_KEY } from '../../constants';
 
 const RETRY_OPTION: retry.Options = {
     retries: 5,
@@ -33,7 +30,7 @@ const RETRY_OPTION: retry.Options = {
 let textResponse: string[] = [];
 export let aplDocumentAvsMode: string | undefined;
 export let aplDatasourceAvsMode: string | undefined;
-let aplCommands = undefined;
+let aplCommands;
 let currentPresentationToken = '';
 let debuggingDirectives = null;
 //speechToken is the key to keep the session consistent.
@@ -96,7 +93,7 @@ export class AVSClient {
         try {
             await this.sendEventToAVSRetries(payload, AVS_EVENT_TYPE.RECOGNIZE);
         } catch (err) {
-            throw loggableAskError(`Failed to send recognize event, with error:`, err);
+            throw logAskError(`Failed to send recognize event, with error:`, err);
         }
 
         debuggingDirectives = await downchannel.getDcDirectives();
@@ -120,7 +117,7 @@ export class AVSClient {
         try {
             await this.sendEventToAVSRetries(payload, AVS_EVENT_TYPE.USEREVENT);
         } catch (err) {
-            throw loggableAskError(`Failed to send user event, with error:`, err);
+            throw logAskError(`Failed to send user event, with error:`, err);
         }
         return ({
             alexaResponse: textResponse,
@@ -142,7 +139,7 @@ export class AVSClient {
             await this.sendEventToAVSRetries(payload, AVS_EVENT_TYPE.FORCE_NEW_SESSION);
             Logger.verbose(`Start a new session.`);
         } catch (err) {
-            throw loggableAskError(`Failed to send SynchronizeState event to start new session, with error:`, err);
+            throw logAskError(`Failed to send SynchronizeState event to start new session, with error:`, err);
         }
     }
 
@@ -158,7 +155,7 @@ export class AVSClient {
             await this.sendEventToAVSRetries(payload, AVS_EVENT_TYPE.LOCALE);
             Logger.verbose(`Set locale to ${locale}.`);
         } catch (err) {
-            throw loggableAskError(`Failed to send locale setting event, with error:`, err);
+            throw logAskError(`Failed to send locale setting event, with error:`, err);
         }
     }
 
@@ -166,7 +163,7 @@ export class AVSClient {
      * Play audio responses from AVS, in series
      * @param audioResponses Array of audio responses processed from AVS
      */
-    private async playAudioResponses(audioResponses: Array<any>): Promise<void> {
+    private async playAudioResponses(audioResponses: any[]): Promise<void> {
         Logger.verbose(`Calling method: AVSClient.playAudioResponses`);
         for (const audioResponse of audioResponses) {
             await play(audioResponse);
@@ -185,7 +182,7 @@ export class AVSClient {
         aplCommands = undefined;
 
         if (data.multipart !== null && data.multipart.length > 0) {
-            const audioResponses: Array<any> = [];
+            const audioResponses: any[] = [];
             for (const part of data.multipart) {
                 if (part.headers !== null) {
                     if (part.headers['Content-Type'].indexOf('application/json') === 0) {
@@ -238,7 +235,7 @@ export class AVSClient {
             try {
                 await this.sendEventToAVS(body, eventType);
             } catch (err) {
-                throw loggableAskError(`Send ${eventType} failed, with error:`, err);
+                throw logAskError(`Send ${eventType} failed, with error:`, err);
             }
         }, RETRY_OPTION);
     }
@@ -293,7 +290,7 @@ export class AVSClient {
                 Logger.verbose(`Succeed in sending capabilities.`);
                 return;
             }).catch((error) => {
-                throw loggableAskError(`Failed to send capabilities.`);
+                throw logAskError(`Failed to send capabilities.`);
             });
         }, RETRY_OPTION);
     }

@@ -4,18 +4,18 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
-import { Logger } from '../logger';
-import { loggableAskError } from '../exceptions';
-import { ERRORS, SIMULATOR_MESSAGE_TYPE } from '../constants';
 import { IViewport } from "apl-suggester";
+import * as vscode from 'vscode';
 import { DEFAULT_VIEWPORT_CHARACTERISTICS, DEFAULT_VIEWPORT_NAME } from "../aplContainer/utils/viewportProfileHelper";
-import { getCurrentDate } from './dateHelper';
-import { getSkillFolderInWs } from './workspaceHelper';
+import { ERRORS, SIMULATOR_MESSAGE_TYPE } from '../constants';
+import { logAskError } from '../exceptions';
+import { Logger } from '../logger';
 import { read, write } from '../runtime/lib/utils/jsonUtility';
-import { isSkillEnabled, currentLocale } from './simulateMessageHelper';
-import { aplDocument, aplDataSource } from './simulateSkillHelper';
-import { aplDocumentAvsMode, aplDatasourceAvsMode } from './avs/avsClient'
+import { aplDatasourceAvsMode, aplDocumentAvsMode } from './avs/avsClient';
+import { getCurrentDate } from './dateHelper';
+import { currentLocale, isSkillEnabled } from './simulateMessageHelper';
+import { aplDataSource, aplDocument } from './simulateSkillHelper';
+import { getSkillFolderInWs } from './workspaceHelper';
 
 export let aplViewport = DEFAULT_VIEWPORT_CHARACTERISTICS;
 export let viewportName = DEFAULT_VIEWPORT_NAME;
@@ -56,7 +56,7 @@ export async function getReplayList(): Promise<void | Record<string, any>> {
             return;
         }
     } catch (err) {
-        throw loggableAskError(ERRORS.OPEN_REPLAY_FILE_FAIL(filePath), err, true);
+        throw logAskError(ERRORS.OPEN_REPLAY_FILE_FAIL(filePath), err, true);
     }
 
     const returnMessage: Record<string, any> = ({

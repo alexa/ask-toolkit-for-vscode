@@ -21,7 +21,7 @@ const SCOPES_SKILLS_DEBUG = 'alexa::ask:skills:debug';
 const DEFAULT_SCOPES = `${SCOPES_SKILLS_READWRITE} ${SCOPES_MODELS_READWRITE} ${SCOPES_SKILLS_TEST} ${SCOPES_CATALOG_READ} ${SCOPES_CATALOG_READWRITE} ${SCOPES_SKILLS_DEBUG}`;
 const DEFAULT_STATE = 'Ask-SkillModel-ReadWrite';
 
-var server: Server;
+let server: Server;
 
 /**
 * Use LWA OAuth2 to retrieve access tokens.
@@ -67,7 +67,7 @@ export async function accessTokenGenerator(lwaOptions: any): Promise<Token> {
 export async function _requestTokens(authCode: AuthorizationCode, redirect_uri: string, OAuth: OAuthClient): Promise<Token> {
     const tokenConfig: AuthorizationTokenConfig = {
         code: authCode,
-        redirect_uri: redirect_uri
+        redirect_uri
     };
     try {
         const result: Token = await OAuth.authorizationCode.getToken(tokenConfig, {json: 'force'});

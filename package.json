@@ -298,7 +298,7 @@
         "test-compile": "tsc -p ./",
         "copyTestData": "cp -R ./test/mockSkill ./out/test",
         "compile": "shx rm -rf ./out/ && shx rm -rf ./dist/ && tsc -p ./",
-        "lint": "eslint src --ext ts",
+        "lint": "eslint src --ext ts --fix",
         "watch": "tsc -watch -p ./",
         "pretest": "npm run compile && npm run copyTestData",
         "test": "node ./out/test/runTest.js",

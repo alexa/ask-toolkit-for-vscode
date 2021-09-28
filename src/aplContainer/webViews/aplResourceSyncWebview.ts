@@ -4,23 +4,23 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
 import * as AdmZip from 'adm-zip';
 import * as fs from 'fs';
 import * as path from 'path';
-import { AbstractWebView, Utils } from '../../runtime';
+import * as vscode from 'vscode';
 import { ExtensionContext, WebviewPanelOnDidChangeViewStateEvent } from 'vscode';
-import { ViewLoader } from '../../utils/webViews/viewLoader';
+import { ERROR_MESSAGES } from '../../../src/aplContainer/constants/messages';
+import { DEFAULT_PROFILE } from '../../constants';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { AbstractWebView, Utils } from '../../runtime';
+import { displayDirRootPath, readFileContentFromZip, updateFileContent } from '../../utils/fileHelper';
 import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
 import { getSkillPkgZipLocation } from '../../utils/skillPackageHelper';
-import { APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, SOURCES_FILE_PATH, DOCUMENT_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, DATASOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, SOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE } from '../config/configuration';
-import { displayDirRootPath, updateFileContent, readFileContentFromZip } from '../../utils/fileHelper';
-import { AplResource } from '../models';
+import { ViewLoader } from '../../utils/webViews/viewLoader';
+import { APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, DATASOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, DOCUMENT_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE, SOURCES_FILE_PATH, SOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE } from '../config/configuration';
 import { PROMPT_MESSAGES, SUCCESS_MESSAGES } from '../constants/messages';
-import { loggableAskError } from '../../exceptions';
-import { Logger } from '../../logger';
-import { ERROR_MESSAGES } from '../../../src/aplContainer/constants/messages';
-import { DEFAULT_PROFILE } from '../../constants'
+import { AplResource } from '../models';
 
 
 export class AplResourceSyncWebview extends AbstractWebView {
@@ -65,12 +65,12 @@ export class AplResourceSyncWebview extends AbstractWebView {
             cancellable: true
         }, async (_progress) => {
             const skillId: string = getSkillDetailsFromWorkspace(this.extensionContext)?.skillId;
-            const skillPkgZipLocation : string = await getSkillPkgZipLocation(
+            const skillPkgZipLocation: string = await getSkillPkgZipLocation(
                 this.wsFolder.fsPath, skillId, this.extensionContext);
             const skillPackageZip: AdmZip = new AdmZip(skillPkgZipLocation);
     
-            let aplResourceNames: string[] = [];
-            let aplResourceMap: Map<string, AplResource> = new Map();
+            const aplResourceNames: string[] = [];
+            const aplResourceMap: Map<string, AplResource> = new Map();
 
             skillPackageZip.getEntries().forEach((entry) => {
                 if (entry.isDirectory) {
@@ -114,7 +114,7 @@ export class AplResourceSyncWebview extends AbstractWebView {
         Logger.verbose(`Calling method: ${this.viewId}.getResourceFromZip, args:`, entryName);
 
         if (!skillPackageZip) {
-            throw loggableAskError(ERROR_MESSAGES.NO_SKILL_PACKAGE_FOUND, undefined, true);
+            throw logAskError(ERROR_MESSAGES.NO_SKILL_PACKAGE_FOUND, undefined, true);
         }
      
         return readFileContentFromZip(skillPackageZip, entryName);

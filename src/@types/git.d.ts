@@ -5,11 +5,12 @@
 
 /*---------------------------------------------------------------------------------------------
  *  Although `git` is available through vscode, currently there is no API access in extension API.
- *  Taking the types file from vscode source code : https://github.com/Microsoft/vscode/blob/master/extensions/git/src/api/git.d.ts
+ *  Taking the types file from vscode source code :
+ *  https://github.com/Microsoft/vscode/blob/master/extensions/git/src/api/git.d.ts
  *  https://github.com/microsoft/vscode/issues/31103
  *---------------------------------------------------------------------------------------------*/
 
-import { Uri, SourceControlInputBox, Event, CancellationToken } from 'vscode';
+import { Event, Uri } from 'vscode';
 
 export interface Git {
     readonly path: string;
@@ -143,7 +144,7 @@ export interface Repository {
     readonly state: RepositoryState;
     readonly ui: RepositoryUIState;
 
-    getConfigs(): Promise<{ key: string; value: string }[]>;
+    getConfigs(): Promise<Array<{ key: string; value: string }>>;
     getConfig(key: string): Promise<string>;
     setConfig(key: string, value: string): Promise<string>;
     getGlobalConfig(key: string): Promise<string>;

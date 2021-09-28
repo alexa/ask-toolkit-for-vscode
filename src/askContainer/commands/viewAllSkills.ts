@@ -3,28 +3,23 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
-import * as path from 'path';
-import { SKILL } from '../../constants';
-import * as retry from 'async-retry';
-import { AbstractCommand, CommandContext, SmapiClientFactory, SmapiResource, Utils } from '../../runtime';
-import { SkillInfo } from '../../models/types';
-import {
-    getSkillNameFromLocales,
-    getCachedSkills,
-    getSkillMetadata,
-    setCachedSkills,
-    clearCachedSkills,
-    getHostedSkillMetadata,
-} from '../../utils/skillHelper';
-import { getImagesFolder } from '../../utils/mediaHelper';
-
 import * as model from 'ask-smapi-model';
+import * as retry from 'async-retry';
+import * as path from 'path';
+import * as vscode from 'vscode';
+import { DEFAULT_PROFILE, SKILL } from '../../constants';
+import { AskError, logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { SkillInfo } from '../../models/types';
+import { AbstractCommand, CommandContext, SmapiClientFactory, SmapiResource, Utils } from '../../runtime';
+import { getImagesFolder } from '../../utils/mediaHelper';
+import {
+    clearCachedSkills, getCachedSkills,
+    getSkillMetadata, getSkillNameFromLocales, setCachedSkills
+} from '../../utils/skillHelper';
+
 import skillSummary = model.v1.skill.SkillSummary;
 import hostedSkillMetadata = model.v1.skill.AlexaHosted.HostedSkillMetadata;
-import { Logger } from '../../logger';
-import { AskError, loggableAskError } from '../../exceptions';
-import { DEFAULT_PROFILE } from '../../constants';
 
 const AlexaHostedProvision = 'Alexa-hosted';
 
@@ -173,7 +168,7 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
             qp.busy = false;
             qp.placeholder = SKILL_RETRIEVAL_FAILED;
             qp.enabled = true;
-            throw loggableAskError(`${SKILL_RETRIEVAL_FAILED}`, err, true);
+            throw logAskError(`${SKILL_RETRIEVAL_FAILED}`, err, true);
         }
     }
 
@@ -238,7 +233,7 @@ export class ViewAllSkillsCommand extends AbstractCommand<void> {
                                 allSkillsQP.hide();
                             }
                         } else {
-                            throw loggableAskError(error, undefined, true);
+                            throw logAskError(error, undefined, true);
                         }
                     })
             }

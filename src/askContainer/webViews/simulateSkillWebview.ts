@@ -4,21 +4,21 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
-import { AbstractWebView, Utils } from '../../runtime';
-import { ViewLoader } from '../../utils/webViews/viewLoader';
-import { Logger } from '../../logger';
-import * as path from 'path';
-import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
-import { DEFAULT_PROFILE, ERRORS, EXTENSION_STATE_KEY, SIMULATOR_MESSAGE_TYPE, WEB_VIEW_NAME } from '../../constants';
-import { loggableAskError } from '../../exceptions';
 import { IViewport } from "apl-suggester";
-import * as simulateMessageHelper from '../../utils/simulateMessageHelper';
-import { getReplayList, getNewViewPortMessage } from '../../utils/simulateReplayHelper';
-import { callAvsForAplUserEvent } from '../../utils/avs/simulateAVSHelper';
-import { deleteRegisteredDevice, getRegisteredDeviceId, readDeviceToken } from '../../utils/avs/deviceTokenUtil';
+import * as path from 'path';
+import * as vscode from 'vscode';
+import { DEFAULT_PROFILE, ERRORS, EXTENSION_STATE_KEY, SIMULATOR_MESSAGE_TYPE, WEB_VIEW_NAME } from '../../constants';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { AbstractWebView, Utils } from '../../runtime';
 import { AVSClient } from '../../utils/avs/avsClient';
-import { onDeviceRegistrationEventEmitter, onDeviceDeletionEventEmitter } from '../events';
+import { deleteRegisteredDevice, getRegisteredDeviceId, readDeviceToken } from '../../utils/avs/deviceTokenUtil';
+import { callAvsForAplUserEvent } from '../../utils/avs/simulateAVSHelper';
+import * as simulateMessageHelper from '../../utils/simulateMessageHelper';
+import { getNewViewPortMessage, getReplayList } from '../../utils/simulateReplayHelper';
+import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
+import { ViewLoader } from '../../utils/webViews/viewLoader';
+import { onDeviceDeletionEventEmitter, onDeviceRegistrationEventEmitter } from '../events';
 import { DEVICE_EXPIRY_TIME } from './deviceRegistryWebview';
 
 let simulateCss: vscode.Uri;
@@ -138,7 +138,7 @@ export class SimulateSkillWebview extends AbstractWebView {
                 break;
             }
             default:
-                throw loggableAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
+                throw logAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
         }
     }
 
@@ -172,11 +172,11 @@ export class SimulateSkillWebview extends AbstractWebView {
                     const isValidToken: boolean = await AVSClient.getInstance(accessToken, this.extensionContext, region).sendPing();
                     if (!isValidToken) {
                         this.isAVSMode = false;
-                        throw loggableAskError('Failed to ping AVS with the device token: ', accessToken);
+                        throw logAskError('Failed to ping AVS with the device token: ', accessToken);
                     }
                 } catch (err) {
                     this.isAVSMode = false;
-                    throw loggableAskError(err);
+                    throw logAskError(err);
                 }
             }
         }

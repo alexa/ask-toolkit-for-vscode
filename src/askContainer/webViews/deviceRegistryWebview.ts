@@ -5,18 +5,18 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from 'vscode';
-import { AbstractWebView } from '../../runtime';
-import { ViewLoader } from '../../utils/webViews/viewLoader';
-import { Logger } from '../../logger';
-import { sendDeviceAuthRequest, getDeviceTokenWithCode } from '../../utils/avs/deviceToken';
-import { refreshDeviceToken } from '../../utils/avs/deviceTokenUtil';
-import { loggableAskError } from '../../exceptions';
 import { ERRORS, EXTENSION_STATE_KEY } from '../../constants';
-import { IDeviceCodeResponse } from '../../utils/avs/avsInterface';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { AbstractWebView } from '../../runtime';
 import { AVSClient } from '../../utils/avs/avsClient';
+import { IDeviceCodeResponse } from '../../utils/avs/avsInterface';
 import { AVS_ERROR_MESSAGE } from '../../utils/avs/avsPayload';
-import retry = require('async-retry');
+import { getDeviceTokenWithCode, sendDeviceAuthRequest } from '../../utils/avs/deviceToken';
+import { refreshDeviceToken } from '../../utils/avs/deviceTokenUtil';
+import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { onDeviceRegistrationEventEmitter } from '../events';
+import retry = require('async-retry');
 
 const RECEIVE_MESSAGE_TYPE = {
     DEVICE_INFO: 'deviceInfo',
@@ -100,7 +100,7 @@ export class DeviceRegistryWebview extends AbstractWebView {
                 this.getPanel().dispose();
                 break;
             default:
-                throw loggableAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
+                throw logAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
         }
     }
 
@@ -123,7 +123,7 @@ export class DeviceRegistryWebview extends AbstractWebView {
             await refreshDeviceToken(this.context);
         } catch (err) {
             await this.backToFirstPage();
-            throw loggableAskError(DEVICE_REGISTRY_ERRORS.CLIENT_SECRET_ERROR, err);
+            throw logAskError(DEVICE_REGISTRY_ERRORS.CLIENT_SECRET_ERROR, err);
         }
         this.getPanel().webview.html = this.loader.renderView({
             name: PAGES.DEVICE_REGISTRY_DONE,
@@ -148,11 +148,11 @@ export class DeviceRegistryWebview extends AbstractWebView {
                     const region = await this.extensionContext.secrets.get(EXTENSION_STATE_KEY.REGISTERED_DEVICE.REGION);
                     const isValidToken: boolean = await AVSClient.getInstance(accessToken, this.extensionContext, region).sendPing();
                     if (!isValidToken) {
-                        throw loggableAskError(DEVICE_REGISTRY_ERRORS.PING_AVS_FAILED);
+                        throw logAskError(DEVICE_REGISTRY_ERRORS.PING_AVS_FAILED);
                     }
                 }
             } catch (err) {
-                throw loggableAskError(DEVICE_REGISTRY_ERRORS.GET_ACCESSTOKEN_FAILED, err);
+                throw logAskError(DEVICE_REGISTRY_ERRORS.GET_ACCESSTOKEN_FAILED, err);
             }
         }, RETRY_OPTION);
     }
@@ -195,7 +195,7 @@ export class DeviceRegistryWebview extends AbstractWebView {
                 Logger.debug(err);
             }
             else {
-                throw loggableAskError(DEVICE_REGISTRY_ERRORS.GET_AUTH_FAILED, err, true);
+                throw logAskError(DEVICE_REGISTRY_ERRORS.GET_AUTH_FAILED, err, true);
             }
         }
     }

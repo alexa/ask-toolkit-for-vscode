@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { DEFAULT_ENCODING, LOCAL_DEBUG } from '../../../constants';
-import { loggableAskError } from '../../../exceptions';
+import { logAskError } from '../../../exceptions';
 import { Logger } from '../../../logger';
 import { AbstractCommand, CommandContext } from '../../../runtime';
 
@@ -20,7 +20,7 @@ export class DebugAdapterPathCommand extends AbstractCommand<string> {
         if (languageType === LOCAL_DEBUG.NODE_DEPENDENCIES.LANG_TYPE) {
             const URIs = await vscode.workspace.findFiles(LOCAL_DEBUG.NODE_DEPENDENCIES.DEP_REGEX);
             if (URIs.length === 0) {
-                throw loggableAskError(LOCAL_DEBUG.NODE_DEPENDENCIES.DEP_INSTALL_MSG);
+                throw logAskError(LOCAL_DEBUG.NODE_DEPENDENCIES.DEP_INSTALL_MSG);
             }
             return URIs[0].fsPath;
         } else if (languageType === LOCAL_DEBUG.PYTHON_DEPENDENCIES.LANG_TYPE) {
@@ -43,9 +43,9 @@ export class DebugAdapterPathCommand extends AbstractCommand<string> {
                     return localDebuggerPath;
                 }
             }
-            throw loggableAskError(LOCAL_DEBUG.PYTHON_DEPENDENCIES.DEP_INSTALL_MSG);
+            throw logAskError(LOCAL_DEBUG.PYTHON_DEPENDENCIES.DEP_INSTALL_MSG);
         }
-        throw loggableAskError(LOCAL_DEBUG.DEBUG_PATH_ERROR(languageType));
+        throw logAskError(LOCAL_DEBUG.DEBUG_PATH_ERROR(languageType));
     }
     
     constructor() {

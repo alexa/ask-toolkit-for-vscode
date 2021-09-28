@@ -4,12 +4,12 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-
-import { AbstractCommand, CommandContext } from '../../runtime';
-
-import { checkProfileSkillAccess } from '../skillHelper';
-import { loggableAskError } from '../../exceptions';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
+import { AbstractCommand, CommandContext } from '../../runtime';
+import { checkProfileSkillAccess } from '../skillHelper';
+
+
 
 export class OpenUrlCommand extends AbstractCommand<void> {
     constructor() {
@@ -25,7 +25,7 @@ export class OpenUrlCommand extends AbstractCommand<void> {
             }
             await vscode.env.openExternal(vscode.Uri.parse(url));
         } catch (err) {
-            throw loggableAskError(`Open URL failed`, err, true);
+            throw logAskError(`Open URL failed`, err, true);
         }
     }
 }

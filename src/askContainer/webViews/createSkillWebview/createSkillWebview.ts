@@ -3,20 +3,20 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-
-import { CreateHostedSkillManager } from './createHostedSkillManager';
-import { CreateNonHostedSkillManager } from './createNonHostedSkillManager';
-import { AbstractWebView, SmapiClientFactory, Utils } from '../../../runtime';
 import { DEFAULT_PROFILE, SKILL, TELEMETRY_EVENTS } from '../../../constants';
+import { logAskError } from '../../../exceptions';
+import { Logger } from '../../../logger';
+import { AbstractWebView, SmapiClientFactory, Utils } from '../../../runtime';
+import { ActionType, TelemetryClient } from '../../../runtime/lib/telemetry';
 import { solveCaptcha } from '../../../utils/captchaValidator';
 import { ViewLoader } from '../../../utils/webViews/viewLoader';
 import { openWorkspaceFolder } from '../../../utils/workspaceHelper';
-import { loggableAskError } from '../../../exceptions';
-import { Logger } from '../../../logger';
-import { TelemetryClient, ActionType } from '../../../runtime/lib/telemetry';
+import { CreateHostedSkillManager } from './createHostedSkillManager';
+import { CreateNonHostedSkillManager } from './createNonHostedSkillManager';
+
 
 export type createSkillWebViewType = {
     locale: string;
@@ -99,7 +99,7 @@ export class CreateSkillWebview extends AbstractWebView {
                 await vscode.window.showInformationMessage(skillCreateMsg);
             } catch (err) {
                 await TelemetryClient.getInstance().store(action, err);
-                throw loggableAskError(`Skill creation failed`, err, true);
+                throw logAskError(`Skill creation failed`, err, true);
             }
         }
     }

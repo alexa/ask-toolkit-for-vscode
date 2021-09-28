@@ -4,23 +4,21 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as fs from 'fs';
+import * as https from 'https';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import * as https from 'https';
-
-import { AbstractCloneSkillManager } from './abstractCloneSkillManager';
-import { SmapiClientFactory } from '../../../runtime';
-import { GitInTerminalHelper, getOrInstantiateGitApi, isGitInstalled } from '../../../utils/gitHelper';
-import { createSkillPackageFolder, syncSkillPackage } from '../../../utils/skillPackageHelper';
-import {
-    checkAuthInfoScript,
-    checkAskPrePushScript,
-    checkGitCredentialHelperScript,
-} from '../../../utils/s3ScriptChecker';
-import { BRANCH_TO_STAGE, SKILL_FOLDER, SKILL, GIT_MESSAGES } from '../../../constants';
-import { Logger } from '../../../logger';
-import { loggableAskError, AskError } from '../../../exceptions';
 import { Repository } from '../../../@types/git';
+import { BRANCH_TO_STAGE, GIT_MESSAGES, SKILL, SKILL_FOLDER } from '../../../constants';
+import { AskError, logAskError } from '../../../exceptions';
+import { Logger } from '../../../logger';
+import { SmapiClientFactory } from '../../../runtime';
+import { getOrInstantiateGitApi, GitInTerminalHelper, isGitInstalled } from '../../../utils/gitHelper';
+import {
+    checkAskPrePushScript, checkAuthInfoScript, checkGitCredentialHelperScript
+} from '../../../utils/s3ScriptChecker';
+import { createSkillPackageFolder, syncSkillPackage } from '../../../utils/skillPackageHelper';
+import { AbstractCloneSkillManager } from './abstractCloneSkillManager';
+
 
 export class CloneHostedSkillManager extends AbstractCloneSkillManager {
     async setupGitFolder(): Promise<Repository> {
@@ -70,7 +68,7 @@ export class CloneHostedSkillManager extends AbstractCloneSkillManager {
             await this.setPrePushHookScript(this.fsPath, this.context);
             return repo;
         } catch (err) {
-            throw loggableAskError(`Git folder setup failed for ${this.fsPath}`, err);
+            throw logAskError(`Git folder setup failed for ${this.fsPath}`, err);
         }
     }
 
@@ -84,7 +82,7 @@ export class CloneHostedSkillManager extends AbstractCloneSkillManager {
                 resolve();
             });
             request.on('error', err => {
-                reject(loggableAskError('Download script failed ', err));
+                reject(logAskError('Download script failed ', err));
             });
             request.end();
         });

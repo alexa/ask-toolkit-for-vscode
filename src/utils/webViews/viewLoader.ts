@@ -30,7 +30,7 @@ export class ViewLoader {
 
     public renderView(options: RenderOptions): string {
         Logger.debug(`Calling method: renderView, args: `, options);
-        const webview: Webview = this.view.getWebview() as Webview;
+        const webview: Webview = this.view.getWebview();
         
         const htmlLocation = Uri.file(path.join(this.context.extensionPath, 'media', this.subdir, `${options.name}.html`));
         if (!htmlLocation || !existsSync(htmlLocation.fsPath)) {

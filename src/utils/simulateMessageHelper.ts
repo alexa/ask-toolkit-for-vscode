@@ -4,21 +4,18 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
-import { Logger } from '../logger';
-import { loggableAskError } from '../exceptions';
-import { getAvailableLocales } from '../utils/skillHelper';
-import {
-    SKILL_ACTION_URLS,
-    ERRORS, SIMULATOR_WEBVIEW_MESSAGES, SIMULATOR_MESSAGE_TYPE, EN_US_LOCALE, EXTENSION_STATE_KEY
-} from '../constants';
-import * as simulateSkillHelper from '../utils/simulateSkillHelper';
-import { exportFileForReplay } from '../utils/simulateReplayHelper';
-import { callAvsForRecognizeEvent } from '../utils/avs/simulateAVSHelper';
-import { AVSClient } from './avs/avsClient';
 import * as model from 'ask-smapi-model';
-import { SmapiClientFactory } from '../runtime';
 import * as os from 'os';
+import * as vscode from 'vscode';
+import { EN_US_LOCALE, ERRORS, EXTENSION_STATE_KEY, SIMULATOR_MESSAGE_TYPE, SIMULATOR_WEBVIEW_MESSAGES, SKILL_ACTION_URLS } from '../constants';
+import { logAskError } from '../exceptions';
+import { Logger } from '../logger';
+import { SmapiClientFactory } from '../runtime';
+import { callAvsForRecognizeEvent } from '../utils/avs/simulateAVSHelper';
+import { exportFileForReplay } from '../utils/simulateReplayHelper';
+import * as simulateSkillHelper from '../utils/simulateSkillHelper';
+import { getAvailableLocales } from '../utils/skillHelper';
+import { AVSClient } from './avs/avsClient';
 import { readDeviceToken } from './avs/deviceTokenUtil';
 
 export let currentLocale: string = EN_US_LOCALE;
@@ -55,7 +52,7 @@ export async function handleSkillStatusMessageFromWebview(webviewMessage: Record
         return (skillEnabled) ? SIMULATOR_WEBVIEW_MESSAGES.ENABLED_SKILL : SIMULATOR_WEBVIEW_MESSAGES.DISABLED_SKILL;
     }
     else {
-        throw loggableAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
+        throw logAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
     }
 }
 
@@ -100,7 +97,7 @@ export async function handleLocaleMessageFromWebview(webviewMessage: Record<stri
         });
     }
     else {
-        throw loggableAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
+        throw logAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
     }
 }
 
@@ -128,12 +125,12 @@ export async function handleUtteranceMessageFromWebview(webviewMessage: Record<s
         }
 
         if (returnMessage.type !== SIMULATOR_MESSAGE_TYPE.UTTERANCE && returnMessage.type !== SIMULATOR_MESSAGE_TYPE.EXCEPTION) {
-            throw loggableAskError(ERRORS.UNRECOGNIZED_SIMULATION_RETURN_MESSAGE);
+            throw logAskError(ERRORS.UNRECOGNIZED_SIMULATION_RETURN_MESSAGE);
         }
         return returnMessage;
     }
     catch (err) {
-        throw loggableAskError(ERRORS.SIMULATION_REQUEST_FAIL, err, true);
+        throw logAskError(ERRORS.SIMULATION_REQUEST_FAIL, err, true);
     }
 }
 
@@ -201,6 +198,6 @@ export async function getInvocationName(profile: string, skillId: string, contex
         if (err.statusCode === 404) {
             void vscode.window.showErrorMessage(`There is no interaction model for ${currentLocale}. Select a different locale.`);
         }
-        throw loggableAskError('There was a problem downloading the interaction model. Try the download again.', err);
+        throw logAskError('There was a problem downloading the interaction model. Try the download again.', err);
     }
 }

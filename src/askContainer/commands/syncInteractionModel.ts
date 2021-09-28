@@ -3,13 +3,13 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { AbstractCommand, CommandContext, AbstractWebView } from '../../runtime';
 import * as vscode from 'vscode';
-
-import { InteractionModelSyncWebview } from '../webViews/interactionModelSync';
-import { checkProfileSkillAccess } from '../../utils/skillHelper';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
-import { loggableAskError } from '../../exceptions';
+import { AbstractCommand, CommandContext } from '../../runtime';
+import { checkProfileSkillAccess } from '../../utils/skillHelper';
+import { InteractionModelSyncWebview } from '../webViews/interactionModelSync';
+
 
 export class SyncInteractionModelCommand extends AbstractCommand<void> {
 
@@ -27,7 +27,7 @@ export class SyncInteractionModelCommand extends AbstractCommand<void> {
             checkProfileSkillAccess(context.extensionContext);
             this.syncInteractionModelView.showView(skillFolderWs);
         } catch (err) {
-            throw loggableAskError(`View failed to load; try again.`, err, true);
+            throw logAskError(`View failed to load; try again.`, err, true);
         }
     }
 }

@@ -3,18 +3,18 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as fs from "fs";
-import * as path from "path";
-import * as https from "https";
-
-import { Logger } from "../logger";
-import { SYSTEM_ASK_FOLDER, DEFAULT_PROFILE, SCHEMA } from "../constants";
-import { SmapiClientFactory, Utils } from "../runtime";
-import { ext } from "../extensionGlobals";
-import { loggableAskError } from "../exceptions";
-import { findSkillFoldersInWs } from "../utils/workspaceHelper";
-import { SkillPackageWatcher } from "../askContainer/fileSystem/skillPackageWatcher";
 import { v1 } from "ask-smapi-model";
+import * as fs from "fs";
+import * as https from "https";
+import * as path from "path";
+import { SkillPackageWatcher } from "../askContainer/fileSystem/skillPackageWatcher";
+import { DEFAULT_PROFILE, SCHEMA, SYSTEM_ASK_FOLDER } from "../constants";
+import { logAskError } from "../exceptions";
+import { ext } from "../extensionGlobals";
+import { Logger } from "../logger";
+import { SmapiClientFactory, Utils } from "../runtime";
+import { findSkillFoldersInWs } from "../utils/workspaceHelper";
+
 
 export type SkillPackageSchema = {
     pathElement: string;
@@ -77,7 +77,7 @@ export class SchemaManager {
             });
             request.on("error", err => {
                 Logger.info("Download skill package schema failed");
-                reject(loggableAskError("Download skill package schema failed", err, true));
+                reject(logAskError("Download skill package schema failed", err, true));
             });
             request.end();
         });
@@ -108,18 +108,18 @@ export class SchemaManager {
         try {
             vendorId = Utils.resolveVendorId(profile);
         } catch (err) {
-            throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+            throw logAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
         }
         const smapiClient = SmapiClientFactory.getInstance(profile, ext.context);
         try {
             getResourceSchemaResponse = await smapiClient.getResourceSchemaV1(resource, vendorId, operation);
         } catch (err) {
-            throw loggableAskError(`Failed to get skill-package schema for vendorId ${vendorId}`, err, true);
+            throw logAskError(`Failed to get skill-package schema for vendorId ${vendorId}`, err, true);
         }
 
         const schemaLocationUrl = getResourceSchemaResponse.schemaLocationUrl;
         if (schemaLocationUrl === undefined) {
-            throw loggableAskError(`Failed to retrieve ${resource} schema location url`);
+            throw logAskError(`Failed to retrieve ${resource} schema location url`);
         }
 
         return schemaLocationUrl;

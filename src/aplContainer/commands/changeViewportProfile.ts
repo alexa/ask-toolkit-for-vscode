@@ -3,18 +3,18 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
+import { getViewportProfiles, IViewport, IViewportProfile } from 'apl-suggester';
 import { OrderedMap } from 'immutable';
+import * as vscode from 'vscode';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
 import { AbstractCommand } from '../../runtime';
-import { getViewportProfiles, IViewportProfile, IViewport } from 'apl-suggester';
 import { EXTENSION_COMMAND_CONFIG } from '../config/configuration';
+import { ERROR_MESSAGES } from '../constants/messages';
 import {
     getViewportCharacteristicsFromViewPort
 } from '../utils/viewportProfileHelper';
 import { AplPreviewWebView } from '../webViews/aplPreviewWebView';
-import { ERROR_MESSAGES } from '../constants/messages';
-import { loggableAskError } from '../../exceptions';
-import { Logger } from '../../logger';
 
 export class ChangeViewportProfileCommand extends AbstractCommand<void> {
     private viewportProfiles!: OrderedMap<string, IViewportProfile>;
@@ -32,12 +32,12 @@ export class ChangeViewportProfileCommand extends AbstractCommand<void> {
         try {
             const aplPreviewPanel: vscode.WebviewPanel = this.aplPreviewWebView.getPanel();
             // change viewport profile before preview, no panel 
-            if (!aplPreviewPanel || !aplPreviewPanel.visible) {
-                throw loggableAskError(ERROR_MESSAGES.CHANGE_VIEWPORT_PROFILE_NO_APL_PREVIEW, undefined, true);
+            if (aplPreviewPanel === undefined || !aplPreviewPanel.visible) {
+                throw logAskError(ERROR_MESSAGES.CHANGE_VIEWPORT_PROFILE_NO_APL_PREVIEW, undefined, true);
             }
         } catch(err) {
             // panel is disposed
-            throw loggableAskError(ERROR_MESSAGES.CHANGE_VIEWPORT_PROFILE_NO_APL_PREVIEW, undefined, true);
+            throw logAskError(ERROR_MESSAGES.CHANGE_VIEWPORT_PROFILE_NO_APL_PREVIEW, undefined, true);
 
         }
 
@@ -118,7 +118,7 @@ export class ChangeViewportProfileCommand extends AbstractCommand<void> {
             this.findToChangeViewport(v, pickedViewportName)
         );
         if (!viewportProfileToChange) {
-            throw loggableAskError(ERROR_MESSAGES.CHANGE_VIEWPORT_PROFILE_NO_MATCHED_VIEWPORT, new Error(`No viewport profile found for ${pickedViewportName}`), true);
+            throw logAskError(ERROR_MESSAGES.CHANGE_VIEWPORT_PROFILE_NO_MATCHED_VIEWPORT, new Error(`No viewport profile found for ${pickedViewportName}`), true);
         }
     }
 

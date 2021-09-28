@@ -3,10 +3,10 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { SimulateSkillWebview } from '../webViews/simulateSkillWebview';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
-import { loggableAskError } from '../../exceptions';
 import { AbstractCommand, CommandContext } from '../../runtime';
+import { SimulateSkillWebview } from '../webViews/simulateSkillWebview';
 
 export class SimulateSkillCommand extends AbstractCommand<void> {
     private simulateSkillWebview: SimulateSkillWebview;
@@ -21,7 +21,7 @@ export class SimulateSkillCommand extends AbstractCommand<void> {
         try {
             this.simulateSkillWebview.showView();
         } catch (err) {
-            throw loggableAskError(`Cannot open test skill view`, err, true);
+            throw logAskError(`Cannot open test skill view`, err, true);
         }
     }
 }

@@ -4,11 +4,11 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
 import { AbstractCommand, CommandContext } from '../../runtime';
 import { openWorkspaceFolder } from '../../utils/workspaceHelper';
-import { loggableAskError } from '../../exceptions';
-import { Logger } from '../../logger';
+
 
 export class OpenWorkspaceCommand extends AbstractCommand<void> {
     constructor() {
@@ -23,7 +23,7 @@ export class OpenWorkspaceCommand extends AbstractCommand<void> {
             "canSelectMany": false
         });
         if (!userChoseWorkSpace) {
-            throw loggableAskError('Cannot find a workspace to create the skill project');
+            throw logAskError('Cannot find a workspace to create the skill project');
         }
 
         await openWorkspaceFolder(userChoseWorkSpace[0]);

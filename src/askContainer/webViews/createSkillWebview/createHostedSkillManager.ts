@@ -5,17 +5,17 @@
  *--------------------------------------------------------------------------------------------*/
 import * as model from 'ask-smapi-model';
 import * as retry from 'async-retry';
-import { view, lensPath } from 'ramda';
+import { lensPath, view } from 'ramda';
 import { ExtensionContext, Progress } from 'vscode';
-
-import { AbstractCreateSkillManager } from './abstractCreateSkillManager';
-import { createSkillWebViewType } from './createSkillWebview';
 import { SKILL, SKILL_STATUS_MODEL } from '../../../constants';
-import { loggableAskError } from '../../../exceptions';
-import { SkillInfo } from '../../../models/types';
+import { logAskError } from '../../../exceptions';
 import { Logger } from '../../../logger';
+import { SkillInfo } from '../../../models/types';
 import { SmapiClientFactory, SmapiResource, Utils } from '../../../runtime';
 import { CloneHostedSkillManager } from '../../commands/cloneSkill/cloneHostedSkillManager';
+import { AbstractCreateSkillManager } from './abstractCreateSkillManager';
+import { createSkillWebViewType } from './createSkillWebview';
+
 
 const INCREMENT_NUMBER = 15;
 export class CreateHostedSkillManager extends AbstractCreateSkillManager {
@@ -26,7 +26,7 @@ export class CreateHostedSkillManager extends AbstractCreateSkillManager {
         try {
             this.vendorId = Utils.resolveVendorId(this.profile);
         } catch (err) {
-            throw loggableAskError(`Failed to retrieve vendorID for profile ${this.profile}`);
+            throw logAskError(`Failed to retrieve vendorID for profile ${this.profile}`);
         }
     }
 
@@ -47,7 +47,7 @@ export class CreateHostedSkillManager extends AbstractCreateSkillManager {
 
             await this.cloneSkill(skillId, userInput.skillName, progress);
         } catch (error) {
-            throw loggableAskError('Failed to create a hosted skill', error);
+            throw logAskError('Failed to create a hosted skill', error);
         }
     }
 
@@ -194,7 +194,7 @@ export class CreateHostedSkillManager extends AbstractCreateSkillManager {
             }
             const skillNotCreatedMsg = 'skill not yet created';
             Logger.verbose(skillNotCreatedMsg);
-            throw loggableAskError(skillNotCreatedMsg);
+            throw logAskError(skillNotCreatedMsg);
         }, retryOptions);
     }
 
@@ -213,11 +213,11 @@ export class CreateHostedSkillManager extends AbstractCreateSkillManager {
         const skillSummary = (await smapiClient.listSkillsForVendorV1(this.vendorId, undefined, undefined, [skillId]))
             .skills?.[0];
         if (!skillSummary) {
-            throw loggableAskError('No skill is found.');
+            throw logAskError('No skill is found.');
         }
         const hostedSkillMetadata = await smapiClient.getAlexaHostedSkillMetadataV1(skillId);
         if (hostedSkillMetadata === undefined) {
-            throw loggableAskError('No Alexa hosted skill is found.');
+            throw logAskError('No Alexa hosted skill is found.');
         }
         return new SmapiResource(new SkillInfo(skillSummary, true, hostedSkillMetadata), skillName);
     }

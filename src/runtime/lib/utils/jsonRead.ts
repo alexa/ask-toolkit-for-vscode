@@ -6,7 +6,7 @@
 import { readFileSync } from 'jsonfile';
 
 export function readFile(filePath: string): any {
-    var file: any;
+    let file: any;
     try {
         file = readFileSync(filePath);
     } catch (e) {
@@ -17,7 +17,7 @@ export function readFile(filePath: string): any {
 }
 
 export function readString(str: string): any {
-    var jsonObj : any;
+    let jsonObj: any;
     try {
         jsonObj = JSON.parse(str);
     } catch (e) {
@@ -29,7 +29,7 @@ export function readString(str: string): any {
 
 export function getProperty(jsonObject: any, track: string): any {
     const trackArray: string[] = track.split('.').slice(1);
-    var property: any = jsonObject;
+    let property: any = jsonObject;
     for (let i = 0; i < trackArray.length; i++) {
         if (property.hasOwnProperty(trackArray[i])) {
             property = property[trackArray[i]];

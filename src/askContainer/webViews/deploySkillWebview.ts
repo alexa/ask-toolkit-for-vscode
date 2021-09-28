@@ -4,17 +4,17 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-import { AbstractWebView } from '../../runtime';
-
-import { ViewLoader } from '../../utils/webViews/viewLoader';
-import { deploySkill } from '../../utils/deploySkillHelper';
-import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
-import { getOrInstantiateGitApi } from '../../utils/gitHelper';
 import { API } from '../../@types/git';
-import { Logger } from '../../logger';
-import { loggableAskError } from '../../exceptions';
-import { getSkillFolderInWs } from '../../utils/workspaceHelper';
 import { WEB_VIEW_NAME } from '../../constants';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { AbstractWebView } from '../../runtime';
+import { deploySkill } from '../../utils/deploySkillHelper';
+import { getOrInstantiateGitApi } from '../../utils/gitHelper';
+import { getSkillDetailsFromWorkspace } from '../../utils/skillHelper';
+import { ViewLoader } from '../../utils/webViews/viewLoader';
+import { getSkillFolderInWs } from '../../utils/workspaceHelper';
+
 
 export class DeploySkillWebview extends AbstractWebView {
     private loader: ViewLoader;
@@ -28,7 +28,7 @@ export class DeploySkillWebview extends AbstractWebView {
                 this.gitApi = value;
             })
             .catch(err => {
-                throw loggableAskError('Failed to retrieve git api.', err);
+                throw logAskError('Failed to retrieve git api.', err);
             });
     }
 
@@ -52,10 +52,10 @@ export class DeploySkillWebview extends AbstractWebView {
                 });
                 await deploySkill(skillWorkspace!, this.extensionContext, this);
             } catch (err) {
-                throw loggableAskError(`Skill deploy failed`, err, true);
+                throw logAskError(`Skill deploy failed`, err, true);
             }
         } else {
-            throw loggableAskError('Unexpected message received from webview.');
+            throw logAskError('Unexpected message received from webview.');
         }
     }
 
