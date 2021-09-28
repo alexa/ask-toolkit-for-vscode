@@ -1,0 +1,8 @@
+# Ignore Vscode artifacts
+.vscode*
+*.md
+node_modules
+out
+coverage
+dist
+media/**/*.html
