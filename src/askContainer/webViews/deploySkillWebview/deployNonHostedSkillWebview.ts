@@ -6,27 +6,24 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as vscode from 'vscode';
-
 import {
-    DEFAULT_PROFILE,
-    SKILL,
-    TELEMETRY_EVENTS,
-    DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT,
-    DEPLOY_SELF_HOSTED_LOCAL_CHANGE_STATE_CONTENT,
+    DEFAULT_PROFILE, DEPLOY_SELF_HOSTED_LOCAL_CHANGE_STATE_CONTENT, DEPLOY_SELF_HOSTED_SKILL_PACKAGE_STATE_CONTENT, SKILL,
+    TELEMETRY_EVENTS
 } from '../../../constants';
-import { AbstractWebView, Utils } from '../../../runtime';
-import { AskStates } from '../../../models/resourcesConfig/askStates';
-import { getHash } from '../../../utils/hashHelper';
-import { ViewLoader } from '../../../utils/webViews/viewLoader';
-import { DeployNonHostedSkillManager } from './deployNonHostedSkillManager';
-import { getSkillMetadataSrc, getSkillDetailsFromWorkspace } from '../../../utils/skillHelper';
-import { getSkillPackageStatus } from '../../../utils/skillPackageHelper';
-import { Logger } from '../../../logger';
-import { AskError, loggableAskError } from '../../../exceptions';
-import { getSkillFolderInWs } from '../../../utils/workspaceHelper';
+import { AskError, logAskError } from '../../../exceptions';
 import { ext } from '../../../extensionGlobals';
+import { Logger } from '../../../logger';
+import { AskStates } from '../../../models/resourcesConfig/askStates';
+import { AbstractWebView, Utils } from '../../../runtime';
+import { ActionType, TelemetryClient } from '../../../runtime/lib/telemetry';
 import { isNonEmptyString } from '../../../runtime/lib/utils';
-import { TelemetryClient, ActionType } from '../../../runtime/lib/telemetry';
+import { getHash } from '../../../utils/hashHelper';
+import { getSkillDetailsFromWorkspace, getSkillMetadataSrc } from '../../../utils/skillHelper';
+import { getSkillPackageStatus } from '../../../utils/skillPackageHelper';
+import { ViewLoader } from '../../../utils/webViews/viewLoader';
+import { getSkillFolderInWs } from '../../../utils/workspaceHelper';
+import { DeployNonHostedSkillManager } from './deployNonHostedSkillManager';
+
 
 enum LocalChangesStates {
     noChanges,
@@ -73,7 +70,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
         Logger.debug(`Calling method: ${this.viewId}.onReceiveMessageListener, args: `, message);
         const skillFolder = getSkillFolderInWs(this.extensionContext);
         if (skillFolder === undefined) {
-            throw loggableAskError('No skill folder found in the workspace.', null, true);
+            throw logAskError('No skill folder found in the workspace.', null, true);
         }
 
         if (message === 'refresh') {
@@ -103,7 +100,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
             } catch (err) {
                 await TelemetryClient.getInstance().store(action, err);
                 this.dispose();
-                throw loggableAskError(`Skill deploy failed`, err, true);
+                throw logAskError(`Skill deploy failed`, err, true);
             }
         } else if (message === 'exportSkillPackage') {
             const hasDownloaded = await vscode.commands.executeCommand('ask.exportSkillPackage');
@@ -111,7 +108,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
                 void this.refresh(true);
             }
         } else {
-            throw loggableAskError('Unexpected message received from webview.');
+            throw logAskError('Unexpected message received from webview.');
         }
     }
 
@@ -181,7 +178,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
             await this.updateSkillPackageSyncState(skillFolder, skillDetails.skillId, profile);
         } catch (error) {
             this.postMessage(error);
-            throw loggableAskError('Skill deploy and build page refresh failed', error, true);
+            throw logAskError('Skill deploy and build page refresh failed', error, true);
         }
     }
 
@@ -232,7 +229,7 @@ export class DeployNonHostedSkillWebview extends AbstractWebView {
                 ? this.resolveLocalChangeStateContent(LocalChangesStates.changesExist)
                 : this.resolveLocalChangeStateContent(LocalChangesStates.noChanges);
         } catch (error) {
-            throw loggableAskError('Failed to get local changes state', error);
+            throw logAskError('Failed to get local changes state', error);
         }
     }
 

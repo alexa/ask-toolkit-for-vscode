@@ -4,17 +4,17 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import { AbstractCommand, CommandContext, Utils } from '../../runtime';
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
-import { EXTENSION_COMMAND_CONFIG, APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, SOURCES_FILE_PATH } from '../config/configuration';
-import { AplPreviewWebView } from '../webViews/aplPreviewWebView';
-import { ERROR_MESSAGES, PROMPT_MESSAGES } from '../constants/messages';
+import { DEFAULT_PROFILE } from '../../constants';
+import { logAskError } from '../../exceptions';
+import { AbstractCommand, CommandContext, Utils } from '../../runtime';
 import { displayDirRootPath } from '../../utils/fileHelper';
-import { loggableAskError } from '../../exceptions';
 import { getSkillFolderInWs } from '../../utils/workspaceHelper';
-import { DEFAULT_PROFILE } from '../../constants'
+import { APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, EXTENSION_COMMAND_CONFIG, SOURCES_FILE_PATH } from '../config/configuration';
+import { ERROR_MESSAGES, PROMPT_MESSAGES } from '../constants/messages';
+import { AplPreviewWebView } from '../webViews/aplPreviewWebView';
 export class PreviewAplCommand extends AbstractCommand<void> {
     private aplPreviewWebView;
 
@@ -28,7 +28,7 @@ export class PreviewAplCommand extends AbstractCommand<void> {
         if (!wsFolder.fsPath.endsWith('.json')) {
             const profile = Utils.getCachedProfile(context.extensionContext) ?? DEFAULT_PROFILE;
             const aplResourceRootPath: string = path.join(wsFolder.fsPath, displayDirRootPath(skillFolderWs.fsPath, profile));
-            const aplResourceNames : string[] = await this.getAplResourceNames(aplResourceRootPath);
+            const aplResourceNames: string[] = await this.getAplResourceNames(aplResourceRootPath);
             const pickAplResource: vscode.QuickPickItem | undefined = await vscode.window.showQuickPick(
                 this.getAplResourceOptions(aplResourceNames)
             );
@@ -58,7 +58,7 @@ export class PreviewAplCommand extends AbstractCommand<void> {
             dirs = fs.readdirSync(parentDirectory, { withFileTypes: true });
         } catch(err) {
             await vscode.window.showInformationMessage(PROMPT_MESSAGES.PREVIEW_APL_NO_APL_FOUND_IN_DIRECTORY);
-            throw loggableAskError(PROMPT_MESSAGES.PREVIEW_APL_NO_APL_FOUND_IN_DIRECTORY);
+            throw logAskError(PROMPT_MESSAGES.PREVIEW_APL_NO_APL_FOUND_IN_DIRECTORY);
         }
         return dirs.filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
     }
@@ -86,7 +86,7 @@ export class PreviewAplCommand extends AbstractCommand<void> {
         if (fs.existsSync(aplDocumentPath)) {
             await vscode.window.showTextDocument(vscode.Uri.file(aplDocumentPath), {preview: false, viewColumn} as vscode.TextDocumentShowOptions);
         } else {
-            throw loggableAskError(ERROR_MESSAGES.PREVIEW_APL_NO_APL_DOCUMENT_FOUND, undefined, true);
+            throw logAskError(ERROR_MESSAGES.PREVIEW_APL_NO_APL_DOCUMENT_FOUND, undefined, true);
         }
     }
 

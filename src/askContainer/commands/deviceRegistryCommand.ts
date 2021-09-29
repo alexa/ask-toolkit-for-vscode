@@ -4,10 +4,10 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import { DeviceRegistryWebview } from '../webViews/deviceRegistryWebview';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
-import { loggableAskError } from '../../exceptions';
 import { AbstractCommand, CommandContext } from '../../runtime';
+import { DeviceRegistryWebview } from '../webViews/deviceRegistryWebview';
 
 export class DeviceRegistryCommand extends AbstractCommand<void> {
     private deviceRegistryWebview: DeviceRegistryWebview;
@@ -22,7 +22,7 @@ export class DeviceRegistryCommand extends AbstractCommand<void> {
         try {
             this.deviceRegistryWebview.showView();
         } catch (err) {
-            throw loggableAskError(`Cannot open device registry webview`, err, true);
+            throw logAskError(`Cannot open device registry webview`, err, true);
         }
     }
 }

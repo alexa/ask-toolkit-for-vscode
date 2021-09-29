@@ -3,15 +3,15 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+import { IncomingMessage, Server, ServerResponse } from 'http';
 import * as open from 'open';
-import { IncomingMessage, ServerResponse, Server } from 'http';
 import { URLSearchParams } from 'url';
-
 import { AUTH, LOCALHOST_PORT } from '../constants';
-import { Utils } from '../runtime';
+import { logAskError } from '../exceptions';
 import { Logger } from '../logger';
-import { loggableAskError } from '../exceptions';
+import { Utils } from '../runtime';
 import { ServerFactory } from '../runtime/lib/utils/serverFactory';
+
 
 /**
  * Build and open the url that navigates user to captcha validation page after login.
@@ -86,7 +86,7 @@ function _listenResponseFromCaptchaServer(PORT: number): Promise<void> {
             return;
         });
         server.on('error', (error) => {
-            throw loggableAskError(`Captcha server cannot be connected.`, error);
+            throw logAskError(`Captcha server cannot be connected.`, error);
         });
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         server.on('request', async (request: IncomingMessage, response: ServerResponse) => {

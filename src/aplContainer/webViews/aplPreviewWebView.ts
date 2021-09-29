@@ -154,7 +154,7 @@ export class AplPreviewWebView extends AbstractWebView {
         }
         this.update(editor.document);
 
-        const webview: vscode.Webview = this.getWebview() as vscode.Webview;
+        const webview: vscode.Webview = this.getWebview();
         const aplRenderPath: vscode.Uri = webview.asWebviewUri(
             vscode.Uri.file(
                 path.join(
@@ -172,7 +172,7 @@ export class AplPreviewWebView extends AbstractWebView {
             js: true,
             args: {
                 "aplRenderUtils": aplRenderPath,
-                customJavascript: customJavascript
+                customJavascript
             }
         });
     }

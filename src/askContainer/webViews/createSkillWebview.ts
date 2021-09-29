@@ -3,19 +3,19 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import { AbstractWebView, SmapiClientFactory, Utils, SmapiResource } from '../../runtime';
 import { DEFAULT_PROFILE, WEB_VIEW_NAME } from '../../constants';
-import { createSkill } from '../../utils/createSkillHelper';
-import { solveCaptcha } from '../../utils/captchaValidator';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
 import { SkillInfo } from '../../models/types';
+import { AbstractWebView, SmapiClientFactory, SmapiResource, Utils } from '../../runtime';
+import { solveCaptcha } from '../../utils/captchaValidator';
 import { cloneSkill } from '../../utils/cloneSkillHelper';
+import { createSkill } from '../../utils/createSkillHelper';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { openWorkspaceFolder } from '../../utils/workspaceHelper';
-import { loggableAskError } from '../../exceptions';
-import { Logger } from '../../logger';
 
 type createSkillWebViewType = {
     locale: string;
@@ -98,7 +98,7 @@ export class CreateSkillWebview extends AbstractWebView {
                 Logger.info(skillCreateMsg);
                 await vscode.window.showInformationMessage(skillCreateMsg);
             } catch (err) {
-                throw loggableAskError(`Skill creation failed`, err, true);
+                throw logAskError(`Skill creation failed`, err, true);
             }
         }
     }
@@ -127,19 +127,19 @@ export class CreateSkillWebview extends AbstractWebView {
         try {
             vendorId = Utils.resolveVendorId(profile);
         } catch (err) {
-            throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+            throw logAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
         }
 
         const smapiClient = SmapiClientFactory.getInstance(profile, this.extensionContext);
         const skillSummary = (await smapiClient.listSkillsForVendorV1(
             vendorId, undefined, undefined, [skillId])).skills?.[0];
         if (!skillSummary) {
-            throw loggableAskError("No skill is found.");
+            throw logAskError("No skill is found.");
         }
 
         const hostedSkillMetadata = await smapiClient.getAlexaHostedSkillMetadataV1(skillId);
         if (hostedSkillMetadata === undefined) {
-            throw loggableAskError("No Alexa hosted skill is found.");
+            throw logAskError("No Alexa hosted skill is found.");
         }
 
         return new SmapiResource(

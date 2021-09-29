@@ -3,16 +3,16 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from "vscode";
 import * as path from "path";
-
+import * as vscode from "vscode";
 import { DEFAULT_PROFILE, SKILL, SKILL_FOLDER } from "../../../constants";
-import { loggableAskError } from "../../../exceptions";
+import { logAskError } from "../../../exceptions";
 import { Logger } from "../../../logger";
 import { AskStates } from '../../../models/resourcesConfig/askStates';
 import { AbstractWebView, Utils } from "../../../runtime";
 import { getSkillDetailsFromWorkspace } from "../../../utils/skillHelper";
 import { deploySkillPackage, pollImportStatus } from "../../../utils/skillPackageHelper";
+
 
 const WINDOW_PROCESS_TITLE_DEPLOYING = "Deploying skill";
 const WINDOW_PROCESS_TITLE_BUILDING = "Deploying skill: Skill package build in progress";
@@ -75,7 +75,7 @@ export abstract class AbstractDeploySkillManager {
                     Logger.info(SKILL_PACKAGE_BUILD_STATUS_SUCCEEDED_MSG);
                     void vscode.window.showInformationMessage(SKILL_PACKAGE_BUILD_STATUS_SUCCEEDED_MSG);
                 } catch (err) {
-                    throw loggableAskError(SKILL_PACKAGE_BUILD_STATUS_FAILED_MSG, err, true);
+                    throw logAskError(SKILL_PACKAGE_BUILD_STATUS_FAILED_MSG, err, true);
                 } finally {
                     view.dispose();
                 }

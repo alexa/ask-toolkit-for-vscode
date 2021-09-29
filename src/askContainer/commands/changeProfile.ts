@@ -3,15 +3,15 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { AbstractCommand, CommandContext, Utils } from '../../runtime';
 import * as vscode from 'vscode';
-
 import { onSkillConsoleViewChangeEventEmitter, onWorkspaceOpenEventEmitter } from '../../askContainer/events';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
+import { AbstractCommand, CommandContext, Utils } from '../../runtime';
+import { SchemaManager } from '../../utils/schemaHelper';
 import { clearCachedSkills } from '../../utils/skillHelper';
 import { disposeWebviews } from '../../utils/webViews/viewManager';
-import { loggableAskError } from '../../exceptions';
-import { SchemaManager } from '../../utils/schemaHelper';
+
 
 const VENDOR_ID = 'Vendor ID';
 
@@ -34,7 +34,7 @@ export class ChangeProfileCommand extends AbstractCommand<void> {
                         detail: `${VENDOR_ID} : ${vendorId}`
                     });
                 } catch (err) {
-                    throw loggableAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
+                    throw logAskError(`Failed to retrieve vendorID for profile ${profile}`, err, true);
                 }
             });
             qp.items = qpItems;

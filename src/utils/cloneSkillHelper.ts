@@ -3,27 +3,23 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
-import * as path from 'path';
-import { 
-    SmapiResource, SmapiClientFactory, Utils
-} from '../runtime';
-import * as R from 'ramda';
 import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 import * as https from 'https';
-
-import { CommandContext } from '../runtime';
-import { SkillInfo } from '../models/types';
-import { GitInTerminalHelper, getOrInstantiateGitApi, isGitInstalled } from './gitHelper';
-import { createSkillPackageFolder, syncSkillPackage } from './skillPackageHelper';
-import { checkAuthInfoScript, checkAskPrePushScript, checkGitCredentialHelperScript } from './s3ScriptChecker'
-import { SKILL_FOLDER, BASE_RESOURCES_CONFIG, DEFAULT_PROFILE, 
-    BASE_STATES_CONFIG, SKILL, GIT_MESSAGES, CLI_HOSTED_SKILL_TYPE } from '../constants';
+import * as path from 'path';
+import * as R from 'ramda';
+import * as vscode from 'vscode';
+import { BASE_RESOURCES_CONFIG, BASE_STATES_CONFIG, CLI_HOSTED_SKILL_TYPE, DEFAULT_PROFILE, GIT_MESSAGES, SKILL, SKILL_FOLDER } from '../constants';
+import { AskError, logAskError } from '../exceptions';
 import { Logger } from '../logger';
-import { loggableAskError, AskError } from '../exceptions';
+import { SkillInfo } from '../models/types';
+import { CommandContext, SmapiClientFactory, SmapiResource, Utils } from '../runtime';
 import { getSkillNameFromLocales } from '../utils/skillHelper';
 import { openWorkspaceFolder } from '../utils/workspaceHelper';
+import { getOrInstantiateGitApi, GitInTerminalHelper, isGitInstalled } from './gitHelper';
+import { checkAskPrePushScript, checkAuthInfoScript, checkGitCredentialHelperScript } from './s3ScriptChecker';
+import { createSkillPackageFolder, syncSkillPackage } from './skillPackageHelper';
+
 
 export async function executeClone(context: CommandContext, skillInfo: SmapiResource<SkillInfo>) {
     try {
@@ -51,7 +47,7 @@ export async function executeClone(context: CommandContext, skillInfo: SmapiReso
         await openWorkspaceFolder(skillFolderUri);
         return;
     } catch (err) {
-        throw loggableAskError(`Skill clone failed`, err, true);
+        throw logAskError(`Skill clone failed`, err, true);
     }
 }
 
@@ -139,7 +135,7 @@ async function setupGitFolder(
         await repo?.checkout('master');
         await setPrePushHookScript(targetPath, context);
     } catch (err) {
-        throw loggableAskError(`Git folder setup failed for ${targetPath}`, err);
+        throw logAskError(`Git folder setup failed for ${targetPath}`, err);
     }
 }
 
@@ -169,7 +165,7 @@ function createAskStateConfig(
 }
 
 function downloadScriptFile(
-    scriptUrl: string, filePath:string, chmod: string): Promise<void>{
+    scriptUrl: string, filePath: string, chmod: string): Promise<void>{
     Logger.verbose(`Calling method: downloadScriptFile, args: `, scriptUrl, filePath, chmod);
     const file = fs.createWriteStream(filePath);
     return new Promise((resolve, reject) => {
@@ -179,7 +175,7 @@ function downloadScriptFile(
             resolve();
         });
         request.on('error', (err) => {
-            reject(loggableAskError('Download script failed ', err));
+            reject(logAskError('Download script failed ', err));
         });
         request.end();
     });

@@ -4,12 +4,12 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from "vscode";
-import { AbstractCommand, CommandContext } from "../../runtime";
-
-import { DeployHostedSkillWebview } from "../webViews/deploySkillWebview/deployHostedSkillWebview";
-import { checkProfileSkillAccess } from "../../utils/skillHelper";
+import { logAskError } from "../../exceptions";
 import { Logger } from "../../logger";
-import { loggableAskError } from "../../exceptions";
+import { AbstractCommand, CommandContext } from "../../runtime";
+import { checkProfileSkillAccess } from "../../utils/skillHelper";
+import { DeployHostedSkillWebview } from "../webViews/deploySkillWebview/deployHostedSkillWebview";
+
 
 export class DeployHostedSkillCommand extends AbstractCommand<void> {
     private deploySkillWebview: DeployHostedSkillWebview;
@@ -27,7 +27,7 @@ export class DeployHostedSkillCommand extends AbstractCommand<void> {
 
             this.deploySkillWebview.showView();
         } catch (err) {
-            throw loggableAskError(`Cannot open deploy skill view`, err, true);
+            throw logAskError(`Cannot open deploy skill view`, err, true);
         }
     }
 }

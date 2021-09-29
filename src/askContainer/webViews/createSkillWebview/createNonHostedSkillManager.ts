@@ -3,30 +3,30 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+import * as model from 'ask-smapi-model';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as model from 'ask-smapi-model';
 import { ExtensionContext, Progress } from 'vscode';
-
-import { AbstractCreateSkillManager } from './abstractCreateSkillManager';
-import { createSkillWebViewType } from './createSkillWebview';
 import {
     DEFAULT_PROFILE,
     MASTER_BRANCH_SKILL_MANIFEST_URL,
     MASTER_BRANCH_SKILL_MODELS_URL,
     SKILL_FOLDER,
-    TEMPLATES,
+    TEMPLATES
 } from '../../../constants';
-import { loggableAskError } from '../../../exceptions';
+import { logAskError } from '../../../exceptions';
 import { Logger } from '../../../logger';
-import { AskStates } from '../../../models/resourcesConfig/askStates';
-import { AskResources } from '../../../models/resourcesConfig/askResource';
 import { Manifest } from '../../../models/manifest';
-import { getHash } from '../../../utils/hashHelper';
-import { downloadToFileFromUrl } from '../../../utils/urlHandlers';
+import { AskResources } from '../../../models/resourcesConfig/askResource';
+import { AskStates } from '../../../models/resourcesConfig/askStates';
 import { GitInTerminalHelper } from '../../../utils/gitHelper';
+import { getHash } from '../../../utils/hashHelper';
 import { getSkillMetadataSrc } from '../../../utils/skillHelper';
 import { deploySkillPackage, pollImportStatus } from '../../../utils/skillPackageHelper';
+import { downloadToFileFromUrl } from '../../../utils/urlHandlers';
+import { AbstractCreateSkillManager } from './abstractCreateSkillManager';
+import { createSkillWebViewType } from './createSkillWebview';
+
 
 import ImportResponse = model.v1.skill.ImportResponse;
 
@@ -76,7 +76,7 @@ export class CreateNonHostedSkillManager extends AbstractCreateSkillManager {
             const eTag = importResponse?.skill?.eTag;
 
             if (skillId === undefined) {
-                throw loggableAskError('SkillId is not found in the import skill package status response');
+                throw logAskError('SkillId is not found in the import skill package status response');
             }
 
             progress.report({
@@ -85,7 +85,7 @@ export class CreateNonHostedSkillManager extends AbstractCreateSkillManager {
             });
             await this.postCreateSkill(skillId, eTag);
         } catch (error) {
-            throw loggableAskError('Failed to create a self-hosted skill', error);
+            throw logAskError('Failed to create a self-hosted skill', error);
         }
     }
 
@@ -174,7 +174,7 @@ export class CreateNonHostedSkillManager extends AbstractCreateSkillManager {
                 const filePath = path.join(this.skillFolder,filename);
                 void fs.remove(filePath);
             } catch (error) {
-                throw loggableAskError(`Failed to remove a file in the skill template`, error);
+                throw logAskError(`Failed to remove a file in the skill template`, error);
             }
         })
     }

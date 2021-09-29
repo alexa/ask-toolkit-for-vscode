@@ -41,7 +41,7 @@ export function getProperty(filePath: string, propertyPathArray: string[]): any 
 }
 
 export function getPropertyValueFromObject(jsonObject: any, propertyPathArray: string[]): any {
-    var targetObject: any = jsonObject;
+    let targetObject: any = jsonObject;
     for (let index = 0; index < propertyPathArray.length - 1; index++) {
         if (!targetObject || !targetObject.hasOwnProperty(propertyPathArray[index])) {
             return null;
@@ -57,7 +57,7 @@ export function getPropertyValueFromObject(jsonObject: any, propertyPathArray: s
 }
 
 export function deletePropertyFromJsonObject(jsonObject: any, propertyPathArray: string[]): boolean {
-    var targetObject: any = jsonObject;
+    let targetObject: any = jsonObject;
     for (let index = 0; index < propertyPathArray.length - 1; index++) {
         if (!targetObject.hasOwnProperty(propertyPathArray[index])) {
             return false;
@@ -69,7 +69,7 @@ export function deletePropertyFromJsonObject(jsonObject: any, propertyPathArray:
 }
 
 export function insertObjectToObject(jsonObject: any, propertyPathArray: string[], writeObject: any): void {
-    var targetObject: any = jsonObject;
+    let targetObject: any = jsonObject;
     for (let index = 0; index < propertyPathArray.length - 1; index++) {
         if (!targetObject.hasOwnProperty(propertyPathArray[index])) {
             if (typeof targetObject !== 'object') {

@@ -3,16 +3,16 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { SKILL } from '../constants';
-import { Options } from 'async-retry';
-import { view, lensPath } from 'ramda';
-import retry = require('async-retry'); 
 import * as model from 'ask-smapi-model';
-import { SmapiClientFactory } from '../runtime';
+import { Options } from 'async-retry';
+import { lensPath, view } from 'ramda';
 import { ExtensionContext } from 'vscode';
-
+import { SKILL } from '../constants';
+import { AskError } from '../exceptions';
 import { Logger } from '../logger';
-import { loggableAskError, AskError } from '../exceptions';
+import { SmapiClientFactory } from '../runtime';
+import retry = require('async-retry'); 
+
 
 async function _pollSkillCreation(skillId: string, profile: string, context: ExtensionContext): Promise<any> {
     // The maximum waiting time:
@@ -90,20 +90,20 @@ function _getManifest(skillName: string, locale: string): model.v1.skill.Manifes
 export async function createSkill(skillName: string, runtime: string, region: string, locale: string, profile: string, vendorId: string, context: ExtensionContext): Promise<string> {
     Logger.verbose(
         `Calling method: createSkill, args: `, {
-            "skillName": skillName,
-            "runtime": runtime,
-            "region": region,
-            "locale": locale,
-            "profile": profile,
-            "vendorId": vendorId
+            skillName,
+            runtime,
+            region,
+            locale,
+            profile,
+            vendorId
         });
     const payload = {
-        vendorId: vendorId,
+        vendorId,
         manifest: _getManifest(skillName, locale),
         hosting: {
             "alexaHosted": {
-                "runtime": runtime,
-                "region": region
+                runtime,
+                region
             }
         }
     } as model.v1.skill.CreateSkillRequest;

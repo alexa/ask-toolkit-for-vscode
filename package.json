@@ -216,7 +216,7 @@
                         "description": "Debugger configuration for Alexa skills (Node.js)",
                         "body": {
                             "name": "Debug Alexa Skill (Node.js)",
-                            "type": "node",
+                            "type": "pwa-node",
                             "request": "launch",
                             "program": "^\"\\${command:ask.debugAdapterPath}\"",
                             "args": [
@@ -298,7 +298,7 @@
         "test-compile": "tsc -p ./",
         "copyTestData": "cp -R ./test/mockSkill ./out/test",
         "compile": "shx rm -rf ./out/ && shx rm -rf ./dist/ && tsc -p ./",
-        "lint": "eslint src --ext ts",
+        "lint": "eslint src --ext ts --fix",
         "watch": "tsc -watch -p ./",
         "pretest": "npm run compile && npm run copyTestData",
         "test": "node ./out/test/runTest.js",

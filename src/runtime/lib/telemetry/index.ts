@@ -3,16 +3,16 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { v4 as uuid } from 'uuid';
-import { extensions, env , workspace, version} from 'vscode';
-import { Logger } from '../../../logger';
-import { DEFAULT_ENCODING, EXTENSION_FULL_NAME, EXTENSION_ID } from '../../../constants';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { promiseRetry } from '../../../utils/retry';
-import { ext } from '../../../extensionGlobals';
-import { loggableAskError } from '../../../exceptions';
-import * as os from 'os';
 import * as child_process from 'child_process';
+import * as os from 'os';
+import { v4 as uuid } from 'uuid';
+import { env, extensions, version, workspace } from 'vscode';
+import { DEFAULT_ENCODING, EXTENSION_FULL_NAME, EXTENSION_ID } from '../../../constants';
+import { logAskError } from '../../../exceptions';
+import { ext } from '../../../extensionGlobals';
+import { Logger } from '../../../logger';
+import { promiseRetry } from '../../../utils/retry';
 
 enum MetricActionResult {
     SUCCESS = 'Success',
@@ -140,7 +140,7 @@ export class TelemetryClient {
             const gitVersionUint8Array: Uint8Array = child_process.execSync('git --version');
             gitVersion = new TextDecoder(DEFAULT_ENCODING).decode(gitVersionUint8Array);
         } catch (error) {
-            loggableAskError('TelemetryClient failed to fetch git version', error);
+            logAskError('TelemetryClient failed to fetch git version', error);
         }
         
         this.data = {
@@ -152,7 +152,7 @@ export class TelemetryClient {
             clientId: EXTENSION_FULL_NAME,
             operatingSystem: `${osType} ${osArch} ${osRelease}`,
             dependencyVersion: version,
-            gitVersion: gitVersion,
+            gitVersion,
             actions: []
         };
     }
@@ -184,11 +184,11 @@ export class TelemetryClient {
      * @param action - The MetricAction item
      * @param error - The error object
      */
-    public async store(action: MetricAction , error?:Error): Promise<void> {
+    public async store(action: MetricAction , error?: Error): Promise<void> {
         action.end(error);
         if (!this.enabled) {
             await this.resetStoredStates();
-            loggableAskError('Telemetry is disabled. Not uploading any data.');
+            logAskError('Telemetry is disabled. Not uploading any data.');
             return;
         }
         let dataMap = ext.context.globalState.get(TELEMETRY_DATA) as {};

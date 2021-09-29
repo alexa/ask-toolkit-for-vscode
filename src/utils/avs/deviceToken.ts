@@ -4,15 +4,15 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
-import { loggableAskError } from '../../exceptions';
-import { Logger } from '../../logger';
-import { v4 as uuid } from 'uuid';
-import { storeDeviceInfoGlobalState, writeTokenToGlobalState } from './deviceTokenUtil';
-import { IDeviceCodeResponse } from './avsInterface'
 import axios from 'axios';
 import * as querystring from 'querystring';
+import { v4 as uuid } from 'uuid';
+import * as vscode from 'vscode';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { IDeviceCodeResponse } from './avsInterface';
 import { AVS_CONFIG, AVS_CONSTANTS, AVS_ERROR_MESSAGE } from './avsPayload';
+import { storeDeviceInfoGlobalState, writeTokenToGlobalState } from './deviceTokenUtil';
 
 /**
  * CBL method to register device. Reference: https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/code-based-linking-other-platforms.html
@@ -45,7 +45,7 @@ export async function sendDeviceAuthRequest(context: vscode.ExtensionContext, pr
         deviceResponse = response.data;
         return deviceResponse;
     } catch (err) {
-        throw loggableAskError(AVS_ERROR_MESSAGE.GET_AUTH_CODE_FAILED, err);
+        throw logAskError(AVS_ERROR_MESSAGE.GET_AUTH_CODE_FAILED, err);
     }
 }
 
@@ -67,6 +67,6 @@ export async function getDeviceTokenWithCode(deviceCode: string, userCode: strin
         accessToken = response.data.access_token;
         return accessToken;
     } catch (err) {
-        throw loggableAskError(AVS_ERROR_MESSAGE.GET_DEVICE_TOKEN_FAILED, err);
+        throw logAskError(AVS_ERROR_MESSAGE.GET_DEVICE_TOKEN_FAILED, err);
     }
 }

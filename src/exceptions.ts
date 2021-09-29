@@ -20,7 +20,7 @@ export class AskParameterAbsenceError extends AskError {
     }
 }
 
-export function loggableAskError(message: string, error: any | undefined=undefined, exposeToUser=false): Error {
+export function logAskError(message: string, error: any | undefined=undefined, exposeToUser=false): Error {
     let errMsg: string;
     if (error !== undefined) {
         let msg: string;

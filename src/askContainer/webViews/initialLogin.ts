@@ -4,14 +4,14 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-
-import { AbstractWebView } from '../../runtime';
 import { DEFAULT_PROFILE, WEB_VIEW_NAME } from '../../constants';
+import { AskParameterAbsenceError, logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { AbstractWebView } from '../../runtime';
 import { authenticate } from '../../utils/webViews/authHelper';
-import { AskParameterAbsenceError, loggableAskError } from '../../exceptions';
 import { ViewLoader } from '../../utils/webViews/viewLoader';
 import { AUTH_FLOW_RESULT } from './profileManagerWebview';
-import { Logger } from '../../logger';
+
 
 
 type SignInType = {
@@ -71,6 +71,6 @@ export class InitialLoginWebview extends AbstractWebView {
 
     reviveView(): void {
         Logger.debug(`Calling method: ${this.viewId}.reviveView`);
-        throw loggableAskError('Method not implemented.');
+        throw logAskError('Method not implemented.');
     }
 }

@@ -4,12 +4,12 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
-import { EXTENSION_STATE_KEY } from '../../constants';
-import { loggableAskError } from '../../exceptions';
 import axios from 'axios';
 import * as querystring from 'querystring';
 import { isEmpty } from 'ramda';
+import * as vscode from 'vscode';
+import { EXTENSION_STATE_KEY } from '../../constants';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
 
 export async function getRegisteredDeviceId(context: vscode.ExtensionContext): Promise<string | undefined> {
@@ -83,7 +83,7 @@ export async function refreshDeviceToken(context: vscode.ExtensionContext): Prom
         writeTokenToGlobalState(response, context);
         accessToken = response.data.access_token;
     } catch (err) {
-        throw loggableAskError(`Failed to refresh device token`, err);
+        throw logAskError(`Failed to refresh device token`, err);
     }
     return accessToken;
 }

@@ -7,17 +7,17 @@ import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 import * as path from 'path';
 import * as vscode from 'vscode';
-
 import { TELEMETRY_EVENTS } from '../../../constants';
-import { SmapiResource, AbstractCommand, CommandContext, Utils } from '../../../runtime';
+import { logAskError } from '../../../exceptions';
 import { Logger } from '../../../logger';
 import { SkillInfo } from '../../../models/types';
+import { AbstractCommand, CommandContext, SmapiResource, Utils } from '../../../runtime';
+import { ActionType, TelemetryClient } from '../../../runtime/lib/telemetry';
 import { getSkillNameFromLocales } from '../../../utils/skillHelper';
 import { openWorkspaceFolder } from '../../../utils/workspaceHelper';
 import { CloneHostedSkillManager } from './cloneHostedSkillManager';
 import { CloneNonHostedSkillManager } from './cloneNonHostedSkillManager';
-import { loggableAskError } from '../../../exceptions';
-import { TelemetryClient, ActionType } from '../../../runtime/lib/telemetry';
+
 
 export class CloneSkillCommand extends AbstractCommand<void> {
     constructor(commandName?: string) {
@@ -65,7 +65,7 @@ export class CloneSkillCommand extends AbstractCommand<void> {
             await openWorkspaceFolder(skillFolderUri);
         } catch (error) {
             await TelemetryClient.getInstance().store(action, error);
-            throw loggableAskError(`Skill clone failed`, error, true);
+            throw logAskError(`Skill clone failed`, error, true);
         }
     }
 

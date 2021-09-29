@@ -4,27 +4,23 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
-import * as path from 'path';
-import { Map } from 'immutable';
-import * as fs from 'fs';
-import { AbstractCommand, CommandContext, Utils } from '../../runtime';
 import { getSampleTemplates, ISampleTemplate } from 'apl-suggester';
-import {
-    EXTENSION_COMMAND_CONFIG,
-    APL_DOCUMENT_FILE_PATH,
-    DATASOURCES_FILE_PATH,
-    SAMPLE_TEMPLATE_ID_TO_NAME_MAP,
-    RESOURCE_NAME_REGEX,
-} from '../config/configuration';
-import { displayDirRootPath, makeFileSync } from '../../utils/fileHelper';
-import { PROMPT_MESSAGES, ERROR_MESSAGES, SUCCESS_MESSAGES } from '../constants/messages';
-import { SampleTemplateQuickPickItem } from '../models';
-import { loggableAskError } from '../../exceptions';
-import { AplPreviewWebView } from '../webViews/aplPreviewWebView';
-import { ap } from 'ramda';
+import * as fs from 'fs';
+import { Map } from 'immutable';
+import * as path from 'path';
+import * as vscode from 'vscode';
+import { DEFAULT_PROFILE } from '../../constants';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
-import { DEFAULT_PROFILE } from '../../constants'
+import { AbstractCommand, CommandContext, Utils } from '../../runtime';
+import { displayDirRootPath, makeFileSync } from '../../utils/fileHelper';
+import {
+    APL_DOCUMENT_FILE_PATH,
+    DATASOURCES_FILE_PATH, EXTENSION_COMMAND_CONFIG, RESOURCE_NAME_REGEX, SAMPLE_TEMPLATE_ID_TO_NAME_MAP
+} from '../config/configuration';
+import { ERROR_MESSAGES, PROMPT_MESSAGES, SUCCESS_MESSAGES } from '../constants/messages';
+import { SampleTemplateQuickPickItem } from '../models';
+import { AplPreviewWebView } from '../webViews/aplPreviewWebView';
 
 
 export class CreateAplDocumentFromSampleCommand extends AbstractCommand<void> {
@@ -64,7 +60,7 @@ export class CreateAplDocumentFromSampleCommand extends AbstractCommand<void> {
         const profile = Utils.getCachedProfile(context.extensionContext) ?? DEFAULT_PROFILE;
         const resourceDirPath: string = path.join(workspaceRootPath, displayDirRootPath(workspaceRootPath, profile), inputResourceDirName);
         if (fs.existsSync(resourceDirPath)) {
-            throw loggableAskError(ERROR_MESSAGES.CREATE_APL_FROM_SAMPLE_TEMPLATE_NAME_EXISTS, undefined, true);
+            throw logAskError(ERROR_MESSAGES.CREATE_APL_FROM_SAMPLE_TEMPLATE_NAME_EXISTS, undefined, true);
         }
 
         this.createAplandDataFileFromSample(pickedSampleItem, resourceDirPath);
@@ -104,7 +100,7 @@ export class CreateAplDocumentFromSampleCommand extends AbstractCommand<void> {
     ): Promise<void> {
         const pickedSampleTemplate: ISampleTemplate | undefined = this.sampleTemplates.get(pickedSampleItem.id);
         if (!pickedSampleTemplate) {
-            throw loggableAskError(ERROR_MESSAGES.CREATE_APL_FROM_SAMPLE_NO_SAMPLE_TEMPLATE_FOUND, new Error(`No sample template found for ${pickedSampleItem.label}`), true);
+            throw logAskError(ERROR_MESSAGES.CREATE_APL_FROM_SAMPLE_NO_SAMPLE_TEMPLATE_FOUND, new Error(`No sample template found for ${pickedSampleItem.label}`), true);
         }
         const aplFileContent = pickedSampleTemplate.apl;
         const dataFileContent = pickedSampleTemplate.data;

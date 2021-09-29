@@ -5,19 +5,19 @@
  *--------------------------------------------------------------------------------------------*/
 
 //This file provides methods for avsClient and downChannelClient.
-import * as vscode from 'vscode';
-import { Logger } from '../../logger';
-import webvtt = require('node-webvtt');
-import { IDirective, IHeader } from './avsInterface';
-import { SKILL_FOLDER } from '../../constants';
-import { getSkillFolderInWs } from './../workspaceHelper';
-import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs';
-import { WaveFile } from 'wavefile';
-import { loggableAskError } from '../../exceptions';
-import { makeDirSync } from '../fileHelper';
+import * as os from 'os';
+import * as path from 'path';
 import * as say from 'say';
+import * as vscode from 'vscode';
+import { WaveFile } from 'wavefile';
+import { SKILL_FOLDER } from '../../constants';
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import { makeDirSync } from '../fileHelper';
+import { getSkillFolderInWs } from './../workspaceHelper';
+import { IDirective, IHeader } from './avsInterface';
+import webvtt = require('node-webvtt');
 
 /**
 * Extract directive from the AVS response.
@@ -83,7 +83,7 @@ export async function generateRequestSpeech(utterance: string, context: vscode.E
         }
         return audioPath;
     }
-    throw loggableAskError('Workspace does not contain a valid skill project');
+    throw logAskError('Workspace does not contain a valid skill project');
 }
 
 export async function generateRequestSpeechMacOS(utterance: string, skillSimulatePath: string): Promise<string> {

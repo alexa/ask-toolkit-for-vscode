@@ -131,17 +131,17 @@ export const RESOURCE_NAME_REGEX = new RegExp(
 /**
  * The regex path of APL document
  */
-export const DOCUMENT_PATH_REGEX: RegExp = /(\\|\/)response(\\|\/)display(\\|\/).+(\\|\/)document.json/;
+export const DOCUMENT_PATH_REGEX = /(\\|\/)response(\\|\/)display(\\|\/).+(\\|\/)document.json/;
 
 /**
  * The regex path of datasources
  */
-export const DATA_PATH_REGEX: RegExp = /(\\|\/)response(\\|\/)display(\\|\/)(.+)(\\|\/)datasources(\\|\/)default.json/;
+export const DATA_PATH_REGEX = /(\\|\/)response(\\|\/)display(\\|\/)(.+)(\\|\/)datasources(\\|\/)default.json/;
 
 /**
  * The regex path of document, datasources, sources relative to skill-package
  * Used for extracting APL assets from skill package zip
  */
-export const DOCUMENT_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE: RegExp = /response(\\|\/)display(\\|\/)([a-zA-Z0-9._-]+)(\\|\/)document.json/;
-export const DATASOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE: RegExp = /response(\\|\/)display(\\|\/)([a-zA-Z0-9._-]+)(\\|\/)datasources(\\|\/)default.json/;
-export const SOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE: RegExp = /response(\\|\/)display(\\|\/)([a-zA-Z0-9._-]+)(\\|\/)sources(\\|\/)default.json/;
+export const DOCUMENT_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE = /response(\\|\/)display(\\|\/)([a-zA-Z0-9._-]+)(\\|\/)document.json/;
+export const DATASOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE = /response(\\|\/)display(\\|\/)([a-zA-Z0-9._-]+)(\\|\/)datasources(\\|\/)default.json/;
+export const SOURCES_PATH_REGEX_RELATIVE_TO_SKILL_PACKAGE = /response(\\|\/)display(\\|\/)([a-zA-Z0-9._-]+)(\\|\/)sources(\\|\/)default.json/;

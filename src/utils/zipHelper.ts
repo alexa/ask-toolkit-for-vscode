@@ -3,10 +3,10 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+import * as AdmZip from "adm-zip";
 import * as fs from "fs";
 import * as path from "path";
-import * as AdmZip from "adm-zip";
-import { AskError, loggableAskError } from "../exceptions";
+import { AskError, logAskError } from "../exceptions";
 import { Logger } from "../logger";
 
 export function unzipFile(zipLocation: string, destPath: string, overWriteFiles = true, deleteZipAfter = true): void {
@@ -19,7 +19,7 @@ export function unzipFile(zipLocation: string, destPath: string, overWriteFiles 
             fs.unlinkSync(zipLocation);
         }
     } catch (unzipErr) {
-        throw loggableAskError(`Unzip failed: ${unzipErr}`);
+        throw logAskError(`Unzip failed: ${unzipErr}`);
     }
 }
 
@@ -36,7 +36,7 @@ export function createZipFile(sourceDir: string, zipFileDir): string {
         zip.writeZip(zipFilePath);
         return zipFilePath;
     } catch (error) {
-        throw loggableAskError(`Create temp zip failed: ${error}`);
+        throw logAskError(`Create temp zip failed: ${error}`);
     }
 }
 
@@ -48,6 +48,6 @@ export function zipDirectory(sourceDir: string, outDir: string): void {
         const zipFilePath = path.join(outDir);
         zip.writeZip(zipFilePath);
     } catch (error) {
-        throw loggableAskError(`Zip Directory failed: ${error}`);
+        throw logAskError(`Zip Directory failed: ${error}`);
     }
 }

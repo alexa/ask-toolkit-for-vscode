@@ -3,29 +3,29 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
+import * as model from 'ask-smapi-model';
+import * as retry from 'async-retry';
 import axios, { AxiosInstance } from 'axios';
-import * as vscode from 'vscode';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as retry from 'async-retry'; 
 import { HttpClient } from 'typed-rest-client/HttpClient';
-import { 
+import * as vscode from 'vscode';
+import { DEFAULT_PROFILE, SKILL, SKILL_FOLDER } from '../constants';
+import { AskError, logAskError } from '../exceptions';
+import { Logger } from '../logger';
+import {
     SmapiClientFactory, Utils
 } from '../runtime';
-import * as model from 'ask-smapi-model';
+import { isNonEmptyString } from '../runtime/lib/utils/stringUtils';
+import { resolveUserAgent } from '../utils/httpHelper';
+import { getSkillMetadataSrc } from '../utils/skillHelper';
+import { createZipFile } from '../utils/zipHelper';
+import { unzipFile } from './zipHelper';
 
 import ExportResponse = model.v1.skill.ExportResponse;
 import UploadResponse = model.v1.skill.UploadResponse;
 import ImportResponse = model.v1.skill.ImportResponse;
 import ApiResponse = model.runtime.ApiResponse;
-import { SKILL_FOLDER, SKILL, DEFAULT_PROFILE } from '../constants';
-import { unzipFile } from './zipHelper';
-import { AskError, loggableAskError } from '../exceptions';
-import { Logger } from '../logger';
-import { resolveUserAgent } from '../utils/httpHelper';
-import { getSkillMetadataSrc } from '../utils/skillHelper';
-import { isNonEmptyString } from '../runtime/lib/utils/stringUtils';
-import { createZipFile } from '../utils/zipHelper';
 
 export async function downloadSkillPackage(
     remoteLocation: string,
@@ -42,14 +42,14 @@ export async function downloadSkillPackage(
             if (overWrite) {
                 fs.unlinkSync(destPath);
             } else {
-                throw loggableAskError(`${destPath} already exists!!`);
+                throw logAskError(`${destPath} already exists!!`);
             }
         }
 
         const skillPkgZipFile: NodeJS.WritableStream = fs.createWriteStream(destPath);
 
         if (response.message.statusCode !== 200) {
-            throw loggableAskError(`HTTP request failure ${response.message}`);
+            throw logAskError(`HTTP request failure ${response.message}`);
         }
 
         // eslint-disable-next-line no-undef
@@ -65,7 +65,7 @@ export async function downloadSkillPackage(
             });
         });
     } catch (err) {
-        throw loggableAskError(`Skill package download failed.`, err);
+        throw logAskError(`Skill package download failed.`, err);
     }
 }
 
@@ -94,7 +94,7 @@ export function createSkillPackageFolder(skillFolder: string): void {
             fs.moveSync(skillJsonPath, path.join(skillFolder, SKILL_FOLDER.SKILL_PACKAGE.ISPS));
         }
     } catch (err) {
-        throw loggableAskError(`Create skill package folder failed`, err);
+        throw logAskError(`Create skill package folder failed`, err);
     }
 }
 
@@ -121,7 +121,7 @@ async function pollExportStatus(exportId: string, context: vscode.ExtensionConte
         } else if (exportStatus.status === SKILL.PACKAGE_STATUS.SUCCEEDED) {
             return exportStatus;
         }
-        throw loggableAskError("Skill package export in progress");
+        throw logAskError("Skill package export in progress");
     }, retryOptions);
 
     return skillStatus;
@@ -139,7 +139,7 @@ export async function syncSkillPackage(
         unzipFile(skillPkgZipLocation, skillPackageFolder);
         return skillPackageStatus;
     } catch (err) {
-        throw loggableAskError(`Sync skill package failed, with error:`, err);
+        throw logAskError(`Sync skill package failed, with error:`, err);
     }
 }
 
@@ -160,7 +160,7 @@ export async function getSkillPackageStatus(
         }
         return await pollExportStatus(exportId, context);
     } catch (err) {
-        throw loggableAskError(`Get skill package remote location failed, with error:`, err);
+        throw logAskError(`Get skill package remote location failed, with error:`, err);
     }
 }
 
@@ -176,7 +176,7 @@ export async function getSkillPkgZipLocation(
         const skillPkgRemoteLocation = skillPackageStatus.skill?.location;
         return await downloadSkillPackage(skillPkgRemoteLocation!, skillPackageFolder);
     } catch (err) {
-        throw loggableAskError(`Download skill package failed, with error:`, err);
+        throw logAskError(`Download skill package failed, with error:`, err);
     }
 }
 
@@ -188,7 +188,7 @@ export async function createUploadUrl(context: vscode.ExtensionContext): Promise
         const smapiClient = SmapiClientFactory.getInstance(profile, context);
         return await smapiClient.createUploadUrlV1();
     } catch (error) {
-        throw loggableAskError(`create skill package failed, with error:`, error);
+        throw logAskError(`create skill package failed, with error:`, error);
     }    
 }
 
@@ -200,7 +200,7 @@ export async function createSkillPackage(context: vscode.ExtensionContext, locat
         const smapiClient = SmapiClientFactory.getInstance(profile, context);
         return smapiClient.callCreateSkillPackageV1({location, vendorId});
     } catch (error) {
-        throw loggableAskError(`create skill package failed, with error:`, error);
+        throw logAskError(`create skill package failed, with error:`, error);
     }
 }
 
@@ -213,7 +213,7 @@ export async function importSkillPackage(
         const smapiClient = SmapiClientFactory.getInstance(profile, context);
         return await smapiClient.callImportSkillPackageV1({ location }, skillId, etag);
     } catch (error) {
-        throw loggableAskError(`Import skill package failed, with error:`, error);
+        throw logAskError(`Import skill package failed, with error:`, error);
     }
 }
 
@@ -243,7 +243,7 @@ export async function deploySkillPackage(
         }
         return path.basename(location.value);
     } catch (error) {
-        throw loggableAskError(`Upload skill package failed, with error:`, error);
+        throw logAskError(`Upload skill package failed, with error:`, error);
     }    
 }
 

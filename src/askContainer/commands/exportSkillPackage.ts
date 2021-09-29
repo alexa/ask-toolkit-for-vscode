@@ -6,19 +6,19 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as vscode from "vscode";
-
-import { BRANCH_TO_STAGE, DEFAULT_PROFILE, SKILL, SKILL_FOLDER } from "../../constants";
-import { AskError, loggableAskError } from "../../exceptions";
+import { DEFAULT_PROFILE, SKILL_FOLDER } from "../../constants";
+import { logAskError } from "../../exceptions";
+import { Logger } from "../../logger";
 import { AskStates } from '../../models/resourcesConfig/askStates';
 import { AbstractCommand, CommandContext, Utils } from "../../runtime";
-import { Logger } from "../../logger";
 import { getCurrentDate } from "../../utils/dateHelper";
-import { GitInTerminalHelper, getOrInstantiateGitApi } from "../../utils/gitHelper";
+import { getOrInstantiateGitApi, GitInTerminalHelper } from "../../utils/gitHelper";
 import { getHash } from "../../utils/hashHelper";
 import { getHostedSkillMetadata, getSkillDetailsFromWorkspace, getSkillMetadataSrc } from "../../utils/skillHelper";
 import { syncSkillPackage } from "../../utils/skillPackageHelper";
 import { getSkillFolderInWs } from "../../utils/workspaceHelper";
 import { zipDirectory } from "../../utils/zipHelper";
+
 export class ExportSkillPackageCommand extends AbstractCommand<boolean> {
     constructor() {
         super("ask.exportSkillPackage");
@@ -29,7 +29,7 @@ export class ExportSkillPackageCommand extends AbstractCommand<boolean> {
         try {
             const skillFolder = getSkillFolderInWs(context.extensionContext);
             if (skillFolder === undefined) {
-                throw loggableAskError("No skill folder found in the workspace");
+                throw logAskError("No skill folder found in the workspace");
             }
             let profile = Utils.getCachedProfile(context.extensionContext);
             profile = profile ?? DEFAULT_PROFILE;
@@ -41,11 +41,11 @@ export class ExportSkillPackageCommand extends AbstractCommand<boolean> {
             if (isHostedSkill) {
                 const gitApi = await getOrInstantiateGitApi(context.extensionContext);
                 if (gitApi === undefined) {
-                    throw loggableAskError("No git extension found.");
+                    throw logAskError("No git extension found.");
                 }
                 const skillRepo = gitApi.getRepository(skillFolder);
                 if (skillRepo === null) {
-                    throw loggableAskError("No skill repository found.");
+                    throw logAskError("No skill repository found.");
                 }
             }
 
@@ -74,7 +74,7 @@ export class ExportSkillPackageCommand extends AbstractCommand<boolean> {
             }
             return false;
         } catch (error) {
-            throw loggableAskError("Export skill package failed", error, true);
+            throw logAskError("Export skill package failed", error, true);
         }
     }
 

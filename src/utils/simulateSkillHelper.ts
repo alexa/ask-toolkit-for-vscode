@@ -4,20 +4,17 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from 'vscode';
 import * as model from 'ask-smapi-model';
+import * as retry from 'async-retry';
+import * as vscode from 'vscode';
+import { ALEXA_RESPONSE_TYPES, DEFAULT_PROFILE, DEFAULT_SESSION_MODE, ERRORS, NEW_SESSION_MODE, SIMULATION_IN_PROGRESS, SIMULATOR_MESSAGE_TYPE, SKILL } from '../constants';
+import { logAskError } from '../exceptions';
+import { Logger } from '../logger';
+import { SmapiClientFactory, Utils } from '../runtime';
+import { aplViewport, viewportName } from './simulateReplayHelper';
 import SimulationResult = model.v2.skill.simulations.SimulationResult;
 import SimulationsApiRequest = model.v2.skill.simulations.SimulationsApiRequest;
 import SimulationsApiResponse = model.v2.skill.simulations.SimulationsApiResponse;
-import { SmapiClientFactory, Utils } from '../runtime';
-import { Logger } from '../logger';
-import { loggableAskError } from '../exceptions';
-import * as retry from 'async-retry';
-import { aplViewport, viewportName } from './simulateReplayHelper';
-import {
-    SKILL, DEFAULT_SESSION_MODE, NEW_SESSION_MODE, ALEXA_RESPONSE_TYPES,
-    ERRORS, SIMULATION_IN_PROGRESS, SIMULATOR_MESSAGE_TYPE, DEFAULT_PROFILE
-} from '../constants';
 
 
 export let aplDataSource: string | undefined;
@@ -39,7 +36,7 @@ export async function enableSkill(profile: string, skillId: string, context: vsc
             .setSkillEnablementV1(skillId, SKILL.STAGE.DEVELOPMENT);
     }
     catch (err) {
-        throw loggableAskError(ERRORS.SKILL_ENABLEMENT_FAIL, err, true);
+        throw logAskError(ERRORS.SKILL_ENABLEMENT_FAIL, err, true);
     }
 }
 
@@ -56,7 +53,7 @@ export async function disableSkill(profile: string, skillId: string, context: vs
             .deleteSkillEnablementV1(skillId, SKILL.STAGE.DEVELOPMENT);
     }
     catch (err) {
-        throw loggableAskError(ERRORS.SKILL_DISABLEMENT_FAIL, err, true);
+        throw logAskError(ERRORS.SKILL_DISABLEMENT_FAIL, err, true);
     }
 }
 
@@ -148,7 +145,7 @@ export async function getSimulationResponse(userInput: string, skillLocale: stri
                     SKILL.STAGE.DEVELOPMENT, simulationId);
 
             if (simulationResponseContent.status === SKILL.SIMULATION_STATUS.IN_PROGRESS) {
-                throw loggableAskError(SIMULATION_IN_PROGRESS);
+                throw logAskError(SIMULATION_IN_PROGRESS);
             }
 
             else if (simulationResponseContent.status === SKILL.SIMULATION_STATUS.FAILURE) {
@@ -166,14 +163,14 @@ export async function getSimulationResponse(userInput: string, skillLocale: stri
             else {
                 const simulationResult: SimulationResult | undefined = simulationResponseContent.result;
                 if (!simulationResult) {
-                    throw loggableAskError(ERRORS.SIMULATION_REQUEST_FAIL);
+                    throw logAskError(ERRORS.SIMULATION_REQUEST_FAIL);
                 }
                 return simulationResult;
             }
         }, retryOptions);
     }
     else {
-        throw loggableAskError(ERRORS.UNDEFINED_SIMULATION_ID);
+        throw logAskError(ERRORS.UNDEFINED_SIMULATION_ID);
     }
 }
 
@@ -214,7 +211,7 @@ export function formatAlexaResponse(simulationResult: Record<string, any> | Simu
                     alexaResponseTextContents.push(response.content?.caption);
                 }
                 else {
-                    throw loggableAskError(`${ERRORS.UNRECOGNIZED_ALEXA_RESPONSE_TYPE(response.type)}`);
+                    throw logAskError(`${ERRORS.UNRECOGNIZED_ALEXA_RESPONSE_TYPE(response.type)}`);
                 }
             }
         }

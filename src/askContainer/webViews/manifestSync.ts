@@ -3,17 +3,17 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
 import * as model from 'ask-smapi-model';
-import * as path from 'path';
-
-import { AbstractWebView, SmapiClientFactory, Utils } from '../../runtime';
-import { DEFAULT_PROFILE, SKILL_FOLDER, WEB_VIEW_NAME } from '../../constants';
-import { ViewLoader } from '../../utils/webViews/viewLoader';
-import { getSkillDetailsFromWorkspace, getSkillMetadataSrc } from '../../utils/skillHelper';
 import { existsSync } from 'fs';
-import { loggableAskError } from '../../exceptions';
+import * as path from 'path';
+import * as vscode from 'vscode';
+import { DEFAULT_PROFILE, WEB_VIEW_NAME } from '../../constants';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
+import { AbstractWebView, SmapiClientFactory, Utils } from '../../runtime';
+import { getSkillDetailsFromWorkspace, getSkillMetadataSrc } from '../../utils/skillHelper';
+import { ViewLoader } from '../../utils/webViews/viewLoader';
+
 
 export class ManifestSyncWebview extends AbstractWebView {
     private loader: ViewLoader;
@@ -80,7 +80,7 @@ export class ManifestSyncWebview extends AbstractWebView {
             if (err.statusCode === 404) {
                 void vscode.window.showErrorMessage('No existing manifest exists for the skill.');
             }
-            throw loggableAskError('There was a problem downloading skill manifest', err, true);
+            throw logAskError('There was a problem downloading skill manifest', err, true);
         }
     }
 }

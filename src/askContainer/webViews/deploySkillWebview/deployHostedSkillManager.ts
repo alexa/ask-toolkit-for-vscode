@@ -3,22 +3,22 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from "vscode";
 import * as model from "ask-smapi-model";
 import * as retry from "async-retry";
-import { view, lensPath } from "ramda";
+import { lensPath, view } from "ramda";
+import * as vscode from "vscode";
+import { Repository } from "../../../@types/git";
+import { BRANCH_TO_STAGE, SKILL } from "../../../constants";
+import { AskError, logAskError } from "../../../exceptions";
+import { Logger } from "../../../logger";
+import { AbstractWebView, SmapiClientFactory } from "../../../runtime";
+import { isNonEmptyString } from '../../../runtime/lib/utils/stringUtils';
+import { getSkillPackageStatus } from "../../../utils/skillPackageHelper";
+import { AbstractDeploySkillManager } from "./abstractDeploySkillManager";
 
 import ListCertificationsResponse = model.v1.skill.certification.ListCertificationsResponse;
 import StandardizedError = model.v1.skill.StandardizedError;
 
-import { Repository } from "../../../@types/git";
-import { loggableAskError, AskError } from "../../../exceptions";
-import { getSkillPackageStatus } from "../../../utils/skillPackageHelper";
-import { BRANCH_TO_STAGE, SKILL } from "../../../constants";
-import { Logger } from "../../../logger";
-import { SmapiClientFactory, AbstractWebView } from "../../../runtime";
-import { isNonEmptyString } from '../../../runtime/lib/utils/stringUtils';
-import { AbstractDeploySkillManager } from "./abstractDeploySkillManager";
 
 const SKILL_BUILD_STATUS_SUCCEEDED_MSG = "Skill build succeeded";
 const SKILL_BUILD_STATUS_FAILED_MSG = "Skill build failed";
@@ -52,7 +52,7 @@ export class DeployHostedSkillManager extends AbstractDeploySkillManager {
     checkValidBranch(branchName: string): void {
         Logger.verbose(`Calling method: checkValidBranch, args:`, branchName);
         if (!(branchName in BRANCH_TO_STAGE)) {
-            throw loggableAskError(
+            throw logAskError(
                 `Hosted skills cannot be deployed through ${branchName} branch. Please merge your branch into remote master branch`
             );
         }
@@ -62,13 +62,13 @@ export class DeployHostedSkillManager extends AbstractDeploySkillManager {
         Logger.verbose(`Calling method: callValidStage, args:`, branchName, this.skillId);
         const skillStage: string = BRANCH_TO_STAGE[branchName];
         if (!skillStage) {
-            throw loggableAskError(`No skill stage available for ${branchName} branch. The current branch must be either master or prod.`);
+            throw logAskError(`No skill stage available for ${branchName} branch. The current branch must be either master or prod.`);
         }
 
         try {
             await this.smapiClient.getSkillManifestV1(this.skillId, skillStage);
         } catch (err) {
-            throw loggableAskError(err);
+            throw logAskError(err);
         }
     }
 
@@ -82,11 +82,11 @@ export class DeployHostedSkillManager extends AbstractDeploySkillManager {
                 // skill never sent for certification
                 return;
             }
-            throw loggableAskError(`Couldn't check certification status for skill. ${err}`);
+            throw logAskError(`Couldn't check certification status for skill. ${err}`);
         }
 
         if (certificationListResponse.items?.some(certSummary => certSummary.status === "IN_PROGRESS") === true) {
-            throw loggableAskError(
+            throw logAskError(
                 `Your skill is in review. If you want to make any changes to the code, withdraw the skill from certification or publish to live.`
             );
         } else {
@@ -261,14 +261,14 @@ export class DeployHostedSkillManager extends AbstractDeploySkillManager {
                         Logger.info(SKILL_BUILD_STATUS_SUCCEEDED_MSG);
                         void vscode.window.showInformationMessage(SKILL_BUILD_STATUS_SUCCEEDED_MSG);
                     } catch (err) {
-                        throw loggableAskError(SKILL_BUILD_STATUS_FAILED_MSG, err, true);
+                        throw logAskError(SKILL_BUILD_STATUS_FAILED_MSG, err, true);
                     } finally {
                         view.dispose();
                     }
                 }
             );
         } catch (err) {
-            throw loggableAskError(SKILL_DEPLOY_STATUS_FAILED_MSG, err, true);
+            throw logAskError(SKILL_DEPLOY_STATUS_FAILED_MSG, err, true);
         }
     }
 }

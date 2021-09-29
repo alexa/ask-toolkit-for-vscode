@@ -4,14 +4,14 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 import * as vscode from 'vscode';
-import { 
+import { logAskError } from '../../exceptions';
+import { Logger } from '../../logger';
+import {
     AbstractCommand, CommandContext
 } from '../../runtime';
-
-import { DeploySkillWebview } from '../webViews/deploySkillWebview';
 import { checkProfileSkillAccess } from '../../utils/skillHelper';
-import { Logger } from '../../logger';
-import { loggableAskError } from '../../exceptions';
+import { DeploySkillWebview } from '../webViews/deploySkillWebview';
+
 
 
 export class DeploySkillCommand extends AbstractCommand<void> {
@@ -30,7 +30,7 @@ export class DeploySkillCommand extends AbstractCommand<void> {
             // eslint-disable-next-line @typescript-eslint/await-thenable
             await this.deploySkillWebview.showView();
         } catch (err) {
-            throw loggableAskError(`Cannot open deploy skill view`, err, true);
+            throw logAskError(`Cannot open deploy skill view`, err, true);
         }
     }
 }

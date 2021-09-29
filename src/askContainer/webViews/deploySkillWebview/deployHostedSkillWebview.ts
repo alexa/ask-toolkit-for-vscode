@@ -6,31 +6,28 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { AbstractWebView, Utils } from '../../../runtime';
-
+import { API, Change, Repository } from "../../../@types/git";
 import {
     BRANCH_TO_STAGE,
-    DEFAULT_PROFILE,
-    SKILL,
+    DEFAULT_PROFILE, DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT,
+    DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT, DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT, SKILL,
     SKILL_FOLDER,
-    TELEMETRY_EVENTS,
-    DEPLOY_HOSTED_SKILL_PACKAGE_STATE_CONTENT,
-    DEPLOY_HOSTED_LOCAL_CHANGE_STATE_CONTENT,
-    DEPLOY_HOSTED_SKILL_CODE_STATE_CONTENT
+    TELEMETRY_EVENTS
 } from '../../../constants';
-import { AskStates } from '../../../models/resourcesConfig/askStates';
-import { ViewLoader } from "../../../utils/webViews/viewLoader";
-import { DeployHostedSkillManager } from "./deployHostedSkillManager";
-import { getSkillDetailsFromWorkspace } from "../../../utils/skillHelper";
-import { getOrInstantiateGitApi } from "../../../utils/gitHelper";
-import { getSkillPackageStatus } from "../../../utils/skillPackageHelper";
-import { API, Change, Repository } from "../../../@types/git";
-import { Logger } from "../../../logger";
-import { AskError, loggableAskError } from "../../../exceptions";
-import { getSkillFolderInWs } from "../../../utils/workspaceHelper";
+import { AskError, logAskError } from "../../../exceptions";
 import { ext } from "../../../extensionGlobals";
+import { Logger } from "../../../logger";
+import { AskStates } from '../../../models/resourcesConfig/askStates';
+import { AbstractWebView, Utils } from '../../../runtime';
+import { ActionType, TelemetryClient } from "../../../runtime/lib/telemetry";
 import { isNonEmptyString } from "../../../runtime/lib/utils";
-import { TelemetryClient, ActionType } from "../../../runtime/lib/telemetry";
+import { getOrInstantiateGitApi } from "../../../utils/gitHelper";
+import { getSkillDetailsFromWorkspace } from "../../../utils/skillHelper";
+import { getSkillPackageStatus } from "../../../utils/skillPackageHelper";
+import { ViewLoader } from "../../../utils/webViews/viewLoader";
+import { getSkillFolderInWs } from "../../../utils/workspaceHelper";
+import { DeployHostedSkillManager } from "./deployHostedSkillManager";
+
 
 enum DeployType {
     gitPush,
@@ -92,7 +89,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
         this.loader = new ViewLoader(this.extensionContext, 'deployHostedSkill', this);
         void getOrInstantiateGitApi(context).then(value => {
             if (value === undefined) {
-                throw loggableAskError('No git extension found.', null, true);
+                throw logAskError('No git extension found.', null, true);
             }
             this.gitApi = value;
         });
@@ -160,7 +157,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
             } catch (err) {
                 await TelemetryClient.getInstance().store(action, err);
                 this.dispose();
-                throw loggableAskError(`Skill deploy failed`, err, true);
+                throw logAskError(`Skill deploy failed`, err, true);
             }
         } else if (message === 'exportSkillPackage') {
             const hasDownloaded = await vscode.commands.executeCommand('ask.exportSkillPackage');
@@ -168,7 +165,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
                 void this.refresh(true);
             }
         } else {
-            throw loggableAskError('Unexpected message received from webview.');
+            throw logAskError('Unexpected message received from webview.');
         }
     }
 
@@ -267,7 +264,7 @@ export class DeployHostedSkillWebview extends AbstractWebView {
             await this.updateSkillCodeSyncState(skillFolder, this.skillRepo, branch);
         } catch (error) {
             await this.postMessage(error);
-            throw loggableAskError('Skill deploy and build page refresh failed', error, true);
+            throw logAskError('Skill deploy and build page refresh failed', error, true);
         }
     }
 

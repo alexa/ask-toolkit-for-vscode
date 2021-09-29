@@ -3,13 +3,13 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { AbstractCommand, CommandContext, AbstractWebView } from '../../runtime';
 import * as vscode from 'vscode';
-
-import { ManifestSyncWebview } from '../webViews/manifestSync';
-import { checkProfileSkillAccess } from '../../utils/skillHelper';
+import { logAskError } from '../../exceptions';
 import { Logger } from '../../logger';
-import { loggableAskError } from '../../exceptions';
+import { AbstractCommand, CommandContext } from '../../runtime';
+import { checkProfileSkillAccess } from '../../utils/skillHelper';
+import { ManifestSyncWebview } from '../webViews/manifestSync';
+
 
 export class SyncManifestCommand extends AbstractCommand<void> {
 
@@ -27,7 +27,7 @@ export class SyncManifestCommand extends AbstractCommand<void> {
             checkProfileSkillAccess(context.extensionContext);
             this.syncManifestView.showView(skillFolderWs);
         } catch (err) {
-            throw loggableAskError(`Cannot open sync manifest view`, err, true);
+            throw logAskError(`Cannot open sync manifest view`, err, true);
         }
     }
 }
