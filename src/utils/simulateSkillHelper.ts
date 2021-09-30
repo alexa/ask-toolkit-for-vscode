@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as model from 'ask-smapi-model';
-import * as retry from 'async-retry';
+import retry from 'async-retry';
 import * as vscode from 'vscode';
 import { ALEXA_RESPONSE_TYPES, DEFAULT_PROFILE, DEFAULT_SESSION_MODE, ERRORS, NEW_SESSION_MODE, SIMULATION_IN_PROGRESS, SIMULATOR_MESSAGE_TYPE, SKILL } from '../constants';
 import { logAskError } from '../exceptions';

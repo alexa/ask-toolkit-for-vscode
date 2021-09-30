@@ -3,16 +3,16 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
-import * as md5 from 'md5-file';
-import * as https from 'https';
+import retry from 'async-retry';
 import * as fs from 'fs';
+import * as https from 'https';
+import * as md5 from 'md5-file';
+import os from 'os';
 import * as path from 'path';
-import * as retry from 'async-retry';
-import { homedir } from 'os';
-
+import * as vscode from 'vscode';
 import { SKILL, SKILL_FOLDER, SYSTEM_ASK_FOLDER } from '../constants';
 import { Logger } from '../logger';
+
 
 const AUTH_INFO_LAST_UPDATE_TIME = 'authInfoLastUpdateTime';
 const ASK_PRE_PUSH_LAST_UPDATE_TIME = 'askPrePushLastUpdateTime';
@@ -39,15 +39,15 @@ export function checkAllSkillS3Scripts(context: vscode.ExtensionContext): void {
 
 export async function checkAuthInfoScript(context: vscode.ExtensionContext): Promise<void> {
     const authInfoUrl = SKILL.S3_SCRIPTS_AUTH_INFO.URL;
-    const authInfoPath = path.join(homedir(), SKILL_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.AUTH_INFO);
+    const authInfoPath = path.join(os.homedir(), SKILL_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.AUTH_INFO);
     await checkScript(authInfoUrl, authInfoPath, context, AUTH_INFO_LAST_UPDATE_TIME, undefined);
 }
 
 export async function checkAskPrePushScript(context: vscode.ExtensionContext): Promise<void> {
     const askScriptUrl = SKILL.GIT_HOOKS_SCRIPTS.ASK_PRE_PUSH.URL;
-    const scriptFolderPath = path.join(homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME);
+    const scriptFolderPath = path.join(os.homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME);
     const askFilePath = path.join(
-        homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.ASK_PRE_PUSH);
+        os.homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.ASK_PRE_PUSH);
     if (!fs.existsSync(scriptFolderPath)) {
         fs.mkdirSync(scriptFolderPath);
     }
@@ -57,9 +57,9 @@ export async function checkAskPrePushScript(context: vscode.ExtensionContext): P
 
 export async function checkGitCredentialHelperScript(context: vscode.ExtensionContext): Promise<void> {
     const scriptUrl = SKILL.GIT_CREDENTIAL_SCRIPT.URL;
-    const scriptFolderPath = path.join(homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME);
+    const scriptFolderPath = path.join(os.homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME);
     const filePath = path.join(
-        homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.GIT_CREDENTIAL_HELPER);
+        os.homedir(), SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.NAME, SYSTEM_ASK_FOLDER.SCRIPTS_FOLDER.GIT_CREDENTIAL_HELPER);
     if (!fs.existsSync(scriptFolderPath)) {
         fs.mkdirSync(scriptFolderPath);
     }

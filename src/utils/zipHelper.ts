@@ -3,7 +3,7 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as AdmZip from "adm-zip";
+import AdmZip from "adm-zip";
 import * as fs from "fs";
 import * as path from "path";
 import { AskError, logAskError } from "../exceptions";
@@ -23,7 +23,7 @@ export function unzipFile(zipLocation: string, destPath: string, overWriteFiles 
     }
 }
 
-export function createZipFile(sourceDir: string, zipFileDir): string {
+export function createZipFile(sourceDir: string, zipFileDir: string): string {
     Logger.verbose(`Calling method: createZipFile, args: `, sourceDir, zipFileDir);
     try {
         fs.accessSync(sourceDir, fs.constants.W_OK);

@@ -3,19 +3,19 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
-
-import { read, deleteProperty, getProperty, writeToProperty } from './jsonUtility';
-import { homedir } from 'os';
-import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
-import { writeFileSync } from 'jsonfile';
-import { Hash } from 'crypto';
-import { isTokenExpired, refreshToken } from './oauthWrapper';
-import { AUTH, EXTENSION_STATE_KEY, CONFIGURATION, FILE_PATH } from './constants';
-import { SmapiClientFactory } from '../smapiClientFactory';
 import * as model from 'ask-smapi-model';
+import { Hash } from 'crypto';
+import { existsSync, mkdirSync } from 'fs';
+import { writeFileSync } from 'jsonfile';
+import { homedir } from 'os';
+import { join } from 'path';
+import * as vscode from 'vscode';
 import { Logger } from '../../../logger';
+import { SmapiClientFactory } from '../smapiClientFactory';
+import { AUTH, CONFIGURATION, EXTENSION_STATE_KEY, FILE_PATH } from './constants';
+import { deleteProperty, getProperty, read, writeToProperty } from './jsonUtility';
+import { isTokenExpired, refreshToken } from './oauthWrapper';
+
 
 export function listExistingProfileNames(): string[]|null {
     const askConfig: string = join(

@@ -1,26 +1,33 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
-        "outDir": "out",
-        "lib": [
-            "es2017",
-            "DOM",
-            "ES2020.Promise"
-        ],
-        "sourceMap": true,
-        "rootDir": ".",
-        // "alwaysStrict": true,
-        /* Strict Type-Checking Option */
-        "strict": true,   /* enable all strict type-checking options */
-        /* Additional Checks */
-        // "noUnusedLocals": false, /* Report errors on unused locals. */
-        "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
-        "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
-        "noUnusedParameters": false,  /* Report errors on unused parameters. */
-        "noUnusedLocals": false,
+        "alwaysStrict": true,
         "declaration": true,
-        "noImplicitAny": false
+        "declarationMap": true,
+        "downlevelIteration": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "inlineSourceMap": true,
+        "lib": ["DOM", "ES2019", "ES5", "ES6", "ES2020.Promise", "ESNext.AsyncIterable", "ES2019.Array"],
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "noEmitOnError": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": false,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": false,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": false,
+        "target": "ES2018",
+        "useDefineForClassFields": true,
+        "outDir": "out",
+        "rootDir": "."
     },
     "exclude": [
         "node_modules",

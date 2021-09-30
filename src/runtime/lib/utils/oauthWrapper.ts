@@ -3,16 +3,16 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { getProperty, readFile } from './jsonRead';
-import { writeToProperty } from './jsonUtility';
-import { homedir } from 'os';
+import HttpsProxyAgent from 'https-proxy-agent';
+import os from 'os';
 import { join } from 'path';
 import { AccessToken, create, OAuthClient } from 'simple-oauth2';
-import { isNonBlankString } from './stringUtils';
-import * as HttpsProxyAgent from 'https-proxy-agent';
-import { createConfigFileIfNotExists } from './profileHelper';
-import { AUTH } from './constants';
 import { resolver } from './configuration';
+import { AUTH } from './constants';
+import { getProperty, readFile } from './jsonRead';
+import { writeToProperty } from './jsonUtility';
+import { createConfigFileIfNotExists } from './profileHelper';
+import { isNonBlankString } from './stringUtils';
 
 export function createOAuth(clientId: string | undefined, clientSecret: string | undefined, lwaAuthorizeHost: string | undefined, lwaTokenHost: string | undefined): OAuthClient {
     // Set default CLI LWA value
@@ -50,7 +50,7 @@ export function readToken(profile: string): StoredToken|undefined {
             expires_at: 0,
         };
     }
-    const cliConfig: any = readFile(join(homedir(), '.ask', 'cli_config'));
+    const cliConfig: any = readFile(join(os.homedir(), '.ask', 'cli_config'));
     if (!cliConfig) {
         return;
     }
@@ -69,7 +69,7 @@ export function readToken(profile: string): StoredToken|undefined {
 
 export function writeToken(token: any, profile: string): void {
     createConfigFileIfNotExists();
-    const configPath = join(homedir(), '.ask', 'cli_config');
+    const configPath = join(os.homedir(), '.ask', 'cli_config');
     const configToken = {
         access_token: token.access_token,
         refresh_token: token.refresh_token,
