@@ -4,8 +4,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-'use strict';
-import * as vscode from 'vscode';
+"use strict";
+import * as vscode from "vscode";
 
 /**
  * Create a status bar item.
@@ -16,12 +16,16 @@ import * as vscode from 'vscode';
  * @return {vscode.StatusBarItem}
  */
 export function createStatusBarItem(
-    priority: number, commandName: string | undefined, iconText: string, tooltip: string,
-    aligment: vscode.StatusBarAlignment = vscode.StatusBarAlignment.Left): vscode.StatusBarItem {
-    const item = vscode.window.createStatusBarItem(aligment, priority);
-    item.command = commandName;
-    item.text = iconText;
-    item.tooltip = tooltip;
-    item.show();
-    return item;
+  priority: number,
+  commandName: string | undefined,
+  iconText: string,
+  tooltip: string,
+  aligment: vscode.StatusBarAlignment = vscode.StatusBarAlignment.Left,
+): vscode.StatusBarItem {
+  const item = vscode.window.createStatusBarItem(aligment, priority);
+  item.command = commandName;
+  item.text = iconText;
+  item.tooltip = tooltip;
+  item.show();
+  return item;
 }

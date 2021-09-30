@@ -8,11 +8,11 @@
 const vscode = acquireVsCodeApi();
 
 window.onload = function () {
-    document.getElementById('syncIm').onsubmit = function syncIm() {
-        const locale = document.getElementById('locale').value;
-        vscode.postMessage({
-            locale: locale,
-        });
-        return false;
-    };
+  document.getElementById("syncIm").onsubmit = function syncIm() {
+    const locale = document.getElementById("locale").value;
+    vscode.postMessage({
+      locale: locale,
+    });
+    return false;
+  };
 };

@@ -1,127 +1,90 @@
 {
-	"APL Document": {
-	  "prefix": "aplDocument",
-	  "body": [
-		"{",
-		"  \"type\": \"APL\",",
-		"  \"version\": \"1.1\",",
-		"  \"settings\": {},",
-		"  \"theme\": \"dark\",",
-		"  \"import\": [],",
-		"  \"resources\": [],",
-		"  \"styles\": {},",
-		"  \"onMount\": [],",
-		"  \"graphics\": {},",
-		"  \"commands\": {},",
-		"  \"layouts\": {},",
-		"  \"mainTemplate\": {",
-		"    \"parameters\": [",
-		"      \"payload\"",
-		"    ],",
-		"    \"items\": []",
-		"  }",
-		"}"
-	  ]
-	},
-	"APL Container": {
-	  "prefix": "aplContainer",
-	  "body": [
-		"{",
-		"  \"type\": \"Container\",",
-		"  \"height\": \"100%\",",
-		"  \"width\": \"100%\",",
-		"  \"paddingTop\": \"16dp\",",
-		"  \"paddingLeft\": \"16dp\",",
-		"  \"paddingRight\": \"16dp\",",
-		"  \"paddingBottom\": \"16dp\",",
-		"  \"items\": []",
-		"}"
-	  ]
-	},
-	"APL Image": {
-	  "prefix": "aplImage",
-	  "body": [
-		"{",
-		"  \"type\": \"Image\",",
-		"  \"height\": \"200dp\",",
-		"  \"width\": \"300dp\",",
-		"  \"source\": \"https://d2o906d8ln7ui1.cloudfront.net/placeholder_image.png\"",
-		"}"
-	  ]
-	},
-	"APL Text": {
-	  "prefix": "aplText",
-	  "body": [
-		"{",
-		"  \"type\": \"Text\",",
-		"  \"text\": \"Type in the text for your layout...\",",
-		"  \"fontSize\": \"16dp\",",
-		"  \"paddingTop\": \"12dp\",",
-		"  \"paddingBottom\": \"12dp\",",
-		"  \"height\": \"32dp\",",
-		"  \"width\": \"300dp\"",
-		"}"
-	  ]
-	},
-	"APL Video": {
-	  "prefix": "aplVideo",
-	  "body": [
-		"{",
-		"  \"type\": \"Video\",",
-		"  \"height\": \"200dp\",",
-		"  \"width\": \"300dp\"",
-		"}"
-	  ]
-	},
-	"APL Frame": {
-	  "prefix": "aplFrame",
-	  "body": [
-		"{",
-		"  \"type\": \"Frame\",",
-		"  \"height\": \"200dp\",",
-		"  \"width\": \"300dp\"",
-		"}"
-	  ]
-	},
-	"APL Pager": {
-	  "prefix": "aplPager",
-	  "body": [
-		"{",
-		"  \"type\": \"Pager\",",
-		"  \"height\": \"200dp\",",
-		"  \"width\": \"300dp\"",
-		"}"
-	  ]
-	},
-	"APL Touch Wrapper": {
-	  "prefix": "aplTouchWrapper",
-	  "body": [
-		"{",
-		"  \"type\": \"TouchWrapper\",",
-		"  \"height\": \"400dp\",",
-		"  \"width\": \"400dp\"",
-		"}"
-	  ]
-	},
-	"APL Scroll View": {
-	  "prefix": "aplScrollView",
-	  "body": [
-		"{",
-		"  \"type\": \"ScrollView\",",
-		"  \"height\": \"400dp\",",
-		"  \"width\": \"400dp\"",
-		"}"
-	  ]
-	},
-	"APL Sequence": {
-	  "prefix": "aplSequence",
-	  "body": [
-		"{",
-		"  \"type\": \"Sequence\",",
-		"  \"height\": \"200dp\",",
-		"  \"width\": \"100%\"",
-		"}"
-	  ]
-	}
+  "APL Document": {
+    "prefix": "aplDocument",
+    "body": [
+      "{",
+      "  \"type\": \"APL\",",
+      "  \"version\": \"1.1\",",
+      "  \"settings\": {},",
+      "  \"theme\": \"dark\",",
+      "  \"import\": [],",
+      "  \"resources\": [],",
+      "  \"styles\": {},",
+      "  \"onMount\": [],",
+      "  \"graphics\": {},",
+      "  \"commands\": {},",
+      "  \"layouts\": {},",
+      "  \"mainTemplate\": {",
+      "    \"parameters\": [",
+      "      \"payload\"",
+      "    ],",
+      "    \"items\": []",
+      "  }",
+      "}"
+    ]
+  },
+  "APL Container": {
+    "prefix": "aplContainer",
+    "body": [
+      "{",
+      "  \"type\": \"Container\",",
+      "  \"height\": \"100%\",",
+      "  \"width\": \"100%\",",
+      "  \"paddingTop\": \"16dp\",",
+      "  \"paddingLeft\": \"16dp\",",
+      "  \"paddingRight\": \"16dp\",",
+      "  \"paddingBottom\": \"16dp\",",
+      "  \"items\": []",
+      "}"
+    ]
+  },
+  "APL Image": {
+    "prefix": "aplImage",
+    "body": [
+      "{",
+      "  \"type\": \"Image\",",
+      "  \"height\": \"200dp\",",
+      "  \"width\": \"300dp\",",
+      "  \"source\": \"https://d2o906d8ln7ui1.cloudfront.net/placeholder_image.png\"",
+      "}"
+    ]
+  },
+  "APL Text": {
+    "prefix": "aplText",
+    "body": [
+      "{",
+      "  \"type\": \"Text\",",
+      "  \"text\": \"Type in the text for your layout...\",",
+      "  \"fontSize\": \"16dp\",",
+      "  \"paddingTop\": \"12dp\",",
+      "  \"paddingBottom\": \"12dp\",",
+      "  \"height\": \"32dp\",",
+      "  \"width\": \"300dp\"",
+      "}"
+    ]
+  },
+  "APL Video": {
+    "prefix": "aplVideo",
+    "body": ["{", "  \"type\": \"Video\",", "  \"height\": \"200dp\",", "  \"width\": \"300dp\"", "}"]
+  },
+  "APL Frame": {
+    "prefix": "aplFrame",
+    "body": ["{", "  \"type\": \"Frame\",", "  \"height\": \"200dp\",", "  \"width\": \"300dp\"", "}"]
+  },
+  "APL Pager": {
+    "prefix": "aplPager",
+    "body": ["{", "  \"type\": \"Pager\",", "  \"height\": \"200dp\",", "  \"width\": \"300dp\"", "}"]
+  },
+  "APL Touch Wrapper": {
+    "prefix": "aplTouchWrapper",
+    "body": ["{", "  \"type\": \"TouchWrapper\",", "  \"height\": \"400dp\",", "  \"width\": \"400dp\"", "}"]
+  },
+  "APL Scroll View": {
+    "prefix": "aplScrollView",
+    "body": ["{", "  \"type\": \"ScrollView\",", "  \"height\": \"400dp\",", "  \"width\": \"400dp\"", "}"]
+  },
+  "APL Sequence": {
+    "prefix": "aplSequence",
+    "body": ["{", "  \"type\": \"Sequence\",", "  \"height\": \"200dp\",", "  \"width\": \"100%\"", "}"]
+  }
 }
-  

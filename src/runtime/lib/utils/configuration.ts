@@ -3,14 +3,14 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import { isNonBlankString } from './stringUtils';
+import {isNonBlankString} from "./stringUtils";
 
 //TODO: Extend support for Promises.
 export function resolver(chain: Array<string | undefined>): string {
-    for (const item of chain) {
-        if (item !== undefined && isNonBlankString(item)) {
-            return item;
-        }
+  for (const item of chain) {
+    if (item !== undefined && isNonBlankString(item)) {
+      return item;
     }
-    return '';
+  }
+  return "";
 }

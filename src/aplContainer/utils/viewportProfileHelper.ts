@@ -4,7 +4,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import { getDefaultViewport, IViewport, ViewportShape } from 'apl-suggester';
+import {getDefaultViewport, IViewport, ViewportShape} from "apl-suggester";
 
 /**
  * DP -> Pixel convert
@@ -13,7 +13,7 @@ import { getDefaultViewport, IViewport, ViewportShape } from 'apl-suggester';
  * @param {number} dpi - dpi
  */
 export const getPixelValueFromDpValue = (dpValue: number, dpi: number): number => {
-    return Math.round((dpi / 160) * dpValue);
+  return Math.round((dpi / 160) * dpValue);
 };
 
 /**
@@ -23,21 +23,21 @@ export const getPixelValueFromDpValue = (dpValue: number, dpi: number): number =
  * @returns {any} - viewport characteristic used in APL webviewhost renderer config
  */
 export function getViewportCharacteristicsFromViewPort(activeViewport: IViewport): any {
-    if (activeViewport) {
-        return {
-            isRound: activeViewport.shape === ViewportShape.ROUND,
-            height: getPixelValueFromDpValue(activeViewport.height, activeViewport.dpi),
-            width: getPixelValueFromDpValue(activeViewport.width, activeViewport.dpi),
-            dpi: activeViewport.dpi,
-        };
-    }
+  if (activeViewport) {
     return {
-        isRound: false,
-        height: 600,
-        width: 1024,
-        dpi: 160,
+      isRound: activeViewport.shape === ViewportShape.ROUND,
+      height: getPixelValueFromDpValue(activeViewport.height, activeViewport.dpi),
+      width: getPixelValueFromDpValue(activeViewport.width, activeViewport.dpi),
+      dpi: activeViewport.dpi,
     };
+  }
+  return {
+    isRound: false,
+    height: 600,
+    width: 1024,
+    dpi: 160,
+  };
 }
 
 export const DEFAULT_VIEWPORT_CHARACTERISTICS = getViewportCharacteristicsFromViewPort(getDefaultViewport());
-export const DEFAULT_VIEWPORT_NAME = 'Echo Show 1';
+export const DEFAULT_VIEWPORT_NAME = "Echo Show 1";

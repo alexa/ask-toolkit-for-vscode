@@ -4,19 +4,19 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 export interface Resource {
-    label?: string;
+  label?: string;
 }
 
 export class SmapiResource<T> {
-    label?: string; 
-    data: T;
+  label?: string;
+  data: T;
 
-    constructor(data: T, label?: string) {
-        this.data = data;
-        this.label = label;
-    }
+  constructor(data: T, label?: string) {
+    this.data = data;
+    this.label = label;
+  }
 }
 export interface CustomResource extends Resource {
-    description: string;
-    hasChildren?: boolean;
+  description: string;
+  hasChildren?: boolean;
 }

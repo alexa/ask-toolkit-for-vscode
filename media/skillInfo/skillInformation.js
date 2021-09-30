@@ -8,28 +8,28 @@
 const vscode = acquireVsCodeApi();
 
 window.onload = function () {
-    document.getElementById('cloneSkill').onsubmit = function cloneSkill() {
-        vscode.postMessage();
-        return false;
-    };
+  document.getElementById("cloneSkill").onsubmit = function cloneSkill() {
+    vscode.postMessage();
+    return false;
+  };
 
-    const skillLocaleNameTable = document.getElementById('skillLocaleNames');
-    const tableBody = skillLocaleNameTable.tBodies[0];
+  const skillLocaleNameTable = document.getElementById("skillLocaleNames");
+  const tableBody = skillLocaleNameTable.tBodies[0];
 
-    let localesInfoArray = document.getElementById('localeNameMap').value;
-    localesInfoArray = JSON.parse(localesInfoArray.replace(/'/g, '"'));
+  let localesInfoArray = document.getElementById("localeNameMap").value;
+  localesInfoArray = JSON.parse(localesInfoArray.replace(/'/g, '"'));
 
-    localesInfoArray.forEach(localeInfo => {
-        const row = document.createElement('tr');
+  localesInfoArray.forEach((localeInfo) => {
+    const row = document.createElement("tr");
 
-        const column1 = document.createElement('td');
-        column1.appendChild(document.createTextNode(localeInfo[0]));
-        row.appendChild(column1);
+    const column1 = document.createElement("td");
+    column1.appendChild(document.createTextNode(localeInfo[0]));
+    row.appendChild(column1);
 
-        const column2 = document.createElement('td');
-        column2.appendChild(document.createTextNode(localeInfo[1]));
-        row.appendChild(column2);
+    const column2 = document.createElement("td");
+    column2.appendChild(document.createTextNode(localeInfo[1]));
+    row.appendChild(column2);
 
-        tableBody.appendChild(row);
-    });
+    tableBody.appendChild(row);
+  });
 };
