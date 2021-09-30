@@ -23,60 +23,58 @@ import * as paths from "path";
 
 // The test coverage approach is inspired by https://github.com/microsoft/vscode-js-debug/blob/master/src/test/testRunner.ts
 function setupCoverage() {
-    const NYC = require("nyc");
-    const nyc = new NYC({
-        // set the project root
-        cwd: paths.join(__dirname, "..", ".."),
-        exclude: ["**/test/**", ".vscode-test/**"],
-        reporter: ["html"],
-        tempDir: paths.join(__dirname, "..", "..", "coverage", ".nyc_output"),
-        all: true,
-        instrument: true,
-        hookRequire: true,
-        hookRunInContext: true,
-        hookRunInThisContext: true,
-    });
+  const NYC = require("nyc");
+  const nyc = new NYC({
+    // set the project root
+    cwd: paths.join(__dirname, "..", ".."),
+    exclude: ["**/test/**", ".vscode-test/**"],
+    reporter: ["html"],
+    tempDir: paths.join(__dirname, "..", "..", "coverage", ".nyc_output"),
+    all: true,
+    instrument: true,
+    hookRequire: true,
+    hookRunInContext: true,
+    hookRunInThisContext: true,
+  });
 
-    nyc.reset();
-    nyc.wrap();
+  nyc.reset();
+  nyc.wrap();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return nyc;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return nyc;
 }
 
 const mocha = new Mocha({
-    ui: "bdd",
-    color: true,
-    timeout: 30 * 1000, // for windows extension activation test
+  ui: "bdd",
+  color: true,
+  timeout: 30 * 1000, // for windows extension activation test
 });
 
 export async function run(): Promise<void> {
-
-    let nyc; 
-    if (shouldGenerateCoverage()) {
-        nyc = setupCoverage();
-    }   
-    // only search test files under out/test
-    const testsRoot = paths.resolve(__dirname, '..');
-    const options = { cwd: testsRoot };
-    const files = glob.sync("**/**.test.js", options);
-    for (const file of files) {
-        mocha.addFile(paths.resolve(testsRoot, file));
+  let nyc;
+  if (shouldGenerateCoverage()) {
+    nyc = setupCoverage();
+  }
+  // only search test files under out/test
+  const testsRoot = paths.resolve(__dirname, "..");
+  const options = {cwd: testsRoot};
+  const files = glob.sync("**/**.test.js", options);
+  for (const file of files) {
+    mocha.addFile(paths.resolve(testsRoot, file));
+  }
+  try {
+    await new Promise<void>((resolve, reject) =>
+      mocha.run((failures) => (failures ? reject(new Error(`${failures} tests failed`)) : resolve())),
+    );
+  } finally {
+    if (nyc !== undefined) {
+      nyc.writeCoverageFile();
+      nyc.report();
     }
-    try {
-        await new Promise<void>((resolve, reject) =>
-            mocha.run(failures => (failures ? reject(new Error(`${failures} tests failed`)) : resolve()))
-        );
-    } finally {
-        if (nyc !== undefined) {
-            nyc.writeCoverageFile();
-            nyc.report();
-        }
-    }
+  }
 }
 
 function shouldGenerateCoverage(): boolean {
-
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    return (process.env.ASK_TOOLKIT_NO_COVERAGE || 'false').toLowerCase() !== 'true';
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  return (process.env.ASK_TOOLKIT_NO_COVERAGE || "false").toLowerCase() !== "true";
 }

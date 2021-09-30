@@ -7,30 +7,21 @@
 // load separate js file by vscode and renderer init sometimes has race condition
 let renderer;
 const vscode = acquireVsCodeApi();
-const EMPTY_STRING = '';
+const EMPTY_STRING = "";
 
 window.onload = function () {
-    initialize();
+  initialize();
 };
 
 window.addEventListener("message", (event) => {
-    const message = event.data; // The json data that the extension sent
-    const sendCommandEvent = (commandEvent) => {
-    };
-    loadAplDoc(
-        renderer,
-        message.document,
-        message.datasources,
-        JSON.parse(message.viewport),
-        EMPTY_STRING,
-        sendCommandEvent,
-    );
+  const message = event.data; // The json data that the extension sent
+  const sendCommandEvent = (commandEvent) => {};
+  loadAplDoc(renderer, message.document, message.datasources, JSON.parse(message.viewport), EMPTY_STRING, sendCommandEvent);
 });
 
 function initialize() {
-    // init renderer engine
-    AplRenderer.initEngine().then(() => {
-        vscode.postMessage({});
-    });
+  // init renderer engine
+  AplRenderer.initEngine().then(() => {
+    vscode.postMessage({});
+  });
 }
-

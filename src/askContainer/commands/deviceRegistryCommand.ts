@@ -4,25 +4,25 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import { logAskError } from '../../exceptions';
-import { Logger } from '../../logger';
-import { AbstractCommand, CommandContext } from '../../runtime';
-import { DeviceRegistryWebview } from '../webViews/deviceRegistryWebview';
+import {logAskError} from "../../exceptions";
+import {Logger} from "../../logger";
+import {AbstractCommand, CommandContext} from "../../runtime";
+import {DeviceRegistryWebview} from "../webViews/deviceRegistryWebview";
 
 export class DeviceRegistryCommand extends AbstractCommand<void> {
-    private deviceRegistryWebview: DeviceRegistryWebview;
+  private deviceRegistryWebview: DeviceRegistryWebview;
 
-    constructor(webview: DeviceRegistryWebview) {
-        super('askContainer.skillsConsole.deviceRegistry');
-        this.deviceRegistryWebview = webview;
-    }
+  constructor(webview: DeviceRegistryWebview) {
+    super("askContainer.skillsConsole.deviceRegistry");
+    this.deviceRegistryWebview = webview;
+  }
 
-    async execute(context: CommandContext): Promise<void> {
-        Logger.debug(`Calling method: ${this.commandName}`);
-        try {
-            this.deviceRegistryWebview.showView();
-        } catch (err) {
-            throw logAskError(`Cannot open device registry webview`, err, true);
-        }
+  async execute(context: CommandContext): Promise<void> {
+    Logger.debug(`Calling method: ${this.commandName}`);
+    try {
+      this.deviceRegistryWebview.showView();
+    } catch (err) {
+      throw logAskError(`Cannot open device registry webview`, err, true);
     }
+  }
 }

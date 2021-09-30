@@ -8,8 +8,8 @@
 const vscode = acquireVsCodeApi();
 
 window.onload = function () {
-    document.getElementById('syncManifest').onsubmit = function syncManifest() {
-        vscode.postMessage({});
-        return false;
-    };
+  document.getElementById("syncManifest").onsubmit = function syncManifest() {
+    vscode.postMessage({});
+    return false;
+  };
 };

@@ -1,10 +1,10 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-'use strict'
+"use strict";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const join = require('path').join
+const join = require("path").join;
 
 /**
  * This file serves as the extension's entryPoint.
@@ -14,28 +14,25 @@ const join = require('path').join
  * This allows us to activate the extension from tests.
  */
 
-Object.defineProperty(exports, '__esModule', { value: true })
+Object.defineProperty(exports, "__esModule", {value: true});
 
-const extensionEntryPath = useBundledEntryPoint() === true
-    ? join(__dirname, 'dist', 'extension')
-    : join(__dirname, 'out', 'src', 'extension');
+const extensionEntryPath =
+  useBundledEntryPoint() === true ? join(__dirname, "dist", "extension") : join(__dirname, "out", "src", "extension");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const extension = require(extensionEntryPath);
 
 async function activate(context) {
-
-    await extension.activate(context);
+  await extension.activate(context);
 }
 
 async function deactivate() {
-    await extension.deactivate();
+  await extension.deactivate();
 }
 
 function useBundledEntryPoint() {
-
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    return (process.env.ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE || 'false').toLowerCase() !== 'true';
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  return (process.env.ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE || "false").toLowerCase() !== "true";
 }
 
 exports.activate = activate;

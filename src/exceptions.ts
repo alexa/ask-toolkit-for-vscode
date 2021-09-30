@@ -3,42 +3,42 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-import * as vscode from 'vscode';
-import { Logger } from './logger';
+import * as vscode from "vscode";
+import {Logger} from "./logger";
 
 export class AskError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'AskError';
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = "AskError";
+  }
 }
 
 export class AskParameterAbsenceError extends AskError {
-    constructor(message: string) {
-        super(message);
-        this.name = 'AskParameterAbsenceError';
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = "AskParameterAbsenceError";
+  }
 }
 
-export function logAskError(message: string, error: any | undefined=undefined, exposeToUser=false): Error {
-    let errMsg: string;
-    if (error !== undefined) {
-        let msg: string;
-        if (error instanceof Error) {
-            msg = error.message;
-        } else {
-            msg = error;
-        }
-        errMsg = `${message}. Reason: ${msg}`;
+export function logAskError(message: string, error: any | undefined = undefined, exposeToUser = false): Error {
+  let errMsg: string;
+  if (error !== undefined) {
+    let msg: string;
+    if (error instanceof Error) {
+      msg = error.message;
     } else {
-        errMsg = `${message}.`;
+      msg = error;
     }
-    
-    Logger.error(errMsg);
+    errMsg = `${message}. Reason: ${msg}`;
+  } else {
+    errMsg = `${message}.`;
+  }
 
-    if (exposeToUser) {
-        void vscode.window.showErrorMessage(errMsg);
-    }
+  Logger.error(errMsg);
 
-    return new AskError(errMsg);
+  if (exposeToUser) {
+    void vscode.window.showErrorMessage(errMsg);
+  }
+
+  return new AskError(errMsg);
 }

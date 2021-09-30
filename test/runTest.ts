@@ -5,8 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
 
-import { runTests } from "vscode-test";
-import { env } from 'process';
+import {runTests} from "vscode-test";
+import {env} from "process";
 
 async function main() {
   try {
@@ -18,7 +18,7 @@ async function main() {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, "./");
 
-    env['ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE'] = 'true';
+    env["ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE"] = "true";
 
     // Download VS Code, unzip it and run the integration test
     await runTests({
