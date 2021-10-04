@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.8.0...v2.9.0) (2021-10-04)
+
+
+### Bug Fixes
+
+* updated debugAdapterPath to use pwa-node as node debug type  ([#147](https://github.com/alexa/ask-toolkit-for-vscode/issues/147)) ([834c67b](https://github.com/alexa/ask-toolkit-for-vscode/commits/834c67b72864490232d7a98e76c3512f37a9a342))
+* updated tsconfig and also removed eslint,tslint and added prettier config ([#148](https://github.com/alexa/ask-toolkit-for-vscode/issues/148)) ([3280dc0](https://github.com/alexa/ask-toolkit-for-vscode/commits/3280dc042c2cd4cb96b2118ed698cb29103207a8))
+
 ## [2.8.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.7.0...v2.8.0) (2021-08-04)
 
 

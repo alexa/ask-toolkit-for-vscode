@@ -2,7 +2,7 @@
   "name": "alexa-skills-kit-toolkit",
   "displayName": "Alexa Skills Kit (ASK) Toolkit",
   "description": "Build and manage Alexa skills using Visual Studio Code",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "publisher": "ask-toolkit",
   "engines": {
     "vscode": "^1.53.0"
