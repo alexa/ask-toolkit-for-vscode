@@ -22,7 +22,7 @@ export function createOAuth(
 ): OAuthClient {
   // Set default CLI LWA value
   const id: string = resolver([clientId, process.env.ASK_LWA_CLIENT_ID, AUTH.DEFAULT_CLIENT_ID]);
-  const secret: string = resolver([clientSecret, process.env.ASK_LWA_CLIENT_CONFIRMATION, AUTH.DEFAULT_CLIENT_SECRET]);
+  const secret: string = resolver([clientSecret, process.env.ASK_LWA_CLIENT_CONFIRMATION, AUTH.DEFAULT_CLIENT_CONFIRMATION]);
   const authorizeHost = resolver([lwaAuthorizeHost, process.env.ASK_LWA_AUTHORIZE_HOST, AUTH.DEFAULT_LWA_AUTHORIZE_HOST]);
   const authorizePath = "/ap/oa";
   const tokenHost = resolver([lwaTokenHost, process.env.ASK_LWA_TOKEN_HOST, AUTH.DEFAULT_ASK_LWA_TOKEN_HOST]);
