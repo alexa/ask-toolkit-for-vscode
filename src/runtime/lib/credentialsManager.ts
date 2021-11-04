@@ -34,7 +34,7 @@ export class CredentialsManager {
     }
     return new Credentials(
       resolver([clientId, process.env.ASK_LWA_CLIENT_ID, AUTH.DEFAULT_CLIENT_ID]),
-      resolver([clientSecret, process.env.ASK_LWA_CLIENT_CONFIRMATION, AUTH.DEFAULT_CLIENT_SECRET]),
+      resolver([clientSecret, process.env.ASK_LWA_CLIENT_CONFIRMATION, AUTH.DEFAULT_CLIENT_CONFIRMATION]),
       token!.refresh_token,
       vendorId,
     );
