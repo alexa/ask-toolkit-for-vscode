@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.1](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.10.0...v2.10.1) (2021-12-23)
+
+
+### Bug Fixes
+
+* skipping broken tests to unblock extension patch release ([#159](https://github.com/alexa/ask-toolkit-for-vscode/issues/159)) ([4fd0ff9](https://github.com/alexa/ask-toolkit-for-vscode/commits/4fd0ff9856cf719d5bd102bb42aa90df2a2ef44c))
+
 ## [2.10.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.9.0...v2.10.0) (2021-11-09)
 
 
