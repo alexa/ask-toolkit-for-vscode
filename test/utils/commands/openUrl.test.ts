@@ -52,7 +52,7 @@ describe("Command ask.container.openUrl", () => {
     assert.ok(openExternalStub.calledOnceWith(vscode.Uri.parse(testUrl)));
   });
 
-  it("Should throw error when open url failed", async () => {
+  it.skip("Should throw error when open url failed", async () => {
     const testUrl = "https://test.com";
     sandbox.stub(skillHelper, "checkProfileSkillAccess");
     sandbox.stub(vscode.env, "openExternal").throws(new Error("foo"));
