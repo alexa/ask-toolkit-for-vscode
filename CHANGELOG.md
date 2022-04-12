@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.10.1...v2.11.0) (2022-04-12)
+
+
+### Features
+
+* upgrade apl-suggester and apl-viewhost-web to version 1.9 ([#171](https://github.com/alexa/ask-toolkit-for-vscode/issues/171)) ([a98dc2f](https://github.com/alexa/ask-toolkit-for-vscode/commits/a98dc2f4e787dd07f00d08e555f257b41fd1c468))
+
 ### [2.10.1](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.10.0...v2.10.1) (2021-12-23)
 
 
