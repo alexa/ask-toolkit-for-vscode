@@ -152,8 +152,8 @@ export const AUTH = {
 };
 
 export const DYNAMIC_CONTENT = {
-  BLOG_POSTS_JSON: "http://d177gaoewxhqz4.cloudfront.net/skills_blog.json",
-  ASK_UPDATES_JSON: "http://d177gaoewxhqz4.cloudfront.net/ask_updates.json",
+  BLOG_POSTS_JSON: "https://d177gaoewxhqz4.cloudfront.net/skills_blog.json",
+  ASK_UPDATES_JSON: "https://d177gaoewxhqz4.cloudfront.net/ask_updates.json",
 };
 
 export const DEV_CONSOLE_ENDPOINT = "https://developer.amazon.com/alexa/console/ask";
