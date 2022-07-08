@@ -30,7 +30,7 @@ async function _openLoginUrlWithRedirectLink(captchaUrl: string, vendorId: strin
     ["openid.claimed_id", "http://specs.openid.net/auth/2.0/identifier_select"],
     ["openid.identity", "http://specs.openid.net/auth/2.0/identifier_select"],
     ["openid.assoc_handle", "amzn_dante_us"],
-    ["openid.return_to", `${captchaUrl}?vendor_id=${vendorId}&redirect_url=http://127.0.0.1:${LOCALHOST_PORT}/captcha`],
+    ["openid.return_to", `${captchaUrl}?vendor_id=${vendorId}&redirect_url=http://localhost:${LOCALHOST_PORT}/captcha`],
     ["openid.pape.max_auth_age", "7200"],
   ]).toString();
   await open(loginUrl.href);
