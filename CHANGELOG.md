@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.11.2](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.11.1...v2.11.2) (2022-07-12)
+
+
+### Bug Fixes
+
+* revert vsce version back to 1.xxx ([53e9249](https://github.com/alexa/ask-toolkit-for-vscode/commits/53e9249840496591b4c8687fb02a0112f9095ec1))
+* security vulnerabilities via npm audit fix --force (upgrade nyc and gulp version) ([#184](https://github.com/alexa/ask-toolkit-for-vscode/issues/184)) ([b488d80](https://github.com/alexa/ask-toolkit-for-vscode/commits/b488d80ca0d4d5b526bd4f6d46d88f0654183660))
+* support WSL using localhost instead 127.0.0.1 ([4189f82](https://github.com/alexa/ask-toolkit-for-vscode/commits/4189f820996acacd4b512f34fefbe82f0ffaac73))
+* support WSL using localhost instead 127.0.0.1 ([a132188](https://github.com/alexa/ask-toolkit-for-vscode/commits/a132188e670648ba7a0cabc3f220cceb96018b97))
+
 ### [2.11.1](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.11.0...v2.11.1) (2022-06-16)
 
 
