@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.11.3](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.11.2...v2.11.3) (2022-07-15)
+
+
+### Bug Fixes
+
+* revert "Merge pull request [#164](https://github.com/alexa/ask-toolkit-for-vscode/issues/164) from ajsb85/development" ([781a250](https://github.com/alexa/ask-toolkit-for-vscode/commits/781a250e45394e00396e630b1043eda388129640))
+
 ### [2.11.2](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.11.1...v2.11.2) (2022-07-12)
 
 
