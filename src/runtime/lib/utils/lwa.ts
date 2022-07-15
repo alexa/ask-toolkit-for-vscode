@@ -32,7 +32,7 @@ export async function accessTokenGenerator(lwaOptions: any): Promise<Token> {
 
   const OAuth: OAuthClient = createOAuth(clientId, clientSecret, lwaAuthorizeHost, lwaTokenHost);
   const SERVER_PORT = 9090;
-  const localServerUrl = `http://localhost:${SERVER_PORT}/cb`;
+  const localServerUrl = `http://127.0.0.1:${SERVER_PORT}/cb`;
   const authorizeUrl: string = OAuth.authorizationCode.authorizeURL({
     redirect_uri: localServerUrl,
     scope: scopes,
