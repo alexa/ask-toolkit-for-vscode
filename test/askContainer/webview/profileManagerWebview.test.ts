@@ -5,10 +5,10 @@
  *--------------------------------------------------------------------------------------------*/
 import * as assert from "assert";
 import * as sinon from "sinon";
+import * as vscode from "vscode";
 import { ProfileManagerWebview } from "../../../src/askContainer/webViews/profileManagerWebview";
 import {FakeExtensionContext, FakeWebviewPanelOnDidChangeViewStateEvent} from "../../testUtilities";
 import { EXTENSION_STATE_KEY } from "../../../src/constants";
-import * as vscode from "vscode";
 
 describe("Webview_deploySkill tests", () => {
   let webView: ProfileManagerWebview;
