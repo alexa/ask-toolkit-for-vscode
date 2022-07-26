@@ -63,7 +63,8 @@ export class ProfileManagerWebview extends AbstractWebView {
     } else if ("deleteProfile" in message) {
       const currentProfile = Utils.getCachedProfile(this.extensionContext);
       if (currentProfile === message.deleteProfile) {
-        const errMsg = "Cannot delete the currently active profile";
+        const errMsg =  "Cannot delete the currently active profile. You can view or edit the currently active profile " +
+                        "in the Visual Studio status bar at the bottom of the IDE.";
         Logger.error(errMsg);
         void vscode.window.showErrorMessage(errMsg);
       } else {
