@@ -52,14 +52,14 @@ describe("Command ask.container.openUrl", () => {
     assert.ok(openExternalStub.calledOnceWith(vscode.Uri.parse(testUrl)));
   });
 
-  it.skip("Should throw error when open url failed", async () => {
+  it("Should throw error when open url failed", async () => {
     const testUrl = "https://test.com";
     sandbox.stub(skillHelper, "checkProfileSkillAccess");
     sandbox.stub(vscode.env, "openExternal").throws(new Error("foo"));
     try {
       await vscode.commands.executeCommand(commandId, testUrl, true);
     } catch (e) {
-      assert.strictEqual(e.message, `Running the contributed command: '${commandId}' failed.`);
+      assert.strictEqual(e.message, `Open URL failed. Reason: foo`);
       return;
     }
     assert.fail("Should throw an error");

@@ -49,13 +49,13 @@ describe("Command ask.container.openWorkspace", () => {
     assert.ok(openWorkspaceStub.calledOnceWith(fakePath[0]));
   });
 
-  it.skip("Should throw error when no workspace provided by user", async () => {
+  it("Should throw error when no workspace provided by user", async () => {
     sandbox.stub(vscode.window, "showOpenDialog").resolves(undefined);
 
     try {
       await vscode.commands.executeCommand(commandId);
     } catch (e) {
-      assert.strictEqual(e.message, `Running the contributed command: '${commandId}' failed.`);
+      assert.strictEqual(e.message, `Cannot find a workspace to create the skill project.`);
 
       return;
     }
