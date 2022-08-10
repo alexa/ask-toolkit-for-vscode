@@ -196,6 +196,31 @@ and many more ...
 - **The latest version seems to be not installable on my vscode. What is the minimum compatible vscode version for the toolkit?**
     - ASK Toolkit (`v2.5.0` and above) works with <a href=" https://code.visualstudio.com/">Visual Studio Code IDE</a> (version 1.53.0 or higher), please make sure you have the latest version installed. 
 
+- **Why am I getting the error '[token] is not recognized as an internal or external command, operable program or batch file' when trying to start the local debugger?**
+    - For Windows users, this is sometimes caused by an incompatibility between the Debug Terminal and the way VSCode parses the launch.json configurations. A simple workaround for this is to add `"console": "integratedTerminal"` to the debug configuration in your `launch.json` file, like the following:
+    ```
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Alexa Skill (Node.js)",
+            "type": "node",
+            "request": "launch",
+            "program": "${command:ask.debugAdapterPath}",
+            "args": [
+                "--accessToken",
+                "${command:ask.accessToken}",
+                "--skillId",
+                "${command:ask.skillIdFromWorkspace}",
+                "--handlerName",
+                "handler",
+                "--skillEntryFile",
+                "${workspaceFolder}/lambda/index.js",
+                "--region",
+                "FE"
+            ], 
+            "console": "integratedTerminal" //Add this
+        },
+    ```
     
 ----
 
