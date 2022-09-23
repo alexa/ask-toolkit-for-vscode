@@ -25,5 +25,10 @@
   "indentationRules": {
     "increaseIndentPattern": "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*)$",
     "decreaseIndentPattern": "^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$"
+  },
+  //for adding comments using vscode shortcuts
+  "comments": {
+    "lineComment": "//",
+    "blockComment": ["/*", "*/"]
   }
 }
