@@ -25,6 +25,9 @@ async function main() {
       extensionDevelopmentPath,
       extensionTestsPath,
       launchArgs: ["--disable-extensions"],
+      //TODO: Delete this to use the latest VSCode version.
+      //Some change made in the 1.73.1 release broke WebView loading behavior in our tests
+      version: "1.72.2",
     });
   } catch (err) {
     console.error(err);
