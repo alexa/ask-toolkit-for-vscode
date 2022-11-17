@@ -6,8 +6,9 @@ name: "Release to Marketplace"
 #   release:
 #     types: [published]
 on:
-  branches:
-    - mdoiron-workflows
+  push:
+    branches:
+      - mdoiron-workflows
 
 jobs:
   release:
