@@ -2,13 +2,10 @@
 name: "Release to Marketplace"
 
 # Controls when the action will run when a new release is published.
-# on:
-#   release:
-#     types: [published]
 on:
   push:
     branches:
-      - mdoiron-workflows
+      - master
 
 jobs:
   release:
