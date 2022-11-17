@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.11.3...v2.12.0) (2022-11-16)
+
+
+### Features
+
+* updated language config file to support shortcut based commenting in acdl files ([f1ec972](https://github.com/alexa/ask-toolkit-for-vscode/commits/f1ec972299a2be27a46f106bad15eaf451745131))
+* upgrade apl-suggester and apl-viewhost-web to version 2022.2 ([9f4b226](https://github.com/alexa/ask-toolkit-for-vscode/commits/9f4b226b2be89dd9ad2620bf4957923f52b75e1f))
+
+
+### Bug Fixes
+
+* make profile deletion error more helpful ([d689434](https://github.com/alexa/ask-toolkit-for-vscode/commits/d689434b76c16574c5f1b6cd2f15fb1f95d61aa0))
+
 ### [2.11.4](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.11.3...v2.11.4) (2022-08-31)
 
 
