@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.12.1](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.12.0...v2.12.1) (2022-11-22)
+
+
+### Bug Fixes
+
+* update dependencies for ReDoS vulnerabilities ([cbe469d](https://github.com/alexa/ask-toolkit-for-vscode/commits/cbe469d742d5748edda2053598e45b0d23359e6e))
+* workflow on syntax ([1d81f74](https://github.com/alexa/ask-toolkit-for-vscode/commits/1d81f74af80e9b5d8c3419317c0aaccb6052c9c5))
+
 ## [2.12.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.11.3...v2.12.0) (2022-11-16)
 
 
