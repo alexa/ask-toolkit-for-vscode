@@ -76,7 +76,7 @@ export abstract class AbstractCommand<T> implements GenericCommand, Command {
   }
 
   private async _invoke(commandName: string, ...args: any[]): Promise<T> {
-    const typeArg = args.find((arg) => arg.CommandType);
+    const typeArg = args.find((arg) => arg && arg.CommandType);
     const commandType = typeArg !== undefined ? typeArg.CommandType : ActionType.COMMAND;
     let output: any;
 
