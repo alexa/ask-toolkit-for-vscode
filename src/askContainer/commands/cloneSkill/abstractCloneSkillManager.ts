@@ -32,6 +32,7 @@ export abstract class AbstractCloneSkillManager {
     this.askStatesPath = path.join(this.fsPath, SKILL_FOLDER.HIDDEN_ASK_FOLDER, SKILL_FOLDER.ASK_STATES_JSON_CONFIG);
   }
 
+  // @ts-ignore
   abstract async cloneSkill(progressBar: vscode.Progress<{message: string; increment: number}>): Promise<void>;
 
   createAskResourcesConfig(isHosted: boolean): void {

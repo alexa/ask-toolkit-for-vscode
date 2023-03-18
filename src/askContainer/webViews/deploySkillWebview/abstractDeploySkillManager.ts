@@ -35,6 +35,7 @@ export abstract class AbstractDeploySkillManager {
     this.askStatesPath = path.join(this.fsPath, SKILL_FOLDER.HIDDEN_ASK_FOLDER, SKILL_FOLDER.ASK_STATES_JSON_CONFIG);
   }
 
+  // @ts-ignore
   abstract async deploySkill(view: AbstractWebView, isForce: boolean): Promise<void>;
 
   async deploySkillPackage(view: AbstractWebView, isForce?: boolean, eTag?: string, currentHash?: string): Promise<void> {

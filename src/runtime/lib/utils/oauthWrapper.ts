@@ -63,11 +63,11 @@ export function readToken(profile: string): StoredToken | undefined {
   }
   const cliConfig: any = readFile(join(os.homedir(), ".ask", "cli_config"));
   if (!cliConfig) {
-    return;
+    return undefined;
   }
   const token: any = getProperty(cliConfig, ".profiles." + profile + ".token");
   if (!token) {
-    return;
+    return undefined;
   }
   return {
     access_token: token.access_token,

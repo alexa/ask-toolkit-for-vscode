@@ -18,15 +18,15 @@ async function main() {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, "./");
 
-    env["ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE"] = "true";
+    env.ASK_TOOLKIT_IGNORE_WEBPACK_BUNDLE = "true";
 
     // Download VS Code, unzip it and run the integration test
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
       launchArgs: ["--disable-extensions"],
-      //TODO: Delete this to use the latest VSCode version.
-      //Some change made in the 1.73.1 release broke WebView loading behavior in our tests
+      // TODO: Delete this to use the latest VSCode version.
+      // Some change made in the 1.73.1 release broke WebView loading behavior in our tests
       version: "1.72.2",
     });
   } catch (err) {
@@ -36,4 +36,5 @@ async function main() {
   }
 }
 
+// eslint-disable-next-line no-void
 void main();

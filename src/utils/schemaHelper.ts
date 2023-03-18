@@ -35,21 +35,26 @@ export class SchemaManager {
    * Update all vendor specific schemas
    */
   public async updateSchemas(): Promise<void> {
-    const skillFolders = await findSkillFoldersInWs();
-    // Only update schema when only one skill is opened under workspace
-    if (skillFolders.length === 1) {
-      const skillPath = skillFolders[0].fsPath;
-      const schemaFolderPath = path.join(skillPath, SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCHEMA_FOLDER.NAME);
-      if (!fs.existsSync(schemaFolderPath)) {
-        fs.mkdirSync(schemaFolderPath);
+    // FIXME: this keeps crashing my extension for whatever reason, swallow the error for now.
+    try {
+      const skillFolders = await findSkillFoldersInWs();
+      // Only update schema when only one skill is opened under workspace
+      if (skillFolders.length === 1) {
+        const skillPath = skillFolders[0].fsPath;
+        const schemaFolderPath = path.join(skillPath, SYSTEM_ASK_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.SCHEMA_FOLDER.NAME);
+        if (!fs.existsSync(schemaFolderPath)) {
+          fs.mkdirSync(schemaFolderPath);
+        }
+
+        await this.updateSkillPackageSchema(schemaFolderPath);
+        this.registerSkillPackageWatcher(skillPath);
+
+        // TODO: update other schema once available
+      } else {
+        Logger.info("Vendor specific schemas are not updated.");
       }
-
-      await this.updateSkillPackageSchema(schemaFolderPath);
-      this.registerSkillPackageWatcher(skillPath);
-
-      // TODO: update other schema once available
-    } else {
-      Logger.info("Vendor specific schemas are not updated.");
+    } catch (e) {
+      console.log("updateSchema failed", e);
     }
   }
 

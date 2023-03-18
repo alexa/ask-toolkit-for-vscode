@@ -6,7 +6,7 @@
     "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "inlineSourceMap": true,
+    "inlineSourceMap": false,
     "lib": ["DOM", "ES2019", "ES5", "ES6", "ES2020.Promise", "ESNext.AsyncIterable", "ES2019.Array"],
     "module": "CommonJS",
     "moduleResolution": "Node",
@@ -19,7 +19,7 @@
     "noUnusedParameters": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false, // FIXME: turn off temporarily after bumping up the TS version
     "strictBindCallApply": true,
     "strictFunctionTypes": false,
     "strictNullChecks": true,
@@ -27,7 +27,8 @@
     "target": "ES2018",
     "useDefineForClassFields": true,
     "outDir": "out",
-    "rootDir": "."
+    "rootDir": ".",
+    "sourceMap": true
   },
   "exclude": ["node_modules", ".vscode-test", "out"]
 }

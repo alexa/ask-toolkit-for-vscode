@@ -11,7 +11,7 @@ import {PluginTreeItem, Resource, CustomResource, ContextValueTypes} from "../..
 import {HelpView} from "../helpView";
 import {HELP_VIEW_ITEMS, EXTERNAL_LINKS} from "../../../constants";
 import {Logger} from "../../../logger";
-import {ActionType} from "../../../runtime/lib/telemetry";
+import {ActionType} from "../../../runtime/lib/telemetry/constants";
 
 export class HelpViewProvider implements vscode.TreeDataProvider<PluginTreeItem<Resource>> {
   private _onDidChangeTreeData = new vscode.EventEmitter<PluginTreeItem<Resource> | undefined>();

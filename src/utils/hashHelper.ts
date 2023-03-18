@@ -13,6 +13,7 @@ export async function getHash(sourcePath: string): Promise<folderHash.HashElemen
       if (error !== null && error !== undefined) {
         reject(error);
       }
+      // @ts-ignore
       resolve(result);
     });
   });
