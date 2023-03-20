@@ -111,6 +111,16 @@ export const HELP_VIEW_ITEMS = {
   GETTING_STARTED_VSCODE: "ASK plugin",
 };
 
+export const ACDL_LANGUAGE_SERVER = {
+  SHOW_VALIDATION_STATUS_CMD: "ask.showACDLValidationStatus",
+  HIDE_VALIDATION_STATUS_CMD: "ask.hideACDLValidationStatus",
+  SHOW_VALIDATION_STATUS_NOTIFICATION: "ask/showValidationStatus",
+  HIDE_VALIDATION_STATUS_NOTIFICATION: "ask/hideValidationStatus",
+  START_TELEMETRY_ACTION: "ask/startTelemetryAction",
+  STORE_TELEMETRY_ACTION: "ask/storeTelemetryAction",
+  SHOW_FULL_NAMESPACE_REQUEST: "ask/show Full ACDL Namespace",
+};
+
 export const EXTENSION_STATE_KEY = {
   CACHED_SKILLS: "AskContainer.HostedSkillsCache",
   LWA_PROFILE: "LwaProfile",
@@ -125,7 +135,9 @@ export const EXTENSION_STATE_KEY = {
   LOG_LEVEL: "logLevel",
   CONFIG_SECTION_NAME: "askToolkit",
   SHOW_WELCOME_SCREEN: "showWelcomeScreen",
+  SHOW_FULL_ACDL_NAMESPACE: "show Full ACDL Namespace",
   DID_FIRST_TIME_LOGIN: "didFirstTimeLogin",
+
   REGISTERED_DEVICE: {
     PRODUCT_ID: "productID",
     CLIENT_ID: "clientID",
@@ -436,6 +448,13 @@ export const TELEMETRY_EVENTS = {
   DEPLOY_SELF_HOSTED_SKILL_TELEMETRY_EVENT: "askContainer.skillsConsole.deploySelfHostedSkill.buildClick",
   CLONE_HOSTED_SKILL_TELEMETRY_EVENT: "askContainer.skillsConsole.cloneAlexaHostedSkill",
   CLONE_SELF_HOSTED_SKILL_TELEMETRY_EVENT: "askContainer.skillsConsole.cloneSelfHostedSkill",
+  ACDL_PROJECT_LOADED_EVENT: "ask.acdl.loadProject",
+  ACDL_GET_DEFINITION_EVENT: "ask.acdl.getDefinition",
+  ACDL_GET_TYPE_DEFINITION_EVENT: "ask.acdl.getTypeDefinition",
+  ACDL_GET_HOVER_EVENT: "ask.acdl.getHover",
+  ACDL_GET_COMPLETIONS_EVENT: "ask.acdl.getCompletions",
+  ACDL_RUN_VALIDATIONS_EVENT: "ask.acdl.runValidations",
+  ACDL_ERROR_EVENT: "ask.acdl.error",
 };
 
 export const SIMULATION_IN_PROGRESS = "Simulation in progress";

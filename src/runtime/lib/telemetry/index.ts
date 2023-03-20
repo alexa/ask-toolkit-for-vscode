@@ -6,90 +6,14 @@
 import axios, {AxiosInstance, AxiosResponse} from "axios";
 import * as child_process from "child_process";
 import * as os from "os";
-import {v4 as uuid} from "uuid";
 import {env, extensions, version, workspace} from "vscode";
 import {DEFAULT_ENCODING, EXTENSION_FULL_NAME, EXTENSION_ID} from "../../../constants";
 import {logAskError} from "../../../exceptions";
 import {ext} from "../../../extensionGlobals";
 import {Logger} from "../../../logger";
 import {promiseRetry} from "../../../utils/retry";
-
-enum MetricActionResult {
-  SUCCESS = "Success",
-  FAILURE = "Failure",
-}
-
-enum TelemetryEnabled {
-  ENABLED = "Enabled",
-  DISABLED = "Disabled",
-  USE_IDE_SETTINGS = "Use IDE settings",
-}
-
-export enum ActionType {
-  COMMAND = "command",
-  EVENT = "event",
-  TOOLS_DOCS_VSCODE = "TOOLS_DOCS_VSCODE",
-  TOOLS_DOCS_CLI = "TOOLS_DOCS_CLI",
-  TOOLS_DOCS_ASK_SDK = "TOOLS_DOCS_ASK_SDK",
-  TOOLS_DOCS_SMAPI_SDK = "TOOLS_DOCS_SMAPI_SDK",
-  IM_EDITOR = "IM_EDITOR",
-}
-
-class MetricAction {
-  private result?: MetricActionResult;
-  private name: string;
-  private startTime: Date;
-  private type: ActionType;
-  private id?: string;
-  private endTime?: Date;
-  private failureMessage: string;
-  private ended: boolean;
-
-  /**
-   * @constructor
-   * @param {string} name - The action name.
-   * @param {string} type - The action type.
-   */
-  constructor(name: string, type: ActionType) {
-    this.failureMessage = "";
-    this.name = name;
-    this.startTime = new Date();
-    this.type = type;
-    this.id = uuid();
-    this.ended = false;
-  }
-
-  /**
-   * Closes action
-   * @param {Error} [error] - Error object indicating an error.
-   */
-  public end(error?: Error) {
-    if (this.ended) {
-      return;
-    }
-
-    const hasError = error instanceof Error;
-    this.result = hasError ? MetricActionResult.FAILURE : MetricActionResult.SUCCESS;
-    this.failureMessage = hasError ? (error?.message as string) : "";
-    this.endTime = new Date();
-    this.ended = true;
-  }
-
-  /**
-   * Implementation of custom toJSON method to modify serialization with JSON.stringify
-   */
-  protected toJSON() {
-    return {
-      end_time: this.endTime,
-      failure_message: this.failureMessage,
-      name: this.name,
-      result: this.result,
-      start_time: this.startTime,
-      type: this.type,
-      id: this.id,
-    };
-  }
-}
+import { ActionType, TelemetryEnabled } from "./constants";
+import { MetricAction } from "./metricAction";
 
 export interface TelemetryClientOptions {}
 
@@ -98,6 +22,8 @@ export interface TelemetryUploadResult {
 }
 
 const TELEMETRY_DATA = "telemetryData";
+
+// Telemetry updates once every 15 minutes
 const MINUTE = 60000;
 const NUMBER_OF_INTERVALS = 15;
 
@@ -114,9 +40,13 @@ export class TelemetryClient {
     gitVersion: string | null;
     actions: MetricAction[];
   };
+
   private postRetries: number;
+
   private serverUrl: string;
+
   private enabled: boolean;
+
   private httpClient: AxiosInstance;
 
   private static instance: TelemetryClient;
@@ -164,7 +94,7 @@ export class TelemetryClient {
    * @returns
    */
   public static getInstance(options?: TelemetryClientOptions) {
-    if (TelemetryClient.instance == undefined) {
+    if (TelemetryClient.instance === undefined) {
       TelemetryClient.instance = new TelemetryClient(options);
     }
     return TelemetryClient.instance;
@@ -193,7 +123,7 @@ export class TelemetryClient {
       return;
     }
     let dataMap = ext.context.globalState.get(TELEMETRY_DATA) as {};
-    if (dataMap == undefined || dataMap.constructor !== Object) {
+    if (dataMap === undefined || dataMap.constructor !== Object) {
       const now = new Date().getTime();
       ext.context.globalState.update(TELEMETRY_DATA, {[now]: []});
     }
@@ -201,7 +131,7 @@ export class TelemetryClient {
     const actions = Object.values(dataMap)[0] as MetricAction[];
     actions.push(action);
     ext.context.globalState.update(TELEMETRY_DATA, dataMap);
-    void this.sendData();
+    this.sendData();
   }
 
   /**
@@ -209,7 +139,7 @@ export class TelemetryClient {
    * @returns {Promise<{success: boolean}>}
    */
   private async sendData(): Promise<TelemetryUploadResult> {
-    if (this.shouldUpdateData() == false) {
+    if (this.shouldUpdateData() === false) {
       return new Promise((resolve) => resolve({success: true}));
     }
     const dataMap = ext.context.globalState.get(TELEMETRY_DATA) as {};
@@ -239,7 +169,7 @@ export class TelemetryClient {
    */
   private shouldUpdateData(): boolean {
     const dataMap = ext.context.globalState.get(TELEMETRY_DATA) as {};
-    if (dataMap == undefined || Object.values(dataMap) == undefined || (Object.values(dataMap)[0] as []).length == 0) {
+    if (dataMap === undefined || Object.values(dataMap) === undefined || (Object.values(dataMap)[0] as []).length === 0) {
       return false;
     }
     const now = new Date().getTime();

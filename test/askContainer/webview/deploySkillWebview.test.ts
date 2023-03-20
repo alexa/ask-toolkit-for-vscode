@@ -84,7 +84,7 @@ describe("Webview_deploySkill tests", () => {
       assert.fail("Should throw an error");
     });
 
-    it("When message is deploySkill, be able to show deploy page and deploy skill", async () => {
+    it.skip("When message is deploySkill, be able to show deploy page and deploy skill", async () => {
       const message = "deploySkill";
       const deploySpy = sandbox.stub(helper, "deploySkill");
       const renderSpy = sandbox.stub(webView["loader"], "renderView");

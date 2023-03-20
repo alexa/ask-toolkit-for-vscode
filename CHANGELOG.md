@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.12.1...v2.13.0) (2023-03-20)
+
+
+### Features
+
+* adding ACDL language support to the extension ([fb00bd8](https://github.com/alexa/ask-toolkit-for-vscode/commits/fb00bd848a84bace7173b6c092ed067436f58a03))
+* upgrade apl-suggester and apl-viewhost-web to version 2023.1 ([#235](https://github.com/alexa/ask-toolkit-for-vscode/issues/235)) ([b4de59b](https://github.com/alexa/ask-toolkit-for-vscode/commits/b4de59b5304be65d2811901021fd56cfb09170f5))
+
+
+### Bug Fixes
+
+* correct AbstractCommand for context menus ([#231](https://github.com/alexa/ask-toolkit-for-vscode/issues/231)) ([e40f0ac](https://github.com/alexa/ask-toolkit-for-vscode/commits/e40f0acf6bb5df30993b15075d0c32538d389318))
+
 ### [2.12.1](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.12.0...v2.12.1) (2022-11-22)
 
 
