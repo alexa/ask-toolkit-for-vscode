@@ -7,7 +7,7 @@
 // This module will contain the abstract components for different VSCode contents to implement
 import * as path from "path";
 
-import {ActionType, TelemetryClient} from "./telemetry";
+import {TelemetryClient} from "./telemetry";
 import {
   Disposable,
   ExtensionContext,
@@ -28,6 +28,7 @@ import {
   TreeDataProvider,
 } from "vscode";
 import {Resource} from "../../runtime";
+import { ActionType } from "./telemetry/constants";
 
 export interface CommandContext {
   // A common context that can be passed to all commands

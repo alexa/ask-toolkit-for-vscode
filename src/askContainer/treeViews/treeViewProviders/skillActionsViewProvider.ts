@@ -13,7 +13,7 @@ import {SkillActionsView} from "../skillActionsView";
 import {Logger} from "../../../logger";
 import {getSkillFolderInWs} from "../../../utils/workspaceHelper";
 import {EXTENSION_COMMAND_CONFIG} from "../../../aplContainer/config/configuration";
-import {ActionType} from "../../../runtime/lib/telemetry";
+import {ActionType} from "../../../runtime/lib/telemetry/constants";
 
 function getIModelGeneratorLink(skillId: string, locale?: string): string {
   Logger.verbose(`Calling method: ${SkillActionsViewProvider.name}.getIModelGeneratorLink`);

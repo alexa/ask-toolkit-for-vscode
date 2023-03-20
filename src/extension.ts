@@ -3,9 +3,10 @@
  *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
-
+import * as path from "path";
 import * as vscode from "vscode";
-import {registerCommands as apiRegisterCommands, AbstractWebView, Utils} from "./runtime";
+import {LanguageClient, LanguageClientOptions, ServerOptions, TransportKind} from "vscode-languageclient/node";
+import {registerCommands as apiRegisterCommands, Utils} from "./runtime";
 
 import {CloneSkillCommand} from "./askContainer/commands/cloneSkill/cloneSkill";
 import {CloneSkillFromConsoleCommand} from "./askContainer/commands/cloneSkillFromConsole";
@@ -57,6 +58,7 @@ import {
   TELEMETRY_NOTIFICATION_MESSAGE,
   SEEN_TELEMETRY_NOTIFICATION_MESSAGE_KEY,
   DEFAULT_PROFILE,
+  ACDL_LANGUAGE_SERVER,
 } from "./constants";
 import {Logger, LogLevel} from "./logger";
 import {AccessTokenCommand} from "./askContainer/commands/accessToken";
@@ -75,12 +77,16 @@ import {authenticate} from "./utils/webViews/authHelper";
 import {ext} from "./extensionGlobals";
 import {ShowToolkitUpdatesCommand} from "./askContainer/commands/showToolkitUpdates";
 import {ToolkitUpdateWebview} from "./askContainer/webViews/toolkitUpdateWebview";
-import {InitialLoginWebview} from "./askContainer/webViews/initialLogin";
 import {WelcomeCommand} from "./askContainer/commands/welcome";
 import {SchemaManager} from "./utils/schemaHelper";
 import {DeviceRegistryWebview} from "./askContainer/webViews/deviceRegistryWebview";
 import {DeviceRegistryCommand} from "./askContainer/commands/deviceRegistryCommand";
 import {DeviceDeletionCommand} from "./askContainer/commands/deviceDeletionCommand";
+
+import {TelemetryClient} from "./runtime/lib/telemetry";
+import { MetricAction } from "./runtime/lib/telemetry/metricAction";
+
+let client: LanguageClient;
 
 const DEFAULT_LOG_LEVEL = LogLevel.info;
 
@@ -332,6 +338,29 @@ async function addStatusBarItems(context: vscode.ExtensionContext): Promise<void
     "Contact Alexa Team for any extension questions",
   );
 
+  // Displays when ACDL validations are running and is shown/hidden by the language server. Starts hidden.
+  const validationsRunningIcon = createStatusBarItem(
+    1,
+    "workbench.action.problems.focus",
+    "$(sync~spin) ACDL Validation in progress",
+    "Current running ACDL compiler validations.",
+  );
+  validationsRunningIcon.hide();
+
+  // Command for language server to invoke to show status bar item when ACDL validations are running
+  context.subscriptions.push(
+    vscode.commands.registerCommand("ask.showACDLValidationStatus", () => {
+      validationsRunningIcon.show();
+    }),
+  );
+
+  // Command for language server to invoke to hide status bar item when ACDL validations are complete
+  context.subscriptions.push(
+    vscode.commands.registerCommand("ask.hideACDLValidationStatus", () => {
+      validationsRunningIcon.hide();
+    }),
+  );
+
   //add device info in status bar
   const [deviceTitle, DeviceTooltip] = await getDeviceInfo(context);
   const deviceIcon = createStatusBarItem(1, undefined, deviceTitle!, DeviceTooltip);
@@ -341,6 +370,7 @@ async function addStatusBarItems(context: vscode.ExtensionContext): Promise<void
 
   updateDeviceInfo(context, deviceIcon);
 
+  context.subscriptions.push(validationsRunningIcon);
   context.subscriptions.push(currentProfileIcon);
   context.subscriptions.push(contactAlexaIcon);
   context.subscriptions.push(deviceIcon);
@@ -360,6 +390,9 @@ function checkIfUpdated(context: vscode.ExtensionContext): void {
     void context.globalState.update(EXTENSION_STATE_KEY.CURRENT_VERSION, extVersion);
   }
 }
+
+// VS Code language server/client interop removes class functions the MetricAction objects, so we cache them client side
+const acdlTelemetryActionStore : Map<string, MetricAction> = new Map<string, MetricAction>();
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   ext.context = context;
@@ -404,7 +437,75 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   }
 
   checkIfUpdated(context);
+
+  // The server is implemented in node
+  const serverModule = context.asAbsolutePath(path.join("dist", "server", "acdlServer.js"));
+  // The debug options for the server
+  // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
+  const debugOptions = {execArgv: ["--nolazy", "--inspect=6009"]};
+
+  // If the extension is launched in debug mode then the debug server options are used
+  // Otherwise the run options are used
+  const serverOptions: ServerOptions = {
+    run: {module: serverModule, transport: TransportKind.ipc},
+    debug: {
+      module: serverModule,
+      transport: TransportKind.ipc,
+      options: debugOptions,
+    },
+  };
+
+  // Options to control the language client
+  const clientOptions: LanguageClientOptions = {
+    // Register the server for acdl files
+    documentSelector: [{scheme: "file", language: "acdl"}],
+    workspaceFolder: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0] : undefined,
+    synchronize: {
+      // Notify the server about file changes to '.json files contained in the workspace
+      fileEvents: vscode.workspace.createFileSystemWatcher("**/.json"),
+    },
+  };
+
+  // Create the language client and start the client.
+  client = new LanguageClient("acdlLanguageServer", "ACDL Language Server", serverOptions, clientOptions);
+
+  // Start the client. This will also launch the server
+  client.start().then(() => {
+    // Attach APIs for showing and hiding ACDL validation status
+    client.onNotification(ACDL_LANGUAGE_SERVER.SHOW_VALIDATION_STATUS_NOTIFICATION, () => {
+      vscode.commands.executeCommand(ACDL_LANGUAGE_SERVER.SHOW_VALIDATION_STATUS_CMD);
+    });
+
+    client.onNotification(ACDL_LANGUAGE_SERVER.HIDE_VALIDATION_STATUS_NOTIFICATION, () => {
+      vscode.commands.executeCommand(ACDL_LANGUAGE_SERVER.HIDE_VALIDATION_STATUS_CMD);
+    });
+
+    // APIs for the Language Server to log telemetry events
+    client.onRequest(ACDL_LANGUAGE_SERVER.START_TELEMETRY_ACTION, (param) => {
+      const action = TelemetryClient.getInstance().startAction(param.actionName, param.actionType);
+      acdlTelemetryActionStore[action.id] = action;
+      return action.id;
+    });
+
+    client.onNotification(ACDL_LANGUAGE_SERVER.STORE_TELEMETRY_ACTION, (param) => {
+      if(param.shouldStore) {
+        TelemetryClient.getInstance().store(acdlTelemetryActionStore[param.actionId], param.errorMsg ? new Error(param.errorMsg) : undefined)
+      }
+      acdlTelemetryActionStore.delete(param.actionId);
+    });
+
+    // Letting the server know if they should be showing full namespaces for ACDL names
+    client.sendRequest(
+      ACDL_LANGUAGE_SERVER.SHOW_FULL_NAMESPACE_REQUEST,
+      vscode.workspace.getConfiguration(EXTENSION_STATE_KEY.CONFIG_SECTION_NAME).get(EXTENSION_STATE_KEY.SHOW_FULL_ACDL_NAMESPACE),
+    );
+  });
 }
 
 // this method is called when your extension is deactivated
-export function deactivate(): void {}
+export function deactivate(): Thenable<void> | undefined {
+  if (!client) {
+    return undefined;
+  }
+  return client.stop();
+}

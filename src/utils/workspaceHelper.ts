@@ -42,7 +42,7 @@ export function getSkillFolderInWs(context: vscode.ExtensionContext): vscode.Uri
   if (doesWorkSpaceExist() && skillFolders) {
     return skillFolders.length > 0 ? skillFolders[0] : undefined;
   }
-  return;
+  return undefined;
 }
 
 export function setSkillContext(): void {

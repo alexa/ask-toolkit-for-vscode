@@ -242,7 +242,7 @@ export async function getHostedSkillMetadata(skillId: string, context: vscode.Ex
     return skillMetadata;
   } catch (err) {
     Logger.verbose("Unable to get hosted skill metadata", err);
-    return;
+    return undefined;
   }
 }
 

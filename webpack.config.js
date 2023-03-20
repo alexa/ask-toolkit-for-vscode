@@ -3,14 +3,18 @@
 "use strict";
 
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 
 /**@type {import('webpack').Configuration}*/
 const config = {
   target: "node", // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
 
-  entry: "./src/extension.ts", // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
+  entry: {
+    extension: "./src/extension.ts",
+    "server/acdlServer": "./src/acdlServer/index.ts",
+  }, // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
   output: {
-    filename: "extension.js",
+    filename: "[name].js",
     libraryTarget: "commonjs2",
     devtoolModuleFilenameTemplate: "../[resource-path]",
   },
@@ -35,5 +39,13 @@ const config = {
       },
     ],
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {from: "./node_modules/@alexa/acdl/dist/lib", to: "lib"},
+        {from: "./node_modules/@alexa/ask-expressions-spec/", to: "node_modules/@alexa/ask-expressions-spec"},
+      ],
+    }),
+  ],
 };
 module.exports = config;

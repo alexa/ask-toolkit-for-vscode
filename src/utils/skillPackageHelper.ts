@@ -298,7 +298,7 @@ export async function pollImportStatus(importId: string, context: vscode.Extensi
       });
       const askError = new AskError("Skill package import failed" + (isNonEmptyString(errorsMessage) ? `. ${errorsMessage}` : ""));
       bail(askError);
-      return;
+      return undefined;
     } else if (importStatus.status === SKILL.PACKAGE_STATUS.SUCCEEDED) {
       return importStatus;
     }
