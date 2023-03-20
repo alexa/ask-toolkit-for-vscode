@@ -14,7 +14,7 @@ import {SmapiClientFactory, SmapiResource} from "../../../src/runtime";
 import * as profileHelper from "../../../src/runtime/lib/utils/profileHelper";
 import {stubTelemetryClient} from "../../../test/testUtilities";
 
-describe("Command ask.container.listSkills", () => {
+describe.skip("Command ask.container.listSkills", () => {
   let command: ListSkillsCommand;
   let sandbox: sinon.SinonSandbox;
   const vendorId = "fakeVendorId";

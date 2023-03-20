@@ -5,6 +5,7 @@ import {Position} from "vscode-languageserver/node";
 
 export function createMockNode<T>(typeStr: string, name: string, uri: string, loc: acdl.SourceLocation | undefined): T {
   return {
+    loc,
     kind: typeStr,
     name: {name, uri, loc} as acdl.Name,
   } as unknown as T;

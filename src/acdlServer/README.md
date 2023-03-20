@@ -14,17 +14,17 @@ See the [official developer documentation](https://developer.amazon.com/en-US/do
     - Suggestions and auto-completion are available for many ACDL actions and types, including built-in and user-defined Actions, Slot Types, and ACDL Keywords. Suggestions are contextual and ACDL type-aware.
 
 - **Hover Tooltips**
-    - Hovering over an ACDL symbol gives you type and declaration information about the symbol. Holding Command (Mac) or Ctrl (Mac) and hovering also displays definition information, where available, in the tooltip.
+    - Hovering over an ACDL symbol gives you type and declaration information about the symbol. Holding Command (Mac) or Ctrl (PC) and hovering also displays definition information, where available, in the tooltip.
     - Tooltips for APLA documents include any content strings associated with the document.
     - Holding Command/Ctrl and hovering over an `UtteranceEvent` will display the utterance samples for that `UtteranceEvent`.
 
 
 - **Go-to Definition and Peek Definition** 
-    - You can use the VS Code go-to definition and peek defintion operations to view definition information of many symbols in ACDL including actions, utterance sets, user-defined types, and APL/APLA documents. 
-    - You can use the VS Code go-to type defintion and peek type defintion operations to view type definitions for symbols that have an associated type, such as utterance sets.
+    - You can use the VS Code go-to definition and peek definition operations to view definition information of many symbols in ACDL including actions, utterance sets, user-defined types, and APL/APLA documents. 
+    - You can use the VS Code go-to type definition and peek type definition operations to view type definitions for symbols that have an associated type, such as utterance sets.
 
 - **Debug with Realtime Validation**
-    - With real-time validation, ACDL compielr validations are run as you are writing ACDL, and you can see ACDL errors and warnings rendered in line with red and yellow wavy lines beneath statements that are incorrect or could cause a problem.
+    - With real-time validation, ACDL compiler validations are run as you are writing ACDL, and you can see ACDL errors and warnings rendered in line with red and yellow wavy lines beneath statements that are incorrect or could cause a problem.
     - You can also view all validation errors in the VS Code `Problems` panel (**View** -> **Problems**).
 
 ## Configuration Options
