@@ -3,9 +3,9 @@
     <br/>
     <h1 align="center">Alexa Skills Toolkit for Visual Studio Code</h1>
     <p align="center">
-    <a href="https://vsmarketplacebadge.apphb.com/version-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadge.apphb.com/version-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
-    <a href="https://vsmarketplacebadge.apphb.com/downloads-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadge.apphb.com/downloads-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
-    <a href="https://vsmarketplacebadge.apphb.com/rating-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadge.apphb.com/rating-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
+    <a href="https://vsmarketplacebadges.dev/version-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadges.dev/version-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
+    <a href="https://vsmarketplacebadges.dev/downloads-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadges.dev/downloads-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
+    <a href="https://vsmarketplacebadges.dev/rating-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadges.dev/rating-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
     </p>
 </p>
 
