@@ -2,11 +2,6 @@
     <img src="https://d34a6e1u0y0eo2.cloudfront.net/media/images/alexa.png">
     <br/>
     <h1 align="center">Alexa Skills Toolkit for Visual Studio Code</h1>
-    <p align="center">
-    <a href="https://vsmarketplacebadges.dev/version-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadges.dev/version-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
-    <a href="https://vsmarketplacebadges.dev/downloads-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadges.dev/downloads-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
-    <a href="https://vsmarketplacebadges.dev/rating-short/ask-toolkit.alexa-skills-kit-toolkit.svg"><img src="https://vsmarketplacebadges.dev/rating-short/ask-toolkit.alexa-skills-kit-toolkit.svg"></a>
-    </p>
 </p>
 
 Alexa Skills Toolkit for Visual Studio Code is an extension that makes it easier for you to create, test, and deploy Alexa skills. It provides a dedicated workspace for Alexa Skills in VS Code and provides features for managing and previewing APL documents along with the ability to test and debug your skills in VS Code with local debugging.
