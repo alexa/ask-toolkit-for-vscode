@@ -32,7 +32,7 @@ Contributions via pull requests are much appreciated. Before sending us a pull r
 
 ### Setup steps
 Ensure that you have the following installed : 
-- NodeJS (preferably 12.x version)
+- NodeJS (preferably 16.x version)
 - npm
 - typescript
 - git
