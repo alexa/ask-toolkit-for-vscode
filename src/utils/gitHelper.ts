@@ -14,7 +14,8 @@ import {AskError} from "../exceptions";
 import {Logger, LogLevel} from "../logger";
 
 export class GitInTerminalHelper {
-  private folderPath: string;
+  public folderPath: string;
+
   private logLevel: LogLevel;
 
   constructor(folderPath: string, logLevel: LogLevel) {
@@ -76,7 +77,7 @@ export class GitInTerminalHelper {
   }
 
   checkoutBranch(branch: string): void {
-    const commands = [`git checkout ${branch} --quiet'}`];
+    const commands = [`git checkout ${branch} --quiet`];
     const options = {
       showOutput: this.logLevel === LogLevel.verbose,
       showStdErr: true,
@@ -109,6 +110,21 @@ export class GitInTerminalHelper {
     this._execChildProcessSync(command, options).toString();
   }
 
+  getCurrentBranch(): string {
+    const command = `git branch --show-current`;
+    const options = {
+      showStdErr: true,
+      showCommand: this.logLevel === LogLevel.verbose,
+      workingDir: this.folderPath,
+    };
+    try {
+      return this._execChildProcessSync(command, options).toString().trim();
+    } catch (error) {
+      Logger.error(`${error}`);
+      throw error;
+    }
+  }
+
   static addFilesToIgnore(targetPath: string, fileNames: string[]): void {
     Logger.verbose(`Calling method: addFilesToIgnore, args: `, targetPath, fileNames);
     const gitignorePath = path.join(targetPath, ".gitignore");
@@ -137,7 +153,7 @@ export class GitInTerminalHelper {
     }
   }
 
-  private _execChildProcessSync(command: string, options: any): Buffer {
+  public _execChildProcessSync(command: string, options: any): Buffer {
     const {showOutput, showStdErr, showCommand, workingDir} = options;
     const execOptions: ExecSyncOptions = {
       stdio: [null, showOutput === true ? 1 : null, showStdErr === true ? 2 : null],

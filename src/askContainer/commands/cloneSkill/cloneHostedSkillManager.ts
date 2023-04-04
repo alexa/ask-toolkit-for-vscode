@@ -7,18 +7,17 @@ import * as fs from "fs";
 import * as https from "https";
 import * as path from "path";
 import * as vscode from "vscode";
-import {Repository} from "../../../@types/git";
 import {BRANCH_TO_STAGE, GIT_MESSAGES, SKILL, SKILL_FOLDER} from "../../../constants";
 import {AskError, logAskError} from "../../../exceptions";
 import {Logger} from "../../../logger";
 import {SmapiClientFactory} from "../../../runtime";
-import {getOrInstantiateGitApi, GitInTerminalHelper, isGitInstalled} from "../../../utils/gitHelper";
+import {GitInTerminalHelper, isGitInstalled} from "../../../utils/gitHelper";
 import {checkAskPrePushScript, checkAuthInfoScript, checkGitCredentialHelperScript} from "../../../utils/s3ScriptChecker";
 import {createSkillPackageFolder, syncSkillPackage} from "../../../utils/skillPackageHelper";
 import {AbstractCloneSkillManager} from "./abstractCloneSkillManager";
 
 export class CloneHostedSkillManager extends AbstractCloneSkillManager {
-  async setupGitFolder(): Promise<Repository> {
+  async setupGitFolder(): Promise<void> {
     Logger.verbose(`Calling method: setupGitFolder`);
     try {
       const smapiClient = SmapiClientFactory.getInstance(this.profile, this.context);
@@ -27,7 +26,7 @@ export class CloneHostedSkillManager extends AbstractCloneSkillManager {
       const credentialsList = await smapiClient.generateCredentialsForAlexaHostedSkillV1(skillId, {
         repository: this.skillInfo.data.hostedSkillMetadata!.alexaHosted!.repository!,
       });
-      const repositoryCredentials = credentialsList.repositoryCredentials;
+      const {repositoryCredentials} = credentialsList;
       if (
         repositoryCredentials === undefined ||
         repositoryCredentials.username === undefined ||
@@ -41,29 +40,15 @@ export class CloneHostedSkillManager extends AbstractCloneSkillManager {
         throw new AskError("Failed to retrieve hosted skill repo URL from the service.");
       }
       await this.downloadGitCredentialScript(this.fsPath, this.context);
+   
       gitHelper.init();
       gitHelper.configureCredentialHelper(repoUrl, this.profile, skillId);
       gitHelper.addOrigin(repoUrl);
+      gitHelper.fetchAll();
+      gitHelper.checkoutBranch("prod")
+      gitHelper.checkoutBranch("master");
 
-      /**
-       * Since gitHelper commands are failing due to execSync
-       * not waiting to call next command, calling the following
-       * set of git commands through inbuilt git extension
-       */
-      await vscode.commands.executeCommand("git.openRepository", this.fsPath);
-
-      const gitApi = await getOrInstantiateGitApi(this.context);
-      const repo = gitApi?.getRepository(vscode.Uri.file(this.fsPath));
-
-      if (repo === undefined || repo === null) {
-        throw new AskError("No skill repository found.");
-      }
-
-      await repo.fetch();
-      await repo.checkout("prod");
-      await repo.checkout("master");
       await this.setPrePushHookScript(this.fsPath, this.context);
-      return repo;
     } catch (err) {
       throw logAskError(`Git folder setup failed for ${this.fsPath}`, err);
     }
@@ -125,20 +110,20 @@ export class CloneHostedSkillManager extends AbstractCloneSkillManager {
     Logger.verbose(`Calling method: cloneSkill, args: `, progressBar);
 
     this.checkGitInstallation();
-    incrAmount = incrAmount ?? 25;
+    const incrementAmount = incrAmount ?? 25;
 
     fs.mkdirSync(path.join(this.fsPath, SKILL_FOLDER.HIDDEN_ASK_FOLDER));
 
-    const skillRepo = await this.setupGitFolder();
+    await this.setupGitFolder();
     progressBar.report({
-      increment: incrAmount,
+      increment: incrementAmount,
       message: "Git access set. Checking skill metadata files...",
     });
 
     this.createAskResourcesConfig(true);
     this.createAskStateConfig();
     progressBar.report({
-      increment: incrAmount,
+      increment: incrementAmount,
       message: "Skill metadata files created. Checking skill package...",
     });
 
@@ -146,16 +131,19 @@ export class CloneHostedSkillManager extends AbstractCloneSkillManager {
 
     createSkillPackageFolder(this.fsPath);
     progressBar.report({
-      increment: incrAmount,
+      increment: incrementAmount,
       message: "Skill package created. Syncing from service...",
     });
 
     const skillPkgPath = path.join(this.fsPath, SKILL_FOLDER.SKILL_PACKAGE.NAME);
-    const skillStage = BRANCH_TO_STAGE[skillRepo.state.HEAD!.name!];
+    const gitHelper = new GitInTerminalHelper(this.fsPath, Logger.logLevel);
+    const curBranch = gitHelper.getCurrentBranch();
+    const skillStage = BRANCH_TO_STAGE[curBranch];
     const skillPackageStatus = await syncSkillPackage(skillPkgPath, this.skillInfo.data.skillSummary.skillId!, this.context, skillStage);
-    void this.postCloneSkill(true, skillPackageStatus.skill?.eTag);
+    
+    this.postCloneSkill(true, skillPackageStatus.skill?.eTag);
     progressBar.report({
-      increment: incrAmount,
+      increment: incrementAmount,
       message: "Skill package synced.",
     });
   }
