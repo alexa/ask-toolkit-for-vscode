@@ -1,11 +1,10 @@
 # This is a workflow to publish master branch changes to VSCE
 name: "Release to Marketplace"
 
-# Controls when the action will run when a new release is published.
+# This action will only run when a new GitHub release is published.
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 
 jobs:
   release:
