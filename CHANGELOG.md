@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.1](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.14.0...v2.14.1) (2023-04-06)
+
+
+### Bug Fixes
+
+* skill creation and clone returns 'no skill repository found' ([a223216](https://github.com/alexa/ask-toolkit-for-vscode/commits/a2232162c61c21c6ca39183d915d46f5e20a5d8e))
+
 ## [2.14.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.13.0...v2.14.0) (2023-03-22)
 
 
