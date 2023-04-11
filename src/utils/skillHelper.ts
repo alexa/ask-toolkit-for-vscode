@@ -68,6 +68,15 @@ export function getSkillMetadataSrc(folderPath: string, profile: string): {skill
     skillPackageSrc = SKILL_FOLDER.SKILL_PACKAGE.NAME;
     return {skillPackageAbsPath, skillPackageSrc};
   }
+  
+  const allProfiles = R.keys(R.path(["profiles"], skillResource));
+  if(!allProfiles.includes(profile)){
+    throw logAskError(
+      `Currently active profile, '${profile}', was not found in 'ask-resources.json'. Profiles configured for this skill: '${allProfiles}'. ` + 
+      `Please ensure that the name of your active profile, '${profile}', matches a profile configured in 'ask-resources.json' and '.ask/ask-states.json'`,
+    );
+  }
+
   skillPackageSrc = R.path(["profiles", profile, "skillMetadata", "src"], skillResource);
   if (skillPackageSrc === undefined) {
     throw logAskError(
