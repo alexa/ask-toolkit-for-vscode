@@ -309,7 +309,7 @@
     "webpack-dev": "webpack --mode development --watch",
     "lint": "eslint src",
     "test-compile": "tsc -p ./",
-    "copyTestData": "cp -R ./test/mockSkill ./out/test",
+    "copyTestData": "cp -R ./test/mockSkill ./out/test && cp -R ./test/acdlServer/mockACDL ./out/test/acdlServer",
     "compile": "shx rm -rf ./out/ && shx rm -rf ./dist/ && tsc -p ./",
     "format": "prettier --write .",
     "watch": "tsc -watch -p ./",

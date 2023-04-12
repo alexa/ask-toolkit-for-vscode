@@ -72,7 +72,7 @@ const getProjectUri = async (uri: string): Promise<string | void> => {
  * @param projectURI
  * @returns {Project} retrieve a Project that's already loaded from the "uriToProjects" dictionary
  */
-const getProject = (projectURI: string): Project => uriToProjects[projectURI];
+export const getProject = (projectURI: string): Project => uriToProjects[projectURI];
 
 /**
  * Get all Projects loaded/cached
@@ -145,10 +145,10 @@ export const addProject = async (uri: string): Promise<Project> => {
   return uriToProjects[projectUri];
 };
 
-export const enum UpdateProjectResult{
+export const enum UpdateProjectResult {
   UPDATED,
   ADDED,
-  NONE
+  NONE,
 }
 
 /**
@@ -173,7 +173,7 @@ export const updateProject = async (textDocument: TextDocument): Promise<UpdateP
     if (project) {
       project.update(file);
       return UpdateProjectResult.UPDATED;
-    } 
+    }
 
     await addProject(uri);
     return UpdateProjectResult.ADDED;
