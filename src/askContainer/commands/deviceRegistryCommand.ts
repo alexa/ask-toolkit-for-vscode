@@ -12,8 +12,8 @@ import {DeviceRegistryWebview} from "../webViews/deviceRegistryWebview";
 export class DeviceRegistryCommand extends AbstractCommand<void> {
   private deviceRegistryWebview: DeviceRegistryWebview;
 
-  constructor(webview: DeviceRegistryWebview) {
-    super("askContainer.skillsConsole.deviceRegistry");
+  constructor(webview: DeviceRegistryWebview, commandOverride?: string) {
+    super(commandOverride ?? "askContainer.skillsConsole.deviceRegistry");
     this.deviceRegistryWebview = webview;
   }
 

@@ -28,8 +28,8 @@ describe("Command askContainer.skillsConsole.deviceRegistry", () => {
 
   it("Should show the view when executed", async () => {
     const showViewSpy = sinon.spy();
-    command = new DeviceRegistryCommand({showView: showViewSpy} as any);
 
+    command = new DeviceRegistryCommand({showView: showViewSpy} as any, "askContainer.skillsConsole.deviceRegistryTest");
     /*
         undefined argument due to
 
@@ -38,7 +38,7 @@ describe("Command askContainer.skillsConsole.deviceRegistry", () => {
         and passes that as a parameter when invoking the command. 
 
     */
-    await vscode.commands.executeCommand("askContainer.skillsConsole.deviceRegistry", undefined);
+    await vscode.commands.executeCommand("askContainer.skillsConsole.deviceRegistryTest", undefined);
 
     assert.ok(showViewSpy.called);
   });
