@@ -234,6 +234,6 @@ export async function getInvocationName(profile: string, skillId: string, contex
     if (err.statusCode === 404) {
       void vscode.window.showErrorMessage(`There is no interaction model for ${currentLocale}. Select a different locale.`);
     }
-    throw logAskError("There was a problem downloading the interaction model. Try the download again.", err);
+    return "open my skill";
   }
 }
