@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.2](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.14.1...v2.14.2) (2023-04-28)
+
+
+### Bug Fixes
+
+* add framework for less frictional unit testing in ACDL language server, backfill hover tests ([b777b8b](https://github.com/alexa/ask-toolkit-for-vscode/commits/b777b8b8cacb5e5b85623a249f7f3fd3ff5a79d0))
+* allow device registry unit test to run even if command has already been registered ([c885d8c](https://github.com/alexa/ask-toolkit-for-vscode/commits/c885d8c2aa5fc22a54c61a877784eb8d28d5240b))
+* skill simulation locale drop down was not handling missing interaction models [#254](https://github.com/alexa/ask-toolkit-for-vscode/issues/254) ([eab6d35](https://github.com/alexa/ask-toolkit-for-vscode/commits/eab6d354352abea31a43a577565fcd9a6ae2992f))
+
 ### [2.14.1](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.14.0...v2.14.1) (2023-04-06)
 
 
