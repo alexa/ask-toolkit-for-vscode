@@ -18,10 +18,10 @@ import {
 import {logAskError} from "../exceptions";
 import {Logger} from "../logger";
 import {SmapiClientFactory} from "../runtime";
-import {callAvsForRecognizeEvent} from "../utils/avs/simulateAVSHelper";
-import {exportFileForReplay} from "../utils/simulateReplayHelper";
-import * as simulateSkillHelper from "../utils/simulateSkillHelper";
-import {getAvailableLocales} from "../utils/skillHelper";
+import {callAvsForRecognizeEvent} from "./avs/simulateAVSHelper";
+import {exportFileForReplay} from "./simulateReplayHelper";
+import * as simulateSkillHelper from "./simulateSkillHelper";
+import {getAvailableLocales} from "./skillHelper";
 import {AVSClient} from "./avs/avsClient";
 import {readDeviceToken} from "./avs/deviceTokenUtil";
 
@@ -47,20 +47,47 @@ export async function handleSkillStatusMessageFromWebview(
     await simulateSkillHelper.enableSkill(profile, skillId, context);
     isSkillEnabled = true;
     return SIMULATOR_WEBVIEW_MESSAGES.ENABLED_SKILL;
-  } else if (webviewMessage.message === SIMULATOR_WEBVIEW_MESSAGES.DISABLE_SKILL) {
+  }
+  if (webviewMessage.message === SIMULATOR_WEBVIEW_MESSAGES.DISABLE_SKILL) {
     const skillEnabled = await simulateSkillHelper.checkSkillStatus(profile, skillId, context);
     if (skillEnabled) {
       await simulateSkillHelper.disableSkill(profile, skillId, context);
     }
     isSkillEnabled = false;
     return SIMULATOR_WEBVIEW_MESSAGES.DISABLED_SKILL;
-  } else if (webviewMessage.message === SIMULATOR_WEBVIEW_MESSAGES.CHECK_SKILL_STATUS) {
+  }
+  if (webviewMessage.message === SIMULATOR_WEBVIEW_MESSAGES.CHECK_SKILL_STATUS) {
     currentSkillId = skillId;
     const skillEnabled = await simulateSkillHelper.checkSkillStatus(profile, skillId, context);
     isSkillEnabled = skillEnabled;
     return skillEnabled ? SIMULATOR_WEBVIEW_MESSAGES.ENABLED_SKILL : SIMULATOR_WEBVIEW_MESSAGES.DISABLED_SKILL;
-  } else {
-    throw logAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
+  }
+
+  throw logAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
+}
+
+/**
+ * Call SMAPI to get the realtime invocation name.
+ * @param profile
+ * @param skillId
+ * @param context
+ */
+export async function getInvocationName(profile: string, skillId: string, context: vscode.ExtensionContext) {
+  Logger.verbose(`Calling method: simulateMessageHelper.getInvocationName`);
+  try {
+    const smapiClient = SmapiClientFactory.getInstance(profile, context);
+    const interactionModelResponse: model.v1.skill.interactionModel.InteractionModelData = await smapiClient.getInteractionModelV1(
+      skillId,
+      "development",
+      currentLocale,
+    );
+    const invocationName = `open ${interactionModelResponse.interactionModel?.languageModel?.invocationName?.toString()}`;
+    return invocationName;
+  } catch (err) {
+    if (err.statusCode === 404) {
+      vscode.window.showErrorMessage(`There is no interaction model for ${currentLocale}. Select a different locale.`);
+    }
+    return "open my skill";
   }
 }
 
@@ -96,7 +123,8 @@ export async function handleLocaleMessageFromWebview(
       invocationName,
       type: SIMULATOR_MESSAGE_TYPE.LOCALE,
     };
-  } else if (webviewMessage.message === SIMULATOR_WEBVIEW_MESSAGES.UPDATE_LOCALE) {
+  }
+  if (webviewMessage.message === SIMULATOR_WEBVIEW_MESSAGES.UPDATE_LOCALE) {
     currentLocale = webviewMessage.skillLocale;
     const invocationName = await getInvocationName(profile, skillId, context);
     if (isAVSMode) {
@@ -107,9 +135,9 @@ export async function handleLocaleMessageFromWebview(
       invocationName,
       type: SIMULATOR_MESSAGE_TYPE.LOCALE,
     };
-  } else {
-    throw logAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
   }
+
+  throw logAskError(ERRORS.UNRECOGNIZED_MESSAGE_FROM_WEBVIEW);
 }
 
 /**
@@ -127,9 +155,9 @@ export async function handleUtteranceMessageFromWebview(
   isAVSMode: boolean,
 ): Promise<void | Record<string, any>> {
   Logger.verbose(`Calling method: simulateMessageHelper.handleUtteranceMessageFromWebview`);
-  const userInput: string = webviewMessage.userInput;
-  const skillLocale: string = webviewMessage.skillLocale;
-  const sessionMode: boolean = webviewMessage.sessionMode;
+  const {userInput} = webviewMessage;
+  const {skillLocale} = webviewMessage;
+  const {sessionMode} = webviewMessage;
   try {
     let returnMessage;
     if (isAVSMode) {
@@ -179,11 +207,11 @@ export async function handleExportMessageFromWebview(
 export function handleActionMessageFromWebview(webviewMessage: Record<string, string>, skillId: string, isAVSMode: boolean): void {
   Logger.verbose(`Calling method: simulateMessageHelper.handleActionMessageFromWebview`);
   const platform = os.platform();
-  //Show registry webview for windows and macOS when simulator in SMAPI mode and has APL document for preview.
+  // Show registry webview for windows and macOS when simulator in SMAPI mode and has APL document for preview.
   if (!isAVSMode && simulateSkillHelper.aplDocument !== undefined) {
     if (platform === "darwin" || platform === "win32") {
       const register = "Register device";
-      void vscode.window
+      vscode.window
         .showInformationMessage(
           `APL touch interactions require creating an AVS virtual device. 
             [Learn more](https://developer.amazon.com/en-US/docs/alexa/ask-toolkit/vs-code-testing-simulator.html#register-device)`,
@@ -199,41 +227,16 @@ export function handleActionMessageFromWebview(webviewMessage: Record<string, st
       locale = locale.replace("-", "_");
       const goToConsole = "Go to Alexa Developer Console";
       const link = SKILL_ACTION_URLS.SIMULATOR(skillId, locale);
-      void vscode.window
+      vscode.window
         .showInformationMessage(
           "This extension supports interacting with the Alexa Presentation Language on MacOS and Windows only. For other platforms please go to the developer console. ",
           goToConsole,
         )
         .then((selection) => {
           if (selection === goToConsole) {
-            void vscode.env.openExternal(vscode.Uri.parse(link));
+            vscode.env.openExternal(vscode.Uri.parse(link));
           }
         });
     }
-  }
-}
-
-/**
- * Call SMAPI to get the realtime invocation name.
- * @param profile
- * @param skillId
- * @param context
- */
-export async function getInvocationName(profile: string, skillId: string, context: vscode.ExtensionContext) {
-  Logger.verbose(`Calling method: simulateMessageHelper.getInvocationName`);
-  try {
-    const smapiClient = SmapiClientFactory.getInstance(profile, context);
-    const interactionModelResponse: model.v1.skill.interactionModel.InteractionModelData = await smapiClient.getInteractionModelV1(
-      skillId,
-      "development",
-      currentLocale,
-    );
-    const invocationName = "open " + interactionModelResponse.interactionModel?.languageModel?.invocationName?.toString();
-    return invocationName;
-  } catch (err) {
-    if (err.statusCode === 404) {
-      void vscode.window.showErrorMessage(`There is no interaction model for ${currentLocale}. Select a different locale.`);
-    }
-    throw logAskError("There was a problem downloading the interaction model. Try the download again.", err);
   }
 }
