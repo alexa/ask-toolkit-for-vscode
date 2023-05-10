@@ -38,7 +38,11 @@ export function checkAllSkillS3Scripts(context: vscode.ExtensionContext): void {
 
 export async function checkAuthInfoScript(context: vscode.ExtensionContext): Promise<void> {
   const authInfoUrl = SKILL.S3_SCRIPTS_AUTH_INFO.URL;
-  const authInfoPath = path.join(os.homedir(), SKILL_FOLDER.HIDDEN_ASK_FOLDER, SYSTEM_ASK_FOLDER.AUTH_INFO);
+  const askHiddenFolder = path.join(os.homedir(), SKILL_FOLDER.HIDDEN_ASK_FOLDER);
+  if(!fs.existsSync(askHiddenFolder)) {
+     fs.mkdirSync(askHiddenFolder)
+  }
+  const authInfoPath = path.join(askHiddenFolder, SYSTEM_ASK_FOLDER.AUTH_INFO);
   await checkScript(authInfoUrl, authInfoPath, context, AUTH_INFO_LAST_UPDATE_TIME, undefined);
 }
 
