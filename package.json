@@ -392,7 +392,7 @@
     "portscanner": "^2.2.0",
     "ramda": "^0.25.0",
     "say": "^0.16.0",
-    "simple-oauth2": "1.0.3",
+    "simple-oauth2": "5.0.0",
     "sound-play": "^1.1.0",
     "typed-rest-client": "^1.8.4",
     "utf-8-validate": "^5.0.2",
