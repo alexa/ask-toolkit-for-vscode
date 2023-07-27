@@ -8,7 +8,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as R from "ramda";
 import * as jsonfile from "jsonfile";
-import {IViewport} from "apl-suggester";
+import {IViewport,ViewportMode} from "apl-suggester";
 import {AbstractWebView} from "../../runtime";
 import {ViewLoader} from "../../utils/webViews/viewLoader";
 import {APL_DOCUMENT_FILE_PATH, DATASOURCES_FILE_PATH, DATA_PATH_REGEX, DOCUMENT_PATH_REGEX} from "../config/configuration";
@@ -18,6 +18,7 @@ import {Logger} from "../../logger";
 export class AplPreviewWebView extends AbstractWebView {
   private loader: ViewLoader;
   private viewport: IViewport;
+  private mode: ViewportMode;
   private context: vscode.ExtensionContext;
   private document: string | undefined;
   private datasources: string | undefined;
@@ -42,10 +43,11 @@ export class AplPreviewWebView extends AbstractWebView {
    *
    * @memberOf AplPreviewWebView
    */
-  public changeViewport(viewport: IViewport) {
+  public changeViewport(viewport: IViewport,mode: ViewportMode) {
     Logger.verbose(`Calling method: ${this.viewId}.changeViewport, args: `, viewport.toString());
     if (!R.equals(this.viewport, viewport)) {
       this.viewport = viewport;
+      this.mode = mode;
       this.postMessage();
     }
   }
@@ -103,6 +105,7 @@ export class AplPreviewWebView extends AbstractWebView {
       document: this.document,
       datasources: this.datasources,
       viewport: JSON.stringify(this.viewport),
+      mode: this.mode
     });
   }
 

@@ -11,7 +11,7 @@ import {Logger} from "../../logger";
 import {AbstractCommand} from "../../runtime";
 import {EXTENSION_COMMAND_CONFIG} from "../config/configuration";
 import {ERROR_MESSAGES} from "../constants/messages";
-import {getViewportCharacteristicsFromViewPort} from "../utils/viewportProfileHelper";
+import {DEFAULT_VIEWPORT_MODE, getViewportCharacteristicsFromViewPort} from "../utils/viewportProfileHelper";
 import {AplPreviewWebView} from "../webViews/aplPreviewWebView";
 
 export class ChangeViewportProfileCommand extends AbstractCommand<void> {
@@ -132,9 +132,9 @@ export class ChangeViewportProfileCommand extends AbstractCommand<void> {
     if (viewportToChange) {
       const viewport = getViewportCharacteristicsFromViewPort({
         ...viewportToChange,
-        shape: viewportProfile.shape,
+        shape: viewportProfile.shape.toUpperCase()
       } as IViewport);
-      this.aplPreviewWebView.changeViewport(viewport);
+      this.aplPreviewWebView.changeViewport(viewport,viewportProfile?.mode || DEFAULT_VIEWPORT_MODE);
       return true;
     }
     return false;

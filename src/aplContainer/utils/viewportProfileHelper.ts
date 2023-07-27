@@ -4,7 +4,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  *--------------------------------------------------------------------------------------------*/
 
-import {getDefaultViewport, IViewport, ViewportShape} from "apl-suggester";
+import {getDefaultViewport, IViewport, ViewportMode, ViewportShape} from "apl-suggester";
 
 /**
  * DP -> Pixel convert
@@ -41,3 +41,4 @@ export function getViewportCharacteristicsFromViewPort(activeViewport: IViewport
 
 export const DEFAULT_VIEWPORT_CHARACTERISTICS = getViewportCharacteristicsFromViewPort(getDefaultViewport());
 export const DEFAULT_VIEWPORT_NAME = "Echo Show 1";
+export const DEFAULT_VIEWPORT_MODE = ViewportMode.HUB;

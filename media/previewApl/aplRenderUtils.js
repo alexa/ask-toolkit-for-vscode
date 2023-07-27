@@ -14,7 +14,7 @@
  * @param {object} onSendEvent
  */
 
-async function loadAplDoc(renderer, apl, datasources, deviceConfig, fatherDiv, onSendEvent) {
+async function loadAplDoc(renderer, apl, datasources, deviceConfig, deviceMode ,fatherDiv, onSendEvent) {
   if (renderer) {
     renderer.destroy();
     renderer = undefined;
@@ -50,6 +50,7 @@ async function loadAplDoc(renderer, apl, datasources, deviceConfig, fatherDiv, o
       mappingKey: "auth-id",
       writeKeys: ["auth-banana", "auth-id"],
     },
+    mode: deviceMode?.toUpperCase(),
     utcTime: Date.now(),
     localTimeAdjustment: -new Date().getTimezoneOffset() * 60 * 1000,
   };
