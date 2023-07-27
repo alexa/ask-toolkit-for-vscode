@@ -16,7 +16,7 @@ window.onload = function () {
 window.addEventListener("message", (event) => {
   const message = event.data; // The json data that the extension sent
   const sendCommandEvent = (commandEvent) => {};
-  loadAplDoc(renderer, message.document, message.datasources, JSON.parse(message.viewport), EMPTY_STRING, sendCommandEvent);
+  loadAplDoc(renderer, message.document, message.datasources, JSON.parse(message.viewport), message?.mode,EMPTY_STRING, sendCommandEvent);
 });
 
 function initialize() {

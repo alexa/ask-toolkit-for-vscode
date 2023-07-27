@@ -452,7 +452,7 @@ async function updateAplViewPort(document, dataSource, viewport) {
       });
     }
   };
-  await loadAplDoc(renderer, document, dataSource, viewport, APL_VIEW_BOX, sendCommandEvent);
+  await loadAplDoc(renderer, document, dataSource, viewport, viewport?.mode, APL_VIEW_BOX, sendCommandEvent);
   saveElementState(INFO_BOX);
 }
 
