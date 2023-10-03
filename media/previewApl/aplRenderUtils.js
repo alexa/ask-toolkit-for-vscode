@@ -22,10 +22,16 @@ async function loadAplDoc(renderer, apl, datasources, deviceConfig, deviceMode ,
   const content = createContent(apl, datasources);
 
   const documentBody = fatherDiv === "" ? document.body : document.getElementById(fatherDiv);
-  const aplDiv = document.getElementById("aplView");
+  const aplDiv = document.getElementById("aplWrapper");
   if (aplDiv) {
     documentBody.removeChild(aplDiv);
   }
+  const wrapper = document.createElement("div");
+  const wrapperScale = documentBody.clientWidth / deviceConfig.width;
+  wrapper.setAttribute("id", "aplWrapper");
+  wrapper.style['transform-origin'] = 'top left';
+  wrapper.style.transform = `scale(${wrapperScale})`;
+
   const div = document.createElement("div");
   div.setAttribute("id", "aplView");
   div.style.border = "1px solid #000";
@@ -33,7 +39,9 @@ async function loadAplDoc(renderer, apl, datasources, deviceConfig, deviceMode ,
   div.style.height = deviceConfig.height.toString();
   div.style.width = deviceConfig.width.toString();
 
-  documentBody.appendChild(div);
+  documentBody.appendChild(wrapper);
+  wrapper.appendChild(div);
+
   const options = {
     content,
     onSendEvent,
