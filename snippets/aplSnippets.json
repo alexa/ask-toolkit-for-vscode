@@ -1,90 +1,562 @@
 {
-  "APL Document": {
-    "prefix": "aplDocument",
-    "body": [
-      "{",
-      "  \"type\": \"APL\",",
-      "  \"version\": \"1.1\",",
-      "  \"settings\": {},",
-      "  \"theme\": \"dark\",",
-      "  \"import\": [],",
-      "  \"resources\": [],",
-      "  \"styles\": {},",
-      "  \"onMount\": [],",
-      "  \"graphics\": {},",
-      "  \"commands\": {},",
-      "  \"layouts\": {},",
-      "  \"mainTemplate\": {",
-      "    \"parameters\": [",
-      "      \"payload\"",
-      "    ],",
-      "    \"items\": []",
-      "  }",
-      "}"
-    ]
-  },
-  "APL Container": {
-    "prefix": "aplContainer",
-    "body": [
-      "{",
-      "  \"type\": \"Container\",",
-      "  \"height\": \"100%\",",
-      "  \"width\": \"100%\",",
-      "  \"paddingTop\": \"16dp\",",
-      "  \"paddingLeft\": \"16dp\",",
-      "  \"paddingRight\": \"16dp\",",
-      "  \"paddingBottom\": \"16dp\",",
-      "  \"items\": []",
-      "}"
-    ]
-  },
-  "APL Image": {
-    "prefix": "aplImage",
-    "body": [
-      "{",
-      "  \"type\": \"Image\",",
-      "  \"height\": \"200dp\",",
-      "  \"width\": \"300dp\",",
-      "  \"source\": \"https://d2o906d8ln7ui1.cloudfront.net/placeholder_image.png\"",
-      "}"
-    ]
-  },
-  "APL Text": {
-    "prefix": "aplText",
-    "body": [
-      "{",
-      "  \"type\": \"Text\",",
-      "  \"text\": \"Type in the text for your layout...\",",
-      "  \"fontSize\": \"16dp\",",
-      "  \"paddingTop\": \"12dp\",",
-      "  \"paddingBottom\": \"12dp\",",
-      "  \"height\": \"32dp\",",
-      "  \"width\": \"300dp\"",
-      "}"
-    ]
-  },
-  "APL Video": {
-    "prefix": "aplVideo",
-    "body": ["{", "  \"type\": \"Video\",", "  \"height\": \"200dp\",", "  \"width\": \"300dp\"", "}"]
-  },
-  "APL Frame": {
-    "prefix": "aplFrame",
-    "body": ["{", "  \"type\": \"Frame\",", "  \"height\": \"200dp\",", "  \"width\": \"300dp\"", "}"]
-  },
-  "APL Pager": {
-    "prefix": "aplPager",
-    "body": ["{", "  \"type\": \"Pager\",", "  \"height\": \"200dp\",", "  \"width\": \"300dp\"", "}"]
-  },
-  "APL Touch Wrapper": {
-    "prefix": "aplTouchWrapper",
-    "body": ["{", "  \"type\": \"TouchWrapper\",", "  \"height\": \"400dp\",", "  \"width\": \"400dp\"", "}"]
-  },
-  "APL Scroll View": {
-    "prefix": "aplScrollView",
-    "body": ["{", "  \"type\": \"ScrollView\",", "  \"height\": \"400dp\",", "  \"width\": \"400dp\"", "}"]
-  },
-  "APL Sequence": {
-    "prefix": "aplSequence",
-    "body": ["{", "  \"type\": \"Sequence\",", "  \"height\": \"200dp\",", "  \"width\": \"100%\"", "}"]
+	"APL Document": {
+	  "prefix": "aplDocument",
+	  "body": [
+		"  \"type\": \"${1:APL}\",",
+		"  \"version\": \"${2:2023.3}\",",
+		"  \"settings\": ${3:{}},",
+		"  \"theme\": \"${4:dark}\",",
+		"  \"import\": [",
+		"    {",
+		"      \"name\": \"${5:alexa-layouts}\",",
+		"      \"version\": \"${6:1.7.0}\"",
+		"    }",
+		"  ],",
+		"  \"resources\": ${7:[]},",
+		"  \"styles\": ${8:{}},",
+		"  \"onMount\": ${9:[]},",
+		"  \"graphics\": ${10:{}},",
+		"  \"commands\": ${11:{}},",
+		"  \"layouts\": ${12:{}},",
+		"  \"mainTemplate\": {",
+		"    \"parameters\": ${13:[",
+		"      \"payload\"",
+		"    ]},",
+		"    \"items\": [",
+		"      {",
+		"        \"type\": \"${14:Container}\",",
+		"        \"width\": \"${15:100vw}\",",
+		"        \"height\": \"${16:100vh}\",",
+		"        \"items\": ${17:[]}",
+		"      }",
+		"    ]",
+		"  }"
+	  ],
+	  "description": "Code Snippet for an APL Document"
+	},
+	"APL Container": {
+	  "prefix": "aplContainer",
+	  "body":  [
+			  "{",
+			  "  \"type\": \"Container\",",
+			  "  \"width\": \"${1:100%}\",",
+			  "  \"height\": \"${2:100%}\",",
+			  "  \"alignItems\": \"${3:stretch}\",",
+			  "  \"justifyContent\": \"${4:start}\",",
+			  "  \"direction\": \"${5:column}\",",
+			  "  \"paddingLeft\": \"${6:0}\",",
+			  "  \"paddingTop\": \"${7:0}\",",
+			  "  \"paddingRight\": \"${8:0}\",",
+			  "  \"paddingBottom\": \"${9:0}\",",
+			  "  \"spacing\": \"${10:0}\",",
+			  "  \"numbered\": ${11:false},",
+			  "  \"wrap\": \"noWrap\",",
+			  "  \"data\": [${12:}],",
+			  "  \"items\": [${13:}]",
+			  "}"
+			],
+	  "description": "Code Snippet for an APL Container Component"
+	},
+	"APL EditText": {
+	  "prefix": "aplEditText",
+	  "body": [
+		"{",
+		"  \"type\": \"EditText\",",
+		"  \"hint\": \"${1:}\",",
+		"  \"onTextChange\": [${2:}],",
+		"  \"onSubmit\": [${3:}],",
+		"  \"text\": \"${4:}\"",
+		"}"
+	  ],
+	  "description": "Code Snippet for an APL Edit Text Component"
+	},
+	"APL EditText Detailed": {
+		"prefix": "aplEditTextDetailed",
+		"body": [
+		  "{",
+		  "  \"type\": \"EditText\",",
+		  "  \"borderColor\": \"${1:}\",",
+		  "  \"borderStrokeWidth\": \"${2:}\",",
+		  "  \"borderWidth\": \"${3:0}\",",
+		  "  \"color\": \"${4:}\",",
+		  "  \"fontFamily\": \"${5:sans-serif}\",",
+		  "  \"fontSize\": \"${6:40dp}\",",
+		  "  \"fontStyle\": \"${7:normal}\",",
+		  "  \"fontWeight\": \"${8:normal}\",",
+		  "  \"highlightColor\": \"${9:}\",",
+		  "  \"hint\": \"${10:}\",",
+		  "  \"hintColor\": ${11:false},",
+		  "  \"hintStyle\": \"${12:normal}\",",
+		  "  \"hintWeight\": \"${13:normal}\",",
+		  "  \"keyboardType\": \"${14:normal}\",",
+		  "  \"lang\": \"${15:}\",",
+		  "  \"maxLength\": \"${16:0}\",",
+		  "  \"onTextChange\": [${17:}],",
+		  "  \"onSubmit\": [${18:}],",
+		  "  \"secureInput\": \"${19:false}\",",
+		  "  \"selectOnFocus\": \"${20:false}\",",
+		  "  \"size\": \"${21:8}\",",
+		  "  \"submitKeyType\": \"${22:done}\",",
+		  "  \"text\": \"${23:}\",",
+		  "  \"validCharacters\": \"${24:}\"",
+		  "}"
+		],
+		"description": "Code Snippet for an APL Edit Text Component"
+	},
+	"APL Frame": {
+	  "prefix": "aplFrame",
+	  "body": [
+		"{",
+			  "  \"type\": \"Frame\",",
+			  "  \"width\":  \"${1:}\",",
+			  "  \"height\": \"${2:}\",",
+			  "  \"borderRadius\": \"${3:0}\",",
+			  "  \"borderColor\": \"${4:}\",",
+			  "  \"borderWidth\":\"${5:0}\",",
+			  "  \"items\": [${6:}]",
+			  "}"
+	  ],
+	  "description": "Code Snippet for an APL Frame Component"
+	},
+	"APL Frame Detailed": {
+		"prefix": "aplFrameDetailed",
+		"body": [
+		  "{",
+				"  \"type\": \"Frame\",",
+				"  \"width\":  \"${1:}\",",
+				"  \"height\": \"${2:}\",",
+				"  \"background\": \"${3:}\",",
+				"  \"backgroundColor\": \"${4:}\",",
+				"  \"borderBottomLeftRadius\":\"${5:}\",",
+				"  \"borderBottomRightRadius\":\"${6:}\",",
+				"  \"borderColor\":\"${7:}\",",
+				"  \"borderRadius\":${8:0},",
+				"  \"borderStrokeWidth\":${9:0},",
+				"  \"borderTopLeftRadius\":\"${10:}\",",
+				"  \"borderTopRightRadius\":\"${11:}\",",
+				"  \"borderWidth\":${12:0},",
+				"  \"items\": [${13:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL Frame Component"
+	},
+	"APL Image": {
+	  "prefix": "aplImage",
+	  "body": [
+		"{",
+			  "  \"type\": \"Image\",",
+			  "  \"width\":  \"${1:}\",",
+			  "  \"height\": \"${2:}\",",
+			  "  \"scale\":\"${3:best-fit}\",",
+			  "  \"sources\": [${4:}]",
+			  "}"
+	  ],
+	  "description": "Code Snippet for an APL Image Component"
+	},
+	"APL Image Detailed": {
+		"prefix": "aplImageDetailed",
+		"body": [
+		  "{",
+				"  \"type\": \"Image\",",
+				"  \"width\":  \"${1:}\",",
+				"  \"height\": \"${2:}\",",
+				"  \"align\": \"${3:center}\",",
+				"  \"borderRadius\": \"${4:0}\",",
+				"  \"filters\":[${5:}],",
+				"  \"onFail\": [${6:}],",
+				"  \"onLoad\": [${7:}],",
+				"  \"overlayColor\":\"${8:0}\",",
+				"  \"overlayGradient\":\"${9:0}\",",
+				"  \"scale\":\"${10:best-fit}\",",
+				"  \"sources\": [${11:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL Image Component"
+	},
+	"APL GridSequence": {
+		"prefix": "aplGrid",
+		"body": [
+		  "{",
+				"  \"type\": \"GridSequence\",",
+				"  \"width\":  \"${1:}\",",
+				"  \"height\": \"${2:}\",",
+				"  \"data\": [${3:}],",
+				"  \"firstItem\": \"${4:}\",",
+				"  \"items\":[${5:}],",
+		  		"  \"lastItem\": [${6:}],",
+				"  \"childHeight\": [${7:}],",
+				"  \"childWidth\": [${8:}],",
+				"  \"numbered\": \"${9:false}\",",
+				"  \"onScroll\": [${10:}],",
+				"  \"preserve\": [${11:}],",
+				"  \"scrollDirection\": \"${12:vertical}\",",
+				"  \"snap\": \"${13:none}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL Grid Sequence Component"
+	},
+	"APL Pager": {
+		"prefix": "aplPager",
+		"body": [
+		  "{",
+				"  \"type\": \"Pager\",",
+				"  \"width\":  \"${1:}\",",
+				"  \"height\": \"${2:}\",",
+				"  \"items\":[${3:}],",
+				"  \"handlePageMove\": [${4:}],",
+				"  \"initialPage\": \"${5:0}\",",
+		  		"  \"navigation\": \"${6:wrap}\",",
+				"  \"onPageChanged\": [${7:}],",
+				"  \"pageDirection\": \"${8:horizontal}\",",
+				"  \"preserve\": [${9:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL Pager Component"
+	},
+	"APL ScrollView": {
+		"prefix": "aplScrollView",
+		"body": [
+		  "{",
+				"  \"type\": \"ScrollView\",",
+				"  \"width\":  \"${1:}\",",
+				"  \"height\": \"${2:}\",",
+				"  \"items\":[${3:}],",
+				"  \"onScroll\": [${4:}],",
+				"  \"preserve\": [${5:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL ScrollView Component"
+	},
+	"APL Sequence": {
+		"prefix": "aplSequence",
+		"body": [
+		  "{",
+				"  \"type\": \"Sequence\",",
+				"  \"width\":  \"${1:}\",",
+				"  \"height\": \"${2:}\",",
+				"  \"data\": [${3:}],",
+				"  \"firstItem\": \"${4:}\",",
+				"  \"items\":[${5:}],",
+		  		"  \"lastItem\": [${6:}],",
+				"  \"numbered\": \"${7:false}\",",
+				"  \"preserve\": [${8:}],",
+				"  \"scrollDirection\": \"${9:vertical}\",",
+				"  \"snap\": \"${10:none}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL Sequence Component"
+	},
+	"APL Text": {
+		"prefix": "aplText",
+		"body": [
+		  "{",
+				"  \"type\": \"Text\",",
+				"  \"width\":  \"${1:}\",",
+				"  \"height\": \"${2:}\",",
+				"  \"text\": \"${3:}\",",
+				"  \"color\": \"${4:}\",",
+				"  \"maxLines\": ${5:0}",
+				"}"
+		],
+		"description": "Code Snippet for an APL Sequence Component"
+	},
+	"APL Text Detailed": {
+		"prefix": "aplTextDetailed",
+		"body": [
+		  "{",
+				"  \"type\": \"Text\",",
+				"  \"width\":  \"${1:}\",",
+				"  \"height\": \"${2:}\",",
+				"  \"text\": \"${3:}\",",
+				"  \"color\": [${4:}],",
+				"  \"fontFamily\": \"${5:sans-serif}\",",
+				"  \"fontSize\": \"${6:40dp}\",",
+				"  \"fontStyle\": \"${7:normal}\",",
+				"  \"fontWeight\": \"${8:normal}\",",
+				"  \"lang\": \"${9:}\",",
+				"  \"letterSpacing\": \"${10:0dp}\",",
+				"  \"lineHeight\": \"${11:125}\",",
+				"  \"maxLines\": \"${12:0}\",",
+				"  \"textAlign\": \"${13:auto}\",",
+				"  \"textAlignVertical\": \"${14:auto}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL Sequence Component"
+	},
+	"APL TouchWrapper": {
+		"prefix": "aplTouchWrapper",
+		"body": [
+		  "{",
+				"  \"type\": \"TouchWrapper\",",
+				"  \"items\":[${1:}],",
+		  	"  \"onPress\": [${2:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL Touch Wrapper Component"
+	},
+	"APL VectorGraphic": {
+		"prefix": "aplVectorGraphic",
+		"body": [
+		  "{",
+				"  \"type\": \"VectorGraphic\",",
+				"  \"align\": \"${1:}\",",
+		  	"  \"onFail\": [${2:}],",
+				"  \"onLoad\": [${3:}],",
+				"  \"scale\": \"${4:none}\",",
+				"  \"source\": \"${5:}\",",
+				"  \"parameters\": \"{${6:}}\",",
+				"}"
+		],
+		"description": "Code Snippet for an APL VectorGraphic Component"
+	},
+	"APL Video": {
+		"prefix": "aplVideo",
+		"body": [
+		  "{",
+				"  \"type\": \"Video\",",
+				"  \"audioTrack\": \"${1:foreground}\",",
+				"  \"autoplay\": \"${2:false}\",",
+				"  \"muted\": \"${3:false}\",",
+				"  \"scale\": \"${4:best-fit}\",",
+		  		"  \"onEnd\": [${5:}],",
+				"  \"onPause\": [${6:}],",
+				"  \"onPlay\": [${7:}],",
+				"  \"onTimeUpdate\": [${8:}],",
+				"  \"onTrackUpdate\": [${9:}],",
+				"  \"onTrackReady\": [${10:}],",
+				"  \"onTrackFail\": [${11:}],",
+				"  \"preserve\": [${12:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL Video Component"
+	},
+	"APL Send Event": {
+		"prefix": "aplSendEvent",
+		"body": [
+		  "{",
+				"  \"type\": \"SendEvent\",",
+				"  \"arguments\": [${1:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL SendEvent Command"
+	},
+	"APL Set Value": {
+		"prefix": "aplSetValue",
+		"body": [
+		  "{",
+				"  \"type\": \"SetValue\",",
+				"  \"componentId\": \"${1:}\",",
+				"  \"property\": \"${2:}\",",
+				"  \"value\": \"${3:}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL Send Event Command"
+	},
+	"APL Set Focus": {
+		"prefix": "aplSetFocus",
+		"body": [
+		  "{",
+				"  \"type\": \"SetFocus\",",
+				"  \"componentId\": \"${1:}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL SetFocus Command"
+	},
+	"APL Clear Focus": {
+		"prefix": "aplClearFocus",
+		"body": [
+		  "{",
+				"  \"type\": \"ClearFocus\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL ClearFocus Command"
+	},
+	"APL Speak Item": {
+		"prefix": "aplSpeakItem",
+		"body": [
+		  "{",
+				"  \"type\": \"SpeakItem\",",
+				"  \"componentId\": \"${1:}\",",
+				"  \"highlightMode\": \"${2:block}\",",
+				"  \"minimumDwellTime\": \"${3:0}\",",
+				"  \"align\": \"${4:visible}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL SpeakItem Command"
+	},
+	"APL Speak List": {
+		"prefix": "aplSpeakList",
+		"body": [
+		  "{",
+				"  \"type\": \"SpeakList\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"count\": \"${2:REQUIRED}\",",
+				"  \"start\": \"${3:REQUIRED}\",",
+				"  \"minimumDwellTime\": \"${4:0}\",",
+				"  \"align\": \"${5:visible}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL SpeakList Command"
+	},
+	"APL Scroll Command": {
+		"prefix": "aplScroll",
+		"body": [
+		  "{",
+				"  \"type\": \"Scroll\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"distance\": ${2:1}",
+				"}"
+		],
+		"description": "Code Snippet for an APL Send Event Command"
+	},
+	"APL Scroll To Index Command": {
+		"prefix": "aplScrollToIndex",
+		"body": [
+		  "{",
+				"  \"type\": \"ScrollToIndex\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"index\": ${2:REQUIRED},",
+				"  \"align\": \"${3:visible}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL ScrollToIndex Command"
+	},
+	"APL Scroll To Component Command": {
+		"prefix": "aplScrollToComponent",
+		"body": [
+		  "{",
+				"  \"type\": \"ScrollToComponent\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"align\": \"${2:visible}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL ScrollToComponent Command"
+	},
+	"APL Set Page Command": {
+		"prefix": "aplSetPage",
+		"body": [
+		  "{",
+				"  \"type\": \"SetPage\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"position\": \"${2:absolute}\",",
+				"  \"value\": ${3:REQUIRED}",
+				"}"
+		],
+		"description": "Code Snippet for an APL SetPage Command"
+	},
+	"APL Auto Page Command": {
+		"prefix": "aplAutoPage",
+		"body": [
+		  "{",
+				"  \"type\": \"AutoPage\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"count\": \"${2:}\",",
+				"  \"duration\": ${3:REQUIRED}",
+				"}"
+		],
+		"description": "Code Snippet for an APL AutoPage Command"
+	},
+	"APL Play Media Command": {
+		"prefix": "aplPlayMedia",
+		"body": [
+		  "{",
+				"  \"type\": \"PlayMedia\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"audioTrack\": \"${2:foreground}\",",
+				"  \"source\": [${3:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL PlayMedia Command"
+	},
+	"APL Control Media Command": {
+		"prefix": "aplControlMedia",
+		"body": [
+		  "{",
+				"  \"type\": \"ControlMedia\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"command\": \"${2:REQUIRED}\",",
+				"  \"value\": ${3:0}",
+				"}"
+		],
+		"description": "Code Snippet for an APL ControlMedia Command"
+	},
+	"APL OpenURL Command": {
+		"prefix": "aplOpenURL",
+		"body": [
+		  "{",
+				"  \"type\": \"OpenURL\",",
+				"  \"source\": \"${1:REQUIRED}\",",
+				"  \"onFail\": [${2:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL OpenURL Command"
+	},
+	"APL AnimateItem Command": {
+		"prefix": "aplAnimateItem",
+		"body": [
+		  "{",
+				"  \"type\": \"AnimateItem\",",
+				"  \"componentId\": \"${1:source}\",",
+				"  \"duration\": \"${2:REQUIRED}\",",
+				"  \"easing\": \"${3:linear}\",",
+				"  \"repeatCount\": ${4:0},",
+				"  \"repeatMode\": \"${5:restart}\",",
+				"  \"value\": [${6:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL AnimateItem Command"
+	},
+	"APL Finish Command": {
+		"prefix": "aplFinishCommand",
+		"body": [
+		  "{",
+				"  \"type\": \"Finish\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL Finish Command"
+	},
+	"APL Select Command": {
+		"prefix": "aplSelect",
+		"body": [
+		  "{",
+				"  \"type\": \"Select\",",
+				"  \"commands\": [${1:}],",
+				"  \"data\": [${2:}],",
+				"  \"otherwise\": [${3:}]",
+				"}"
+		],
+		"description": "Code Snippet for an APL Select Command"
+	},
+	"APL Reinflate Command": {
+		"prefix": "aplReinflate",
+		"body": [
+		  "{",
+				"  \"type\": \"Reinflate\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL Reinflate Command"
+	},
+	"APL Insert Item Command": {
+		"prefix": "aplInsertItem",
+		"body": [
+		  "{",
+				"  \"type\": \"InsertItem\",",
+				"  \"componentId\": \"${1::source}\",",
+				"  \"at\": \"${2:}\",",
+				"  \"items\": {${3:}}",
+				"}"
+		],
+		"description": "Code Snippet for an APL InsertItem Command"
+	},
+	"APL Remove Item Command": {	
+		"prefix": "aplRemoveItem",
+		"body": [
+		  "{",
+				"  \"type\": \"RemoveItem\",",
+				"  \"componentId\": \"${1::source}\"",
+				"}"
+		],
+		"description": "Code Snippet for an APL RemoveItem Command"
+	}
   }
-}
+  
