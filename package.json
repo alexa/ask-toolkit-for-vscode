@@ -338,6 +338,7 @@
     "@types/vscode": "^1.53.0",
     "@typescript-eslint/eslint-plugin": "^5.38.0",
     "@typescript-eslint/parser": "^5.38.0",
+    "@vscode/vsce": "^2.15.0",
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^9.0.0",
     "del": "^3.0.0",
@@ -359,7 +360,6 @@
     "ts-loader": "^9.3.1",
     "ts-node": "^10.9.1",
     "typescript": "4.7",
-    "@vscode/vsce": "^2.15.0",
     "vscode-test": "^1.3.0",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.5.0"
@@ -367,8 +367,8 @@
   "dependencies": {
     "@alexa/acdl": "^0.3.3",
     "adm-zip": "0.5.10",
-    "apl-suggester": "^2023.2.0",
-    "apl-viewhost-web": "^2023.2.0",
+    "apl-suggester": "^2023.3.0",
+    "apl-viewhost-web": "^2023.3.0",
     "ask-smapi-model": "^1.14.0",
     "ask-smapi-sdk": "^1.2.2",
     "async-retry": "^1.3.1",
