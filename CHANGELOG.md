@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.16.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.15.0...v2.16.0) (2024-02-08)
+
+
+### Features
+
+* set python 3.8 as default hosted skill python runtime version ([#283](https://github.com/alexa/ask-toolkit-for-vscode/issues/283)) ([0582cb6](https://github.com/alexa/ask-toolkit-for-vscode/commits/0582cb6d8256e7b19d56e37d1685ed36dda28c8d))
+
+
+### Bug Fixes
+
+* viewport.mode always showing hub irrespective of what device preview is being used ([670e4e1](https://github.com/alexa/ask-toolkit-for-vscode/commits/670e4e191232821e59e7d753e9ae6176e7bc1e36))
+
 ## [2.15.0](https://github.com/alexa/ask-toolkit-for-vscode/compare/v2.14.2...v2.15.0) (2023-07-13)
 
 
