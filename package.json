@@ -367,8 +367,8 @@
   "dependencies": {
     "@alexa/acdl": "^0.3.3",
     "adm-zip": "0.5.10",
-    "apl-suggester": "^2023.3.0",
-    "apl-viewhost-web": "^2023.3.0",
+    "apl-suggester": "^2024.1.0",
+    "apl-viewhost-web": "^2024.1.0",
     "ask-smapi-model": "^1.14.0",
     "ask-smapi-sdk": "^1.2.2",
     "async-retry": "^1.3.1",
