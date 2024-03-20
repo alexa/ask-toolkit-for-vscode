@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
 
-import {runTests} from "vscode-test";
+import {runTests} from "@vscode/test-electron";
 import {env} from "process";
 
 async function main() {
