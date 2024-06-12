@@ -346,7 +346,7 @@
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.5.0",
     "glob": "^7.1.6",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.0.3",
     "mocha": "^10.1.0",
