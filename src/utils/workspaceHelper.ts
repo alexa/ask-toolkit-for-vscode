@@ -31,7 +31,7 @@ export async function findSkillFoldersInWs(): Promise<vscode.Uri[]> {
   const askResources = await vscode.workspace.findFiles("**/ask-resources.json");
   const skillFolders: vscode.Uri[] = [];
   askResources.forEach((resourceFileUri) => {
-    skillFolders.push(vscode.Uri.file(path.dirname(resourceFileUri.fsPath)));
+    skillFolders.push(vscode.Uri.file(path.dirname(resourceFileUri.fsPath)).toJSON());
   });
   return skillFolders;
 }
@@ -40,7 +40,7 @@ export function getSkillFolderInWs(context: vscode.ExtensionContext): vscode.Uri
   Logger.verbose("Calling method: getSkillFolderInWs");
   const skillFolders: vscode.Uri[] | undefined = context.workspaceState.get(EXTENSION_STATE_KEY.WS_SKILLS);
   if (doesWorkSpaceExist() && skillFolders) {
-    return skillFolders.length > 0 ? skillFolders[0] : undefined;
+    return skillFolders.length > 0 ? vscode.Uri.from(skillFolders[0]) : undefined;
   }
   return undefined;
 }
