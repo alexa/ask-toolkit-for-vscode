@@ -6,6 +6,10 @@ on:
   release:
     types: [published]
 
+
+permissions:
+  contents: read
+
 jobs:
   release:
     runs-on: "ubuntu-latest"
